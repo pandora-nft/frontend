@@ -1,12 +1,26 @@
 import type { NextPage } from 'next';
 import { Header } from 'components/Header';
+import { LootboxCanvas } from 'canvas';
+import { LoadingIndicator } from 'components/LoadingIndicator';
 
 const Home: NextPage = () => {
   return (
     <div>
       <Header />
-      <div className="border border-red-500 p-4 mt-4">This is main</div>
-      <h1>test vercel 2</h1>
+      <div className="centered">
+        <div className="grid grid-cols-2">
+          <div className="ml-24 mt-9">
+            <h1 className="text-[180px] -mb-5 -ml-3">Pandora</h1>
+            <h3 className="text-2xl">
+              Decentralized NFT loot box gamifying trading experiences to solve NFT market
+              illiquidity problems
+            </h3>
+          </div>
+          <div className="h-100">
+            <LootboxCanvas />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

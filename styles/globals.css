@@ -2,8 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+.centered {
+  @apply flex flex-col justify-center items-center mx-5 sm:mx-10 3xl:mx-1/10 4xl:mx-1/6 5xl:mx-1/5 mb-20 my-10;
+}
+
 html,
 body {
+  height: 1000px;
+  /* background: black; */
+  background: linear-gradient(
+    160deg,
+    rgb(0, 0, 0) 0%,
+    rgb(232, 110, 222) 70%,
+    rgba(17, 15, 148, 0.5) 100%
+  );
+  color: white;
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
