@@ -1,3 +1,4 @@
+// @ts-ignore
 import {
   PerspectiveCamera,
   OrbitControls,
@@ -17,7 +18,8 @@ const angleToRadians = (angleInDegree: number) => {
 // ref: https://sketchfab.com/3d-models/loot-box-24d1d9be93954d3eb7807f8b528d6d98
 const Lootbox = () => {
   const { scene } = useGLTF('/lootbox/scene.gltf');
-  return <primitive position={[0, 1, 0]} object={scene} scale={2.4} dispose={null}></primitive>;
+
+  return <primitive position={[0, 1, 0]} object={scene} scale={3} dispose={null}></primitive>;
 };
 
 useGLTF.preload('/lootbox/scene.gltf');
@@ -26,7 +28,7 @@ export const LootboxCanvas = () => {
   return (
     <Canvas>
       <Suspense fallback={<Html position={[-0.4, 0.7, 0]}>{<LoadingIndicator />}</Html>}>
-        <PerspectiveCamera makeDefault position={[3, -0.6, 8]} />
+        <PerspectiveCamera makeDefault position={[3, -0.6, 9]} />
         <OrbitControls autoRotate autoRotateSpeed={1} enableZoom={false} />
         <ambientLight args={['#ffffff', 0.25]} />
         <spotLight
