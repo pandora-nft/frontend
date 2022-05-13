@@ -55,12 +55,7 @@ const Home: NextPage = () => {
               <h2>Buy the ticket and receive PandoraNFT in return</h2>
               <h2>The more you buy the more chance you win</h2>
             </div>
-            <Tilt
-              className="Tilt col-span-1 ml-auto"
-              options={{ max: 25 }}
-              transition={true}
-              easing="cubic-bezier(.03,.98,.52,.99)"
-            >
+            <Tilt className="col-span-1 ml-auto">
               <img className="h-110 rotate-12" src="/Ticket.png" alt="ticket" />
             </Tilt>
           </div>
