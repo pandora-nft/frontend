@@ -33,11 +33,11 @@ const Home: NextPage = () => {
   return (
     <div>
       <>
-        <div className="centered mt-48 mb-48">
+        <div className="centered mt-48 mb-48 ">
           <div className="grid grid-cols-2 pt-10">
             <div className="ml-24 mt-24 text-left">
-              <div className="text-[180px] -mb-20 -ml-3">Pandora</div>
-              <h2 className="">
+              <div className="text-[180px] font-medium -mb-20 -ml-3">Pandora</div>
+              <h2 className="font-[200]">
                 The decentralized NFT loot box gamifying trading experiences to solve NFT market
                 illiquidity problems
               </h2>
@@ -48,27 +48,27 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        <section>
-          <div className="grid grid-cols-3 grid-flow-row 1fr 1fr">
-            <div className="mt-40 col-span-2">
-              <h1>Provably randomize lottery ticket</h1>
+        <section className="">
+          <div className="grid grid-cols-3 ">
+            <div className="mt-24 col-span-2">
+              <h1 className="mb-4">Provably randomize lottery ticket</h1>
               <h2>Buy the ticket and receive PandoraNFT in return</h2>
               <h2>The more you buy the more chance you win</h2>
             </div>
             <Tilt
-              className="Tilt col-span-1"
+              className="Tilt col-span-1 ml-auto"
               options={{ max: 25 }}
               transition={true}
               easing="cubic-bezier(.03,.98,.52,.99)"
             >
-              <img src="/Ticket.png" alt="ticket" />
+              <img className="h-110 rotate-12" src="/Ticket.png" alt="ticket" />
             </Tilt>
           </div>
         </section>
 
         <section className="mt-72 -mb-50">
           <h1>Now is your chance to win high-valuable NFTs</h1>
-          <div className="w-full h-120 -py-100 border-2 border-red-400">
+          <div className="w-full h-120 -py-100 border-red-400">
             <NFTShowcase />
           </div>
         </section>

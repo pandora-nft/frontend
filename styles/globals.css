@@ -54,7 +54,7 @@
 
 @layer base {
   section {
-    @apply h-[100vh] centered border-b border-black;
+    @apply h-[100vh] centered;
   }
 
   h1 {
