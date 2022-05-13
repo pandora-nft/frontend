@@ -2,6 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Gotham';
+  src: url('../font/Gotham-Font/Gotham-Thin.otf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('../font/Gotham-Font/Gotham-XLight.otf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('../font/Gotham-Font/Gotham-Light.otf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('../font/Gotham-Font/GothamMedium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('../font/Gotham-Font/Gotham-Bold.otf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('../font/Gotham-Font/Gotham-Black.otf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
 .centered {
   @apply flex flex-col justify-center items-center mx-5 sm:mx-10 3xl:mx-1/10 4xl:mx-1/6 5xl:mx-1/5;
 }
@@ -10,18 +52,13 @@
   @apply text-transparent bg-clip-text bg-gradient-to-br from-mainPink to-white;
 }
 
-@font-face {
-  font-family: Gotham;
-  src: url('../font/Gotham-Font/GothamMedium.ttf') format('truetype');
-}
-
 @layer base {
   section {
     @apply h-[100vh] centered border-b border-black;
   }
 
   h1 {
-    @apply font-bold text-5xl;
+    @apply font-black text-5xl;
   }
   h2 {
     @apply text-3xl;
@@ -41,17 +78,7 @@ body {
   color: #1e1e1e;
   padding: 0;
   margin: 0;
-  /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
-    Fira Sans, Droid Sans, Helvetica Neue, sans-serif; */
-  font-family: Gotham, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
+  font-weight: 100;
+  font-family: 'Gotham', BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, sans-serif;
 }
