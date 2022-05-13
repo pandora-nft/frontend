@@ -5,7 +5,7 @@ import { LootboxCanvas, NFTShowcase } from 'canvas';
 import { PresentationControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { useEffect, useState } from 'react';
-import Tilt from 'react-tilt';
+import Tilt from 'react-parallax-tilt';
 
 const Card = () => {
   return (
