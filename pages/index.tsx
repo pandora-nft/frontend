@@ -5,6 +5,7 @@ import { LootboxCanvas, NFTShowcase } from 'canvas';
 import { PresentationControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { useEffect, useState } from 'react';
+import Tilt from 'react-tilt';
 
 const Card = () => {
   return (
@@ -46,6 +47,24 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
+
+        <section>
+          <div className="grid grid-cols-3 grid-flow-row 1fr 1fr">
+            <div className="mt-40 col-span-2">
+              <h1>Provably randomize lottery ticket</h1>
+              <h2>Buy the ticket and receive PandoraNFT in return</h2>
+              <h2>The more you buy the more chance you win</h2>
+            </div>
+            <Tilt
+              className="Tilt col-span-1"
+              options={{ max: 25 }}
+              transition={true}
+              easing="cubic-bezier(.03,.98,.52,.99)"
+            >
+              <img src="/Ticket.png" alt="ticket" />
+            </Tilt>
+          </div>
+        </section>
 
         <section className="mt-72 -mb-50">
           <h1>Now is your chance to win high-valuable NFTs</h1>
