@@ -23,7 +23,8 @@ module.exports = {
         '1/10': '10%',
       },
       colors: {
-        main1: '#0F52BA',
+        black: '#1e1e1e',
+        mainPink: '#E54090',
         main2: '#ec912b',
         main3: '#011359',
         sub1: '#deeefc',
