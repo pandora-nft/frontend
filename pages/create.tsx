@@ -1,4 +1,7 @@
 import type { NextPage } from "next";
+import { useMoralisWeb3Api } from "react-moralis";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import Image from "next/image";
 import { Header } from "components/Header";
 import { LootboxCanvas, NFTShowcase } from "canvas";
@@ -6,169 +9,274 @@ import { PresentationControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import Tilt from "react-parallax-tilt";
+//todo receive chain and single or multiple as props
 
+//upload pics => show pics
+//description
+//// fee is 2%
+//# to do => mode => fixed price , bids(add minimum bids) , oversoldable(max ticket is not min),
+//external link
+//min ticket
+//ticket price
+//Expiration Date
+//Rotalties
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
 const Create = () => {
+  const router = useRouter();
+
+  const [image, setImage] = useState(Array());
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
+      setImage([...image, URL.createObjectURL(img)]);
+      console.log(image);
+    }
+  };
+  console.log(image);
+  image.map((item, i) => console.log(item, i));
   return (
-    <div>
-      <div>Create page</div>
-      <div className="rounded-xl w-96 h-96 mx-auto mt-10 bg-gradient-to-r p-[6px] from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]">
-        <div className="flex flex-col justify-between h-full bg-white text-white rounded-lg p-2"></div>
+    <div className="w-0.8 p-16 grid justify-items-center border-2 ">
+      <div className="grid pl-16 w-full justify-items-start ">
+        <h2 className="text-[42px] font-bold">
+          Create Single LootBox on Ethereum
+        </h2>
       </div>
-      <h3 className="mt-5">
-        1 Head of party can put any num of nft in the lootbox
-      </h3>
-      <div className="flex justify-center mt-8">
-        <div className="rounded-lg shadow-xl bg-gray-50 lg:w-1/2">
-          <div className="m-4">
-            <label className="inline-block mb-2 text-gray-500">
-              Upload Image(jpg,png,svg,jpeg)
-            </label>
-            <div className="flex items-center justify-center w-full">
-              <label className="flex flex-col w-full h-32 border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
-                <div className="flex flex-col items-center justify-center pt-7">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-12 h-12 text-gray-400 group-hover:text-gray-600"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                    Select a photo
-                  </p>
-                </div>
-                <input type="file" className="opacity-0" />
-              </label>
-            </div>
-          </div>
-          <div className="flex p-2 space-x-4">
-            <button className="px-4 py-2 text-white bg-red-500 rounded shadow-xl">
-              Cannel
-            </button>
-            <button className="px-4 py-2 text-white bg-green-500 rounded shadow-xl">
-              Create
-            </button>
-          </div>
+
+      <div className="grid pl-16 pt-8 justify-items-start rounded-lg  w-full ">
+        <div className="h-24 lg:w-2/5 shadow-xl bg-gray-50">
+          connected to Ethereum
+          <img className="w-6" src="/chain/Ethereum.png"></img>
+          <span>address:</span>
         </div>
       </div>
-      <div className="cn">
-        <form className="w-full max-w-lg">
-          <div className="flex flex-wrap -mx-3 mb-6">
-            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-              <label
-                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                First Name
+
+      {/* Form */}
+      <div className="grid pl-16 pt-8 justify-items-start rounded-lg  w-full ">
+        <div className="w-3/4">
+          <form className="w-full max-w-lg">
+            <label className="inline-block mb-2 text-[24px] font-bold">
+              Upload Image (jpg,png,svg,jpeg)
+            </label>
+            <div className="flex items-center justify-center w-full">
+              <label className="flex flex-col w-full h-full border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
+                <div className="flex flex-col items-center justify-center pt-7 ">
+                  {image.length !== 0 ? (
+                    <div>
+                      <img
+                        className="w-36 h-36"
+                        src={image[image.length - 1]}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-12 h-12 text-gray-400 group-hover:text-gray-600"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <p className="pt-1 text-m tracking-wider text-gray-400 group-hover:text-gray-600">
+                        Select a photo
+                      </p>
+                    </>
+                  )}
+                </div>
+                <input
+                  type="file"
+                  name="myImage"
+                  onChange={(e) => {
+                    handleImageChange(e);
+                  }}
+                  className="opacity-0"
+                />
               </label>
-              <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                id="grid-first-name"
-                type="text"
-                placeholder="Jane"
-              />
-              <p className="text-red-500 text-xs italic">
-                Please fill out this field.
-              </p>
             </div>
-            <div className="w-full md:w-1/2 px-3">
-              <label
-                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                htmlFor="grid-last-name"
-              >
-                Last Name
-              </label>
-              <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-last-name"
-                type="text"
-                placeholder="Doe"
-              />
-            </div>
-          </div>
-          <div className="flex flex-wrap -mx-3 mb-6">
-            <div className="w-full px-3">
-              <label
-                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                htmlFor="grid-password"
-              >
-                Password
-              </label>
-              <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-password"
-                type="password"
-                placeholder="******************"
-              />
-              <p className="text-gray-600 text-xs italic">
-                Make it as long and as crazy as you'd like
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-wrap -mx-3 mb-2">
-            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-              <label
-                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                htmlFor="grid-city"
-              >
-                City
-              </label>
-              <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-city"
-                type="text"
-                placeholder="Albuquerque"
-              />
-            </div>
-            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-              <label
-                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                htmlFor="grid-state"
-              >
-                State
-              </label>
-              <div className="relative">
-                <select
-                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="grid-state"
+
+            <div className="grid xl:grid-cols-2 xl:gap-6 pt-6">
+              <div className="relative z-0 w-full pb-2 group">
+                <label
+                  htmlFor="message"
+                  className="block text-m font-medium text-gray-900 dark:text-gray-400"
                 >
-                  <option>New Mexico</option>
-                  <option>Missouri</option>
-                  <option>Texas</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="floating_first_name"
+                  id="floating_first_name"
+                  className="block py-2.5 px-0 w-full text-m text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                  required
+                />
+              </div>
+            </div>
+            <div className="grid-row xl:grid-cols-2 xl:gap-6 pt-6">
+              <label
+                htmlFor="message"
+                className="block mb-4 text-m font-medium text-gray-900 dark:text-gray-400"
+              >
+                Description
+              </label>
+              <textarea
+                id="message"
+                className="block p-2.5 w-full text-m text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="add description"
+              ></textarea>
+            </div>
+            <div className="grid pt-6 xl:grid-cols-2 xl:gap-6">
+              <div className="relative z-0 w-full pb-2 group">
+                <label
+                  htmlFor="message"
+                  className="block text-m font-medium text-gray-900 dark:text-gray-400"
+                >
+                  Ticket Price
+                </label>
+                <input
+                  type="text"
+                  name="floating_last_name"
+                  id="floating_last_name"
+                  className="block py-2.5 px-0 w-full text-m text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                  required
+                />
+                <div className=" pr-5 pt-2 font-light font-sm text-gray-800">
+                  Service Fee 2%
                 </div>
               </div>
             </div>
-            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-              <label
-                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                htmlFor="grid-zip"
+            <div className="grid pt-6 xl:grid-cols-2 xl:gap-6">
+              <div className="relative z-0 w-full pb-2 group">
+                <label
+                  htmlFor="message"
+                  className="block text-m font-medium text-gray-900 dark:text-gray-400"
+                >
+                  Minimum Ticket
+                </label>
+                <input
+                  type="tel"
+                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                  name="floating_phone"
+                  id="floating_phone"
+                  className="block py-2.5 px-0 w-full text-m text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                  required
+                />
+              </div>
+            </div>
+            <div className="grid pt-6 xl:grid-cols-2 xl:gap-6">
+              <div className="relative z-0 w-full pb-2 group">
+                <input
+                  type="text"
+                  name="floating_company"
+                  id="floating_company"
+                  className="block py-2.5 px-0 w-full text-m text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                  required
+                />
+                <label
+                  htmlFor="floating_company"
+                  className="peer-focus:font-medium absolute text-m text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
+                  Company (Ex. Google)
+                </label>
+              </div>
+            </div>
+            <fieldset>
+              <legend className="sr-only">Checkbox variants</legend>
+              <div className="flex items-center mb-4">
+                <input
+                  id="checkbox-2"
+                  type="checkbox"
+                  value=""
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                />
+                <label
+                  htmlFor="checkbox-2"
+                  className="ml-2 text-m font-medium text-gray-900 dark:text-gray-300"
+                >
+                  I agree to the{" "}
+                  <a
+                    href="#"
+                    className="text-blue-600 hover:underline dark:text-blue-500"
+                  >
+                    terms and conditions
+                  </a>
+                </label>
+              </div>
+
+              <div className="flex items-center ">
+                <input
+                  id="checkbox-3"
+                  type="checkbox"
+                  value=""
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                />
+                <label
+                  htmlFor="checkbox-3"
+                  className="ml-2 text-m font-medium text-gray-900 dark:text-gray-300"
+                >
+                  I am 13 years or older
+                </label>
+              </div>
+              <Link href={"/whitepaper"} replace>
+                <a className=" pr-5 font-light text-gray-500">How it work</a>
+              </Link>
+            </fieldset>
+            <div></div>
+            <button
+              type="submit"
+              className="text-white pt-4 mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Submit
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* show uploaded pic */}
+      {image.map((item, i) => (
+        <div
+          key={i}
+          className="rounded-xl w-36 h-36 mx-auto mt-16 mb-10 bg-gradient-to-r p-[6px] from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]"
+        >
+          <div
+            key={i}
+            className="flex flex-col justify-between h-full bg-white text-white rounded-lg"
+          >
+            <div
+              key={i}
+              className="rounded-lg  h-full w-full relative cursor-pointer "
+            >
+              <div
+                key={i}
+                className="absolute inset-0 bg-red opacity-25 rounded-lg shadow-2xl"
+              ></div>
+              <div
+                key={i}
+                className="absolute inset-0 transform  hover:scale-90 transition duration-300"
               >
-                Zip
-              </label>
-              <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-zip"
-                type="text"
-                placeholder="90210"
-              />
+                <div
+                  key={i}
+                  className="h-full w-full bg-white rounded-lg shadow-2xl"
+                >
+                  <img key={i} className="w-full h-full" src={item} />
+                </div>
+              </div>
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+      ))}
     </div>
   );
 };
