@@ -34,7 +34,10 @@ const Home: NextPage = () => {
             </div>
             <div className="motion-safe:animate-slowBounce">
               <Tilt className="col-span-1 ml-auto">
-                <img className="h-110 rotate-12" src="/Ticket.png" alt="ticket" />
+                <img className="h-100 rotate-12" src="/Ticket.png" alt="ticket" />
+                {/* <div className="rotate-12"> */}
+                {/* <Image width={300} height={500} src="/Ticket.png" alt="ticket" /> */}
+                {/* </div> */}
               </Tilt>
             </div>
           </div>
@@ -69,16 +72,16 @@ const Home: NextPage = () => {
           <h1>Available Now On</h1>
           <div className="pt-20 grid grid-cols-3 gap-10">
             <div className="flex flex-col items-center justify-center">
-              <img className="h-24" src="/chain/Ethereum.png" />
+              <Image width={60} height={100} src="/chain/Ethereum.png" alt="EthChain" />
               <h3 className="pt-4">Ethereum</h3>
             </div>
             <div className="flex flex-col items-center justify-center">
-              <img className="h-24" src="/chain/BNB.png" />
+              <Image width={100} height={100} src="/chain/BNB.png" alt="BNBChain" />
               <h3 className="pt-4">Binance</h3>
             </div>
 
             <div className="ml-2 flex flex-col items-center justify-center">
-              <img className="h-24" src="/chain/Polygon.png" />
+              <Image width={100} height={100} src="/chain/Polygon.png" alt="PolygonChain" />
               <h3 className="pt-4">Polygon</h3>
             </div>
           </div>
