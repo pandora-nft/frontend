@@ -10,16 +10,9 @@ import { Canvas } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import Tilt from "react-parallax-tilt";
 //todo receive chain and single or multiple as props
-
-//upload pics => show pics
-//description
-//// fee is 2%
 //# to do => mode => fixed price , bids(add minimum bids) , oversoldable(max ticket is not min),
-//external link
-//min ticket
-//ticket price
-//Expiration Date
-//Rotalties
+//todo single/multiple lootbox
+//interaction with contract
 
 declare global {
   interface Window {
@@ -40,7 +33,7 @@ const Create = () => {
   console.log(image);
   image.map((item, i) => console.log(item, i));
   return (
-    <div className="w-0.8 p-16 grid justify-items-center border-2 ">
+    <div className="w-0.8 p-16 grid justify-items-center ">
       <div className="grid pl-16 w-full justify-items-start ">
         <h2 className="text-[42px] font-bold">
           Create Single LootBox on Ethereum
@@ -176,6 +169,12 @@ const Create = () => {
             </div>
             <div className="grid pt-6 xl:grid-cols-2 xl:gap-6">
               <div className="relative z-0 w-full pb-2 group">
+                <label
+                  htmlFor="message"
+                  className="block text-m font-medium text-gray-900 dark:text-gray-400"
+                >
+                  Expiration Date
+                </label>
                 <input
                   type="text"
                   name="floating_company"
@@ -184,15 +183,9 @@ const Create = () => {
                   placeholder=" "
                   required
                 />
-                <label
-                  htmlFor="floating_company"
-                  className="peer-focus:font-medium absolute text-m text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Company (Ex. Google)
-                </label>
               </div>
             </div>
-            <fieldset>
+            <fieldset className="pt-4">
               <legend className="sr-only">Checkbox variants</legend>
               <div className="flex items-center mb-4">
                 <input
@@ -201,33 +194,39 @@ const Create = () => {
                   value=""
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
-                <label
-                  htmlFor="checkbox-2"
-                  className="ml-2 text-m font-medium text-gray-900 dark:text-gray-300"
-                >
-                  I agree to the{" "}
-                  <a
-                    href="#"
-                    className="text-blue-600 hover:underline dark:text-blue-500"
+                <div>
+                  <label
+                    htmlFor="checkbox-2"
+                    className="ml-2 text-m font-medium text-gray-900 dark:text-gray-300 "
                   >
-                    terms and conditions
-                  </a>
-                </label>
+                    I agree to the{" "}
+                    <a
+                      href="#"
+                      className="text-blue-600 hover:underline dark:text-blue-500"
+                    >
+                      terms and conditions
+                    </a>
+                  </label>
+                </div>
               </div>
 
               <div className="flex items-center ">
-                <input
-                  id="checkbox-3"
-                  type="checkbox"
-                  value=""
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  htmlFor="checkbox-3"
-                  className="ml-2 text-m font-medium text-gray-900 dark:text-gray-300"
-                >
-                  I am 13 years or older
-                </label>
+                <div>
+                  <input
+                    id="checkbox-3"
+                    type="checkbox"
+                    value=""
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="checkbox-3"
+                    className="ml-2 text-m font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    I am 13 years or older
+                  </label>
+                </div>
               </div>
               <Link href={"/whitepaper"} replace>
                 <a className=" pr-5 font-light text-gray-500">How it work</a>
@@ -270,7 +269,11 @@ const Create = () => {
                   key={i}
                   className="h-full w-full bg-white rounded-lg shadow-2xl"
                 >
-                  <img key={i} className="w-full h-full" src={item} />
+                  <img
+                    key={i}
+                    className="w-full h-full rounded-lg"
+                    src={item}
+                  />
                 </div>
               </div>
             </div>
