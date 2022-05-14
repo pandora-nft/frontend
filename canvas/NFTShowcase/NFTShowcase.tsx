@@ -67,7 +67,7 @@ function Items({ w = 0.7, gap = 0.15 }) {
 
   return (
     <ScrollControls
-      style={{ overflowX: 'hidden' }}
+      // style={{ overflowX: 'hidden' }}
       horizontal
       damping={10}
       pages={(width - xW + urls.length * xW) / width}
