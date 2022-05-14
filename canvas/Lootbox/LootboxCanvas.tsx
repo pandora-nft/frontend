@@ -17,19 +17,19 @@ const angleToRadians = (angleInDegree: number) => {
 
 // ref: https://sketchfab.com/3d-models/loot-box-24d1d9be93954d3eb7807f8b528d6d98
 const Lootbox = () => {
-  const { scene } = useGLTF('/lootbox/scene.gltf');
+  const { scene } = useGLTF('/lootbox2/scene.gltf');
 
-  return <primitive position={[0, 1, 0]} object={scene} scale={3} dispose={null}></primitive>;
+  return <primitive position={[0, 1, 0]} object={scene} scale={4} dispose={null}></primitive>;
 };
 
-useGLTF.preload('/lootbox/scene.gltf');
+useGLTF.preload('/lootbox2/scene.gltf');
 
 export const LootboxCanvas = () => {
   return (
     <Canvas>
       <Suspense fallback={<Html position={[-0.4, 0.7, 0]}>{<LoadingIndicator />}</Html>}>
-        <PerspectiveCamera makeDefault position={[3, -0.6, 9]} />
-        <OrbitControls autoRotate autoRotateSpeed={1} enableZoom={false} />
+        <PerspectiveCamera makeDefault position={[10, 5, 0]} />
+        <OrbitControls autoRotate autoRotateSpeed={2} enableZoom={false} />
         <ambientLight args={['#ffffff', 0.25]} />
         <spotLight
           args={['#ffffff', 10, 50, angleToRadians(80), 0.4]}
@@ -37,9 +37,10 @@ export const LootboxCanvas = () => {
           castShadow={true}
         />
         <SpotLight
-          position={[0, 5, 0]}
+          position={[0, 6, 0]}
           distance={10}
           angle={1}
+          color="#ffb0fb"
           attenuation={5}
           anglePower={1} // Diffuse-cone anglePower (default: 5)
         />
