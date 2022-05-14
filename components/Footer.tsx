@@ -1,17 +1,33 @@
 export const Footer = () => {
   const createNavLink = (label: string) => {
-    return <div className="pt-5 pr-5 font-light text-gray-500">{label}</div>;
+    return (
+      <div className="hover:opacity-50 cursor-pointer pr-5 font-light text-black">{label}</div>
+    );
+  };
+
+  const createIcon = (logoName: string, style?: React.CSSProperties) => {
+    return (
+      <img className="w-10 h-10 p-2 hover:opacity-50 cursor-pointer" src={`logo/${logoName}.svg`} />
+    );
   };
 
   return (
-    <div className="centered py-40">
-      <div className="w-full h-[1px] border-t border-gray-200 mb-20"></div>
-      <h1 className="text-gray-500 font-medium">Pandora</h1>
-      <div className="flex flex-row justify-between">
+    <div className="centered mt-40 pb-20">
+      <div className="w-3/4 h-[1px] border-t border-gray-300 mb-20"></div>
+      <h2 className="text-black font-light">Pandora</h2>
+      <div className="mt-5 flex flex-row justify-between">
         {createNavLink('Home')}
         {createNavLink('Marketplace')}
         {createNavLink('Roadmap')}
         {createNavLink('Whitepaper')}
+      </div>
+      <div className="mt-5 flex flex-row">
+        {createIcon('twitter')}
+        {createIcon('discord')}
+        {createIcon('github')}
+        {createIcon('youtube')}
+        {createIcon('medium')}
+        {createIcon('telegram')}
       </div>
     </div>
   );
