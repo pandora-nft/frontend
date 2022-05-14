@@ -4,8 +4,11 @@ import { Header } from 'components/Header';
 import { LootboxCanvas, NFTShowcase } from 'canvas';
 import { PresentationControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Tilt from 'react-parallax-tilt';
+import { useInView } from 'react-intersection-observer';
+import { AnimationOnScroll } from 'react-animation-on-scroll';
+import 'animate.css/animate.min.css';
 
 const Card = () => {
   return (
@@ -30,57 +33,61 @@ const Home: NextPage = () => {
   //   document.body.style.overflow = 'hidden';
   // }, []);
 
+  useEffect(() => {}, []);
+
   return (
     <div>
       <>
-        <div className="centered mt-48 mb-48 ">
-          <div className="grid grid-cols-2 pt-10">
-            <div className="ml-24 mt-24 text-left">
-              <div className="text-[180px] font-medium -mb-20 -ml-3">Pandora</div>
+        <div className="centered mt-12 mb-48">
+          <div className="grid grid-cols-2 px-10 pt-10">
+            <div className="mt-32 text-left">
+              <div className="text-[18vh] font-medium -mb-20 -ml-3">Pandora</div>
               <h2 className="font-[200]">
                 The decentralized NFT loot box gamifying trading experiences to solve NFT market
                 illiquidity problems
               </h2>
             </div>
-            <div className="h-100">
-              <LootboxCanvas />
+            <div className="h-100 ml-5">
+              <NFTShowcase />
             </div>
           </div>
         </div>
 
-        <section className="">
-          <div className="grid grid-cols-3 ">
-            <div className="mt-24 col-span-2">
-              <h1 className="mb-4">Provably randomize lottery ticket</h1>
-              <h2>Buy the ticket and receive PandoraNFT in return</h2>
-              <h2>The more you buy the more chance you win</h2>
+        <AnimationOnScroll animateIn="animate__fadeInUp">
+          <section className={``}>
+            <div className="border border-red-500 grid grid-cols-3">
+              <div className="mt-24 col-span-2">
+                <h1 className="mb-4">Provably randomize lottery ticket</h1>
+                <h2>Buy the ticket and receive PandoraNFT in return</h2>
+                <h2>The more you buy the more chance you win</h2>
+              </div>
+              <Tilt className="col-span-1 ml-auto">
+                <img className="h-110 rotate-12" src="/Ticket.png" alt="ticket" />
+              </Tilt>
             </div>
-            <Tilt className="col-span-1 ml-auto">
-              <img className="h-110 rotate-12" src="/Ticket.png" alt="ticket" />
-            </Tilt>
-          </div>
-        </section>
+          </section>
+        </AnimationOnScroll>
 
-        <section className="mt-72 -mb-50">
+        {/* <section className="mt-72 -mb-50">
           <h1>Now is your chance to win high-valuable NFTs</h1>
-          <div className="w-full h-120 -py-100 border-red-400">
-            <NFTShowcase />
-          </div>
-        </section>
+          <div className="w-full h-120 -py-100 border-red-400"><NFTShowcase /> </div>
+        </section> */}
 
-        <section className="">
-          <h1>The next stage of NFT trading experiences</h1>
-          <div className="grid grid-cols-3 gap-5">
-            <Card />
-            <Card />
-            <Card />
-          </div>
-        </section>
+        <AnimationOnScroll animateIn="animate__fadeInLeft">
+          <section className="">
+            <h1>The next stage of NFT trading experiences</h1>
+            <div className="grid grid-cols-3 gap-5">
+              <Card />
+              <Card />
+              <Card />
+            </div>
+          </section>
+        </AnimationOnScroll>
 
-        <section>
+        {/* <section>
           <h1>Roadmap</h1>
-        </section>
-
+        </section> */}
+        {/* 
         <section>
           <h1>Available Now On</h1>
           <div className="pt-20 grid grid-cols-3 gap-10">
@@ -99,7 +106,14 @@ const Home: NextPage = () => {
             </div>
           </div>
         </section>
+        */}
       </>
+
+      <AnimationOnScroll animateIn="animate__fadeInUp">
+        <div className="h-100">
+          <LootboxCanvas />
+        </div>
+      </AnimationOnScroll>
     </div>
   );
 };
