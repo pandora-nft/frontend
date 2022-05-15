@@ -1,13 +1,13 @@
 // pages/lootbox/[bid]
 
-import { useRouter } from "next/router";
-import { LootboxCanvas } from "canvas";
+import { useRouter } from "next/router"
+import { LootboxCanvas } from "canvas"
 
 //Todo: query onchain lootbox to display
 //Todo: interact with blockchain from frontend
 //Todo: multichain interaction???
 const Bid = () => {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
     <>
@@ -17,6 +17,6 @@ const Bid = () => {
         <div>boxId: {router.query.bid}</div>
       </section>
     </>
-  );
-};
-export default Bid;
+  )
+}
+export default Bid

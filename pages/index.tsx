@@ -1,10 +1,10 @@
-import type { NextPage } from "next";
-import Image from "next/image";
-import { LootboxCanvas, NFTShowcase } from "canvas";
-import Tilt from "react-parallax-tilt";
-import { AnimationOnScroll } from "react-animation-on-scroll";
-import "animate.css/animate.min.css";
-import { Card } from "components";
+import type { NextPage } from "next"
+import Image from "next/image"
+import { LootboxCanvas, NFTShowcase } from "canvas"
+import Tilt from "react-parallax-tilt"
+import { AnimationOnScroll } from "react-animation-on-scroll"
+import "animate.css/animate.min.css"
+import { Card } from "components"
 
 const Home: NextPage = () => {
   return (
@@ -88,7 +88,7 @@ const Home: NextPage = () => {
         </AnimationOnScroll>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
