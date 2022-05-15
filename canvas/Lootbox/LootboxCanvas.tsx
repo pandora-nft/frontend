@@ -6,10 +6,10 @@ import {
   Html,
   ContactShadows,
   SpotLight,
-} from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
-import { Suspense } from 'react';
-import { LoadingIndicator } from 'components';
+} from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { Suspense } from "react";
+import { LoadingIndicator } from "components";
 
 const angleToRadians = (angleInDegree: number) => {
   return (Math.PI / 180) * angleInDegree;
@@ -17,12 +17,12 @@ const angleToRadians = (angleInDegree: number) => {
 
 // ref: https://sketchfab.com/3d-models/loot-box-24d1d9be93954d3eb7807f8b528d6d98
 const Lootbox = () => {
-  const { scene } = useGLTF('/lootbox2/scene.gltf');
+  const { scene } = useGLTF("/lootbox2/scene.gltf");
 
   return <primitive position={[0, 1, 0]} object={scene} scale={4} dispose={null}></primitive>;
 };
 
-useGLTF.preload('/lootbox2/scene.gltf');
+useGLTF.preload("/lootbox2/scene.gltf");
 
 export const LootboxCanvas = () => {
   return (
@@ -30,9 +30,9 @@ export const LootboxCanvas = () => {
       <Suspense fallback={<Html position={[-0.4, 0.7, 0]}>{<LoadingIndicator />}</Html>}>
         <PerspectiveCamera makeDefault position={[10, 5, 0]} />
         <OrbitControls autoRotate autoRotateSpeed={2} enableZoom={false} />
-        <ambientLight args={['#ffffff', 0.25]} />
+        <ambientLight args={["#ffffff", 0.25]} />
         <spotLight
-          args={['#ffffff', 10, 50, angleToRadians(80), 0.4]}
+          args={["#ffffff", 10, 50, angleToRadians(80), 0.4]}
           position={[-5, 10, -5]}
           castShadow={true}
         />

@@ -1,43 +1,31 @@
-import type { NextPage } from "next";
-import { useMoralisWeb3Api } from "react-moralis";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import Image from "next/image";
-import { Header } from "components/Header";
-import { LootboxCanvas, NFTShowcase } from "canvas";
-import { PresentationControls } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import { useEffect, useState } from "react";
-import Tilt from "react-parallax-tilt";
+import Link from "next/link"
+import { useState } from "react"
+
 //todo receive chain and single or multiple as props
 //# to do => mode => fixed price , bids(add minimum bids) , oversoldable(max ticket is not min),
 //todo single/multiple lootbox
 //interaction with contract
 
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
+// declare global {
+//   interface Window {
+//     ethereum?: any;
+//   }
+// }
 const Create = () => {
-  const router = useRouter();
-
-  const [image, setImage] = useState(Array());
+  const [image, setImage] = useState(Array())
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      let img = event.target.files[0];
-      setImage([...image, URL.createObjectURL(img)]);
-      console.log(image);
+      let img = event.target.files[0]
+      setImage([...image, URL.createObjectURL(img)])
+      console.log(image)
     }
-  };
-  console.log(image);
-  image.map((item, i) => console.log(item, i));
+  }
+  console.log(image)
+  image.map((item, i) => console.log(item, i))
   return (
     <div className="w-0.8 p-16 grid justify-items-center ">
       <div className="grid pl-16 w-full justify-items-start ">
-        <h2 className="text-[42px] font-bold">
-          Create Single LootBox on Ethereum
-        </h2>
+        <h2 className="text-[42px] font-bold">Create Single LootBox on Ethereum</h2>
       </div>
 
       <div className="grid pl-16 pt-8 justify-items-start rounded-lg  w-full ">
@@ -60,10 +48,7 @@ const Create = () => {
                 <div className="flex flex-col items-center justify-center pt-7 ">
                   {image.length !== 0 ? (
                     <div>
-                      <img
-                        className="w-36 h-36"
-                        src={image[image.length - 1]}
-                      />
+                      <img className="w-36 h-36" src={image[image.length - 1]} />
                     </div>
                   ) : (
                     <>
@@ -89,7 +74,7 @@ const Create = () => {
                   type="file"
                   name="myImage"
                   onChange={(e) => {
-                    handleImageChange(e);
+                    handleImageChange(e)
                   }}
                   className="opacity-0"
                 />
@@ -143,9 +128,7 @@ const Create = () => {
                   placeholder=" "
                   required
                 />
-                <div className=" pr-5 pt-2 font-light font-sm text-gray-800">
-                  Service Fee 2%
-                </div>
+                <div className=" pr-5 pt-2 font-light font-sm text-gray-800">Service Fee 2%</div>
               </div>
             </div>
             <div className="grid pt-6 xl:grid-cols-2 xl:gap-6">
@@ -200,10 +183,7 @@ const Create = () => {
                     className="ml-2 text-m font-medium text-gray-900 dark:text-gray-300 "
                   >
                     I agree to the{" "}
-                    <a
-                      href="#"
-                      className="text-blue-600 hover:underline dark:text-blue-500"
-                    >
+                    <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">
                       terms and conditions
                     </a>
                   </label>
@@ -253,10 +233,7 @@ const Create = () => {
             key={i}
             className="flex flex-col justify-between h-full bg-white text-white rounded-lg"
           >
-            <div
-              key={i}
-              className="rounded-lg  h-full w-full relative cursor-pointer "
-            >
+            <div key={i} className="rounded-lg  h-full w-full relative cursor-pointer ">
               <div
                 key={i}
                 className="absolute inset-0 bg-red opacity-25 rounded-lg shadow-2xl"
@@ -265,15 +242,8 @@ const Create = () => {
                 key={i}
                 className="absolute inset-0 transform  hover:scale-90 transition duration-300"
               >
-                <div
-                  key={i}
-                  className="h-full w-full bg-white rounded-lg shadow-2xl"
-                >
-                  <img
-                    key={i}
-                    className="w-full h-full rounded-lg"
-                    src={item}
-                  />
+                <div key={i} className="h-full w-full bg-white rounded-lg shadow-2xl">
+                  <img key={i} className="w-full h-full rounded-lg" src={item} />
                 </div>
               </div>
             </div>
@@ -281,7 +251,7 @@ const Create = () => {
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default Create;
+export default Create

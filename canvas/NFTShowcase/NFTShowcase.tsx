@@ -1,10 +1,10 @@
 // @ts-nocheck
-import * as THREE from 'three';
-import { useRef, useState } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Image, ScrollControls, Scroll, useScroll } from '@react-three/drei';
-import { useSnapshot } from 'valtio';
-import { state, damp } from './util';
+import * as THREE from "three";
+import { useRef, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Image, ScrollControls, Scroll, useScroll } from "@react-three/drei";
+import { useSnapshot } from "valtio";
+import { state, damp } from "./util";
 
 function Item({ index, position, scale, c = new THREE.Color(), ...props }) {
   const ref = useRef();
@@ -42,7 +42,7 @@ function Item({ index, position, scale, c = new THREE.Color(), ...props }) {
       delta
     );
     ref.current.material.color.lerp(
-      c.set(hovered || clicked === index ? 'white' : '#aaa'),
+      c.set(hovered || clicked === index ? "white" : "#aaa"),
       hovered ? 0.3 : 0.1
     );
   });
@@ -67,7 +67,7 @@ function Items({ w = 0.7, gap = 0.15 }) {
 
   return (
     <ScrollControls
-      style={{ overflowY: 'hidden' }}
+      style={{ overflowY: "hidden" }}
       horizontal
       damping={10}
       pages={(width - xW + urls.length * xW) / width}
