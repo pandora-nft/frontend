@@ -8,8 +8,8 @@ export const Card: React.FC<Props> = ({ text }) => {
       <AnimateCard />
       <h3 className="mt-10 text-2xl font-medium italic">{text}</h3>
     </div>
-  )
-}
+  );
+};
 
 const AnimateCard = () => {
   return (
@@ -33,5 +33,5 @@ const AnimateCard = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

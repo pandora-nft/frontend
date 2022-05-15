@@ -16,5 +16,5 @@ export const LoadingIndicator = () => {
         fill="currentFill"
       />
     </svg>
-  )
-}
+  );
+};

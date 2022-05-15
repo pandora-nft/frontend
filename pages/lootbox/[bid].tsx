@@ -1,14 +1,14 @@
 // pages/lootbox/[bid].js
 
-import { useRouter } from "next/router"
+import { useRouter } from "next/router";
 
 const Bid = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <>
       <div>boxId: {router.query.bid}</div>
     </>
-  )
-}
-export default Bid
+  );
+};
+export default Bid;

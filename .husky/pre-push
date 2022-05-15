@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-git diff HEAD --quiet && npm run test-all
+git diff HEAD --quiet && npm run pre-push

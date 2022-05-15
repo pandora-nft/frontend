@@ -4,14 +4,14 @@ export const Footer = () => {
       <a href={`./${link}`} className="pt-5 pr-5 font-light text-gray-500">
         {label}
       </a>
-    )
-  }
+    );
+  };
 
   const createIcon = (logoName: string) => {
     return (
       <img className="w-10 h-10 p-2 hover:opacity-50 cursor-pointer" src={`logo/${logoName}.svg`} />
-    )
-  }
+    );
+  };
 
   return (
     <div className="centered mt-40 pb-20">
@@ -33,5 +33,5 @@ export const Footer = () => {
         {createIcon("telegram")}
       </div>
     </div>
-  )
-}
+  );
+};

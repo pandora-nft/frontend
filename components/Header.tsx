@@ -1,5 +1,5 @@
-import { ConnectButton } from "web3uikit"
-import Link from "next/link"
+import { ConnectButton } from "web3uikit";
+import Link from "next/link";
 
 export const Header = () => {
   const createNavLink = (label: string, endpoint: string) => {
@@ -7,8 +7,8 @@ export const Header = () => {
       <Link href={{ pathname: `${endpoint}` }} replace>
         <a className="pt-5 pr-5 font-light text-gray-500">{label}</a>
       </Link>
-    )
-  }
+    );
+  };
   return (
     <>
       <nav className="p-5 flex flex-row items-center justify-between border-gray-200">
@@ -30,5 +30,5 @@ export const Header = () => {
         </div>
       </nav>
     </>
-  )
-}
+  );
+};

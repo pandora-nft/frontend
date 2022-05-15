@@ -1,5 +1,5 @@
 const Marketplace = () => {
-  return <>This is Market place</>
-}
+  return <>This is Market place</>;
+};
 
-export default Marketplace
+export default Marketplace;

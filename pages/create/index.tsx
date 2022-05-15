@@ -1,5 +1,5 @@
-import Link from "next/link"
-import { useState } from "react"
+import Link from "next/link";
+import { useState } from "react";
 
 //todo receive chain and single or multiple as props
 //# to do => mode => fixed price , bids(add minimum bids) , oversoldable(max ticket is not min),
@@ -12,16 +12,16 @@ import { useState } from "react"
 //   }
 // }
 const Create = () => {
-  const [image, setImage] = useState(Array())
+  const [image, setImage] = useState(Array());
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      let img = event.target.files[0]
-      setImage([...image, URL.createObjectURL(img)])
-      console.log(image)
+      let img = event.target.files[0];
+      setImage([...image, URL.createObjectURL(img)]);
+      console.log(image);
     }
-  }
-  console.log(image)
-  image.map((item, i) => console.log(item, i))
+  };
+  console.log(image);
+  image.map((item, i) => console.log(item, i));
   return (
     <div className="w-0.8 p-16 grid justify-items-center ">
       <div className="grid pl-16 w-full justify-items-start ">
@@ -74,7 +74,7 @@ const Create = () => {
                   type="file"
                   name="myImage"
                   onChange={(e) => {
-                    handleImageChange(e)
+                    handleImageChange(e);
                   }}
                   className="opacity-0"
                 />
@@ -251,7 +251,7 @@ const Create = () => {
         </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default Create
+export default Create;

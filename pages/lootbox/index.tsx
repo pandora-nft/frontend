@@ -5,6 +5,6 @@ const Lootbox = () => {
     <>
       <div>Loot box index</div>
     </>
-  )
-}
-export default Lootbox
+  );
+};
+export default Lootbox;
