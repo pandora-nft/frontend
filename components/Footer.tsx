@@ -1,7 +1,9 @@
 export const Footer = () => {
-  const createNavLink = (label: string) => {
+  const createNavLink = (label: string, link: string) => {
     return (
-      <div className="hover:opacity-50 cursor-pointer pr-5 font-light text-black">{label}</div>
+      <a href={`./${link}`} className="pt-5 pr-5 font-light text-gray-500">
+        {label}
+      </a>
     );
   };
 
@@ -12,14 +14,16 @@ export const Footer = () => {
   };
 
   return (
+
     <div className="centered mt-40 pb-20">
       <div className="w-3/4 h-[1px] border-t border-gray-300 mb-20"></div>
       <h2 className="text-black font-light">Pandora</h2>
       <div className="mt-5 flex flex-row justify-between">
-        {createNavLink('Home')}
-        {createNavLink('Marketplace')}
-        {createNavLink('Roadmap')}
-        {createNavLink('Whitepaper')}
+        {createNavLink("Home", "")}
+        {createNavLink("Marketplace", "")}
+        {createNavLink("Create", "create")}
+        {createNavLink("Roadmap", "")}
+        {createNavLink("Whitepaper", "")}
       </div>
       <div className="mt-5 flex flex-row">
         {createIcon('twitter')}
