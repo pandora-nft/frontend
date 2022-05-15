@@ -45,7 +45,7 @@
 }
 
 .centered {
-  @apply flex flex-col justify-center items-center mx-5 sm:mx-10 3xl:mx-1/10 4xl:mx-1/6 5xl:mx-1/5;
+  @apply flex flex-col text-center justify-center items-center mx-5 sm:mx-10 3xl:mx-1/10 4xl:mx-1/6 5xl:mx-1/5;
 }
 
 .text-gradient {
@@ -54,7 +54,7 @@
 
 @layer base {
   section {
-    @apply h-[100vh] centered;
+    @apply h-[100vh];
   }
 
   h1 {
