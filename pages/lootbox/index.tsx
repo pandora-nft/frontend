@@ -1,6 +1,6 @@
 // pages/lootbox
 
-import { LootboxCanvas } from "canvas";
+import { LootboxCanvas } from "canvas"
 
 const Lootbox = () => {
   return (
@@ -10,6 +10,6 @@ const Lootbox = () => {
         <div>Market place page</div>
       </section>
     </>
-  );
-};
-export default Lootbox;
+  )
+}
+export default Lootbox

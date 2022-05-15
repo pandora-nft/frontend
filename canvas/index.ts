@@ -1,2 +1,2 @@
-export * from "./Lootbox/LootboxCanvas";
-export * from "./NFTShowcase/NFTShowcase";
+export * from "./Lootbox/LootboxCanvas"
+export * from "./NFTShowcase/NFTShowcase"
