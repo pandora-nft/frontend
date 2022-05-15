@@ -1,9 +1,14 @@
-// pages/lootbox/[bid].js
+// pages/lootbox
+
+import { LootboxCanvas } from "canvas";
 
 const Lootbox = () => {
   return (
     <>
-      <div>Loot box index</div>
+      <section>
+        <LootboxCanvas />
+        <div>Market place page</div>
+      </section>
     </>
   );
 };

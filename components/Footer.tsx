@@ -9,7 +9,10 @@ export const Footer = () => {
 
   const createIcon = (logoName: string) => {
     return (
-      <img className="w-10 h-10 p-2 hover:opacity-50 cursor-pointer" src={`logo/${logoName}.svg`} />
+      <img
+        className="w-10 h-10 p-2 hover:opacity-50 cursor-pointer"
+        src={`/logo/${logoName}.svg`}
+      />
     );
   };
 

@@ -17,11 +17,9 @@ const Create = () => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
       setImage([...image, URL.createObjectURL(img)]);
-      console.log(image);
     }
   };
-  console.log(image);
-  image.map((item, i) => console.log(item, i));
+
   return (
     <div className="w-0.8 p-16 grid justify-items-center ">
       <div className="grid pl-16 w-full justify-items-start ">
