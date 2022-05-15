@@ -1,11 +1,7 @@
 // pages/lootbox/[bid]
 
-import { useState } from "react";
-import Router, { useRouter } from "next/router";
-import { LootboxCanvas, NFTShowcase } from "canvas";
-import { ConnectButton } from "web3uikit";
-import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/router";
+import { LootboxCanvas } from "canvas";
 
 //Todo: query onchain lootbox to display
 //Todo: interact with blockchain from frontend
