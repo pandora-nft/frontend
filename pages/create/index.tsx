@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useMoralisWeb3Api } from "react-moralis";
+import { useMoralis } from "react-moralis";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,17 +21,14 @@ declare global {
 }
 const Create = () => {
   const router = useRouter();
-
   const [image, setImage] = useState(Array());
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
       setImage([...image, URL.createObjectURL(img)]);
-      console.log(image);
     }
   };
-  console.log(image);
-  image.map((item, i) => console.log(item, i));
+
   return (
     <div className="w-0.8 p-16 grid justify-items-center ">
       <div className="grid pl-16 w-full justify-items-start ">
