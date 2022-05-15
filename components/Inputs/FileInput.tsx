@@ -1,5 +1,5 @@
-import React from "react";
+import React from "react"
 
 export const FileInput = () => {
-  return <div>FileInput</div>;
-};
+  return <div>FileInput</div>
+}

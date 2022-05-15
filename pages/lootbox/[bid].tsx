@@ -1,17 +1,13 @@
 // pages/lootbox/[bid]
 
-import { useState } from "react";
-import Router, { useRouter } from "next/router";
-import { LootboxCanvas, NFTShowcase } from "canvas";
-import { ConnectButton } from "web3uikit";
-import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/router"
+import { LootboxCanvas } from "canvas"
 
 //Todo: query onchain lootbox to display
 //Todo: interact with blockchain from frontend
 //Todo: multichain interaction???
 const Bid = () => {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
     <>
@@ -21,6 +17,6 @@ const Bid = () => {
         <div>boxId: {router.query.bid}</div>
       </section>
     </>
-  );
-};
-export default Bid;
+  )
+}
+export default Bid
