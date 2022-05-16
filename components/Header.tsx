@@ -18,7 +18,7 @@ export const Header = () => {
         </div>
         <div className="flex flex-row justify-between">
           {createNavLink("Home", "/")}
-          {createNavLink("Marketplace", "/lootbox")}
+          {createNavLink("Marketplace", "/marketplace")}
           {createNavLink("Create", "/create")}
           {createNavLink("Lootbox", "/lootbox/0x00000001")}
           {createNavLink("Roadmap", "/")}
