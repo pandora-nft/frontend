@@ -1,18 +1,33 @@
 import Link from "next/link"
 import { useState } from "react"
+import { useChain, useWeb3Contract, useMoralis } from "react-moralis"
+import { FACTORY_ABI, FACTORY_ADDRESS } from "contract"
+import { ethers } from "ethers"
+const initialFormData = {
+  name: "",
+  drawTimestamp: Math.floor(Date.now() / 1000) + 60, //1 day = +86400
+  ticketPrice: 0.001,
+  minimumTicketRequired: 1,
+  maxTicketPerWallet: 1,
+}
 
-//todo receive chain and single or multiple as props
-//# to do => mode => fixed price , bids(add minimum bids) , oversoldable(max ticket is not min),
-//todo single/multiple lootbox
-//interaction with contract
-
-// declare global {
-//   interface Window {
-//     ethereum?: any;
-//   }
-// }
 const Create = () => {
-  const [image, setImage] = useState(Array())
+  const { account } = useMoralis()
+  const { chain } = useChain()
+  const [formData, setFormData] = useState(initialFormData)
+  const [image, setImage] = useState<Array<string>>([])
+  const { runContractFunction: deployLootbox } = useWeb3Contract({
+    contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
+    functionName: "deployLootbox",
+    abi: FACTORY_ABI,
+    params: {
+      _name: formData.name,
+      _drawTimestamp: formData.drawTimestamp,
+      _ticketPrice: ethers.utils.parseEther(formData.ticketPrice.toString()).toString(),
+      _minimumTicketRequired: formData.minimumTicketRequired,
+      _maxTicketPerWallet: formData.maxTicketPerWallet,
+    },
+  })
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0]
@@ -20,24 +35,31 @@ const Create = () => {
     }
   }
 
+  async function handleFormSumbit(e) {
+    e.preventDefault()
+    const deploy_res = await deployLootbox()
+    console.log(deploy_res)
+  }
+  if (formData) console.log(formData)
   return (
     <div className="w-0.8 p-16 grid justify-items-center ">
       <div className="grid pl-16 w-full justify-items-start ">
         <h2 className="text-[42px] font-bold">Create Single LootBox on Ethereum</h2>
       </div>
 
+      {/* <div>{JSON.stringify(formData)}</div> */}
       <div className="grid pl-16 pt-8 justify-items-start rounded-lg  w-full ">
         <div className="h-24 lg:w-2/5 shadow-xl bg-gray-50">
-          connected to Ethereum
+          connected to Ethereum chainId: {chain ? chain.networkId : ""}
           <img className="w-6" src="/chain/Ethereum.png"></img>
-          <span>address:</span>
+          <span>address:{account}</span>
         </div>
       </div>
 
       {/* Form */}
       <div className="grid pl-16 pt-8 justify-items-start rounded-lg  w-full ">
         <div className="w-3/4">
-          <form className="w-full max-w-lg">
+          <form onSubmit={(e) => handleFormSumbit(e)} className="w-full max-w-lg">
             <label className="inline-block mb-2 text-[24px] font-bold">
               Upload Image (jpg,png,svg,jpeg)
             </label>
@@ -88,6 +110,8 @@ const Create = () => {
                   Name
                 </label>
                 <input
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  value={formData.name}
                   type="text"
                   name="floating_first_name"
                   id="floating_first_name"
@@ -119,7 +143,12 @@ const Create = () => {
                   Ticket Price
                 </label>
                 <input
-                  type="text"
+                  onChange={(e) =>
+                    setFormData({ ...formData, ticketPrice: Number(e.target.value) })
+                  }
+                  value={formData.ticketPrice}
+                  type="number"
+                  step=".001"
                   name="floating_last_name"
                   id="floating_last_name"
                   className="block py-2.5 px-0 w-full text-m text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -135,13 +164,38 @@ const Create = () => {
                   htmlFor="message"
                   className="block text-m font-medium text-gray-900 dark:text-gray-400"
                 >
-                  Minimum Ticket
+                  Minimum Ticket Required
                 </label>
                 <input
-                  type="tel"
-                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                  name="floating_phone"
-                  id="floating_phone"
+                  onChange={(e) =>
+                    setFormData({ ...formData, minimumTicketRequired: Number(e.target.value) })
+                  }
+                  value={formData.minimumTicketRequired}
+                  type="number"
+                  min="0"
+                  max="500"
+                  className="block py-2.5 px-0 w-full text-m text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                  required
+                />
+              </div>
+            </div>
+            <div className="grid pt-6 xl:grid-cols-2 xl:gap-6">
+              <div className="relative z-0 w-full pb-2 group">
+                <label
+                  htmlFor="message"
+                  className="block text-m font-medium text-gray-900 dark:text-gray-400"
+                >
+                  Max ticket per wallet
+                </label>
+                <input
+                  onChange={(e) =>
+                    setFormData({ ...formData, maxTicketPerWallet: Number(e.target.value) })
+                  }
+                  value={formData.maxTicketPerWallet}
+                  type="number"
+                  min="0"
+                  max="500"
                   className="block py-2.5 px-0 w-full text-m text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   placeholder=" "
                   required
