@@ -1,40 +1,28 @@
-import { LOOTBOX_ADDRESS, LOOTBOX_ABI } from "contract"
-import { useMoralis, useChain } from "react-moralis"
-import { useEffect, useState } from "react"
+import { LOOTBOX_ABI } from "contract"
+import { useMoralis } from "react-moralis"
+import { useState } from "react"
 import { ethers } from "ethers"
-// import { Lootbox } from "types"
+import { Lootbox } from "types"
 
 export const useLootbox = () => {
-  const { enableWeb3, isWeb3Enabled, web3: moralisProvider } = useMoralis()
-  const { chain } = useChain()
-  // const [lootbox, setLootbox] = useState<Lootbox>({
-  //   address: "",
-  //   name: "",
-  //   nfts: [],
-  // })
+  const { web3: moralisProvider } = useMoralis()
+  const [lootbox, setLootbox] = useState<Lootbox>({
+    address: "",
+    name: "",
+    nfts: [],
+  })
 
-  const [name, setName] = useState<string>("")
-  const [id, setId] = useState<string>("")
+  const fetchLootbox = async (lootboxAddress: string) => {
+    const contract = new ethers.Contract(lootboxAddress, LOOTBOX_ABI, moralisProvider)
+    const name = await contract.name()
 
-  useEffect(() => {
-    const main = async () => {
-      const contract = new ethers.Contract(
-        chain ? LOOTBOX_ADDRESS[chain.networkId] : "",
-        LOOTBOX_ABI,
-        moralisProvider
-      )
-      const name = await contract.name()
-      setName(name.toString())
-      const id = await contract.id()
-      setId(id.toString())
-    }
+    //TODO: fetch nfts from this lootbox
+    setLootbox({
+      address: lootboxAddress,
+      name: name.toString(),
+      nfts: [], // put fetch nfts in here
+    })
+  }
 
-    if (isWeb3Enabled) {
-      main()
-    } else {
-      enableWeb3()
-    }
-  }, [isWeb3Enabled])
-
-  return { id, name }
+  return { fetchLootbox, lootbox }
 }
