@@ -34,7 +34,7 @@ export const TICKET_ADDRESS: { [chainId: number]: string } = {
 }
 export const LOOTBOX_ADDRESS: { [chainId: number]: string } = {
   //Rinkeby
-  4: "0x09F0fec74a6f350e7e03d8d694228144473F5332",
+  4: "0x382C6F730503Ec5846Af16081f75B68290a79A14",
   //BNB Testnet
   97: "0x24Fd4716985DAee8cDcaACDC5B3A06F15b498374",
   //Polygon Testnet

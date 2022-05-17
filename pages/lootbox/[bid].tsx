@@ -12,7 +12,8 @@ import { useLootbox, useNFTsBalance } from "hooks"
 interface Props {
   lootboxAddress: string
 }
-const Bid: React.FC<Props> = ({ lootboxAddress }) => {
+
+const Bid: React.FC<Props> = () => {
   const router = useRouter()
   const { enableWeb3, isWeb3Enabled } = useMoralis()
   const { fetchLootbox, lootbox } = useLootbox()
@@ -27,7 +28,9 @@ const Bid: React.FC<Props> = ({ lootboxAddress }) => {
 
   useEffect(() => {
     if (isWeb3Enabled) {
-      fetchLootbox(lootboxAddress)
+      // fetchLootbox(lootboxAddress)
+      // TODO: get lootboxAddress passed from Link or url
+      fetchLootbox("0x382C6F730503Ec5846Af16081f75B68290a79A14")
     } else {
       enableWeb3()
     }
