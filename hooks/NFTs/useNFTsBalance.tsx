@@ -3,16 +3,18 @@ import { useEffect } from "react"
 
 export const useNFTsBalance = () => {
   const { enableWeb3, isWeb3Enabled } = useMoralis()
-  const { getNFTBalances, data } = useNFTBalances()
+  const { getNFTBalances, data: NFTBalances } = useNFTBalances()
+
   useEffect(() => {
-    async function updateUI() {
+    const main = async () => {
       await getNFTBalances()
     }
     if (isWeb3Enabled) {
-      updateUI()
+      main()
     } else {
       enableWeb3()
     }
   }, [isWeb3Enabled])
-  return { data }
+
+  return { NFTBalances }
 }

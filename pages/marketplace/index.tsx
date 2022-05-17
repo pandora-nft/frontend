@@ -1,4 +1,4 @@
-import { useLootboxFactory } from "pages/api/factory/useLootboxFactory"
+import { useLootboxFactory } from "hooks"
 
 const Marketplace = () => {
   const { allLootboxes } = useLootboxFactory()

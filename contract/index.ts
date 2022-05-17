@@ -1,18 +1,24 @@
 import factoryAbi from "./factory/abi.json"
 import lootboxAbi from "./lootbox/abi.json"
+import ticketAbi from "./ticket/abi.json"
+
+export { factoryAbi as FACTORY_ABI }
+export { lootboxAbi as LOOTBOX_ABI }
+export { ticketAbi as TICKET_ABI }
 
 export const FACTORY_ADDRESS: { [chainId: number]: string } = {
-  //Rinkeby
+  // Rinkeby
   4: "0x0406b6DEA38F9D3E616E29E2837FBDfC65F328A2",
-  //BNB Testnet
+  // BNB Testnet
   97: "0x5dA7a5af90fe291cE1bef49C819273A78F82D450",
-  //Polygon Testnet
+  // Polygon Testnet
   80001: "0x88ec0FB3FF771AeF0CACbC0d84b583BC31D35f92",
-  //BNB Chain
+  // BNB Chain
   56: "",
-  //Polygon Mainnet
+  // Polygon Mainnet
   137: "",
 }
+
 export const TICKET_ADDRESS: { [chainId: number]: string } = {
   //Rinkeby
   4: "0x36DF42342293ab2fbff56360dAb65498f1675156",
@@ -39,5 +45,3 @@ export const LOOTBOX_ADDRESS: { [chainId: number]: string } = {
   //Polygon Mainnet
   137: "",
 }
-export { factoryAbi as FACTORY_ABI }
-export { lootboxAbi as LOOTBOX_ABI }

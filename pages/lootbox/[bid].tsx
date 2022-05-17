@@ -2,10 +2,10 @@
 import { FACTORY_ADDRESS, FACTORY_ABI } from "contract"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
-import { LootboxCanvas } from "canvas"
 import { useMoralis, useChain, useWeb3Contract } from "react-moralis"
 import { ethers } from "ethers"
-import { useNFTsBalance } from "pages/api/NFTs/useNFTsBalance"
+import { useNFTsBalance } from "hooks"
+
 //Todo: query onchain lootbox to display
 //add buy ticket
 //add refund
@@ -17,7 +17,9 @@ const Bid = () => {
   const [name, setName] = useState<string>("")
   const [address, setAddress] = useState<string>("")
   const [image, setImage] = useState<Array<string>>([])
-  const data = useNFTsBalance()
+
+  const { NFTBalances } = useNFTsBalance()
+
   const { runContractFunction: getName } = useWeb3Contract({
     contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
     functionName: "getLootboxName",
@@ -56,8 +58,8 @@ const Bid = () => {
         <div>boxId: {router.query.bid}</div>
         <div>LootBoxName: {name}</div>
         <div>LootBoxName: {address}</div>
-        {data.data ? (
-          data.data.result.map((nft, index) => {
+        {NFTBalances ? (
+          NFTBalances.result.map((nft, index) => {
             return (
               <div
                 key={index}
@@ -100,7 +102,6 @@ const Bid = () => {
             </div>
           </div>
         ))}
-        <LootboxCanvas />
       </section>
     </>
   )

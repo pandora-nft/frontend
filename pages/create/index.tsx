@@ -3,6 +3,7 @@ import { useState } from "react"
 import { useChain, useWeb3Contract, useMoralis } from "react-moralis"
 import { FACTORY_ABI, FACTORY_ADDRESS } from "contract"
 import { ethers } from "ethers"
+
 const initialFormData = {
   name: "",
   drawTimestamp: Math.floor(Date.now() / 1000) + 60, //1 day = +86400
@@ -50,7 +51,7 @@ const Create = () => {
       {/* <div>{JSON.stringify(formData)}</div> */}
       <div className="grid pl-16 pt-8 justify-items-start rounded-lg  w-full ">
         <div className="h-24 lg:w-2/5 shadow-xl bg-gray-50">
-          connected to Ethereum chainId: {chain ? chain.networkId : ""}
+          connected to {chain ? chain.name : "..."} chainId: {chain ? chain.networkId : "..."}
           <img className="w-6" src="/chain/Ethereum.png"></img>
           <span>address:{account}</span>
         </div>

@@ -8,8 +8,9 @@ export const TestUseLootbox = () => {
   const { chain } = useChain()
   const [name, setName] = useState<string>("")
   const [id, setId] = useState<string>("")
+
   useEffect(() => {
-    async function updateUI() {
+    const main = async () => {
       const contract = new ethers.Contract(
         chain ? LOOTBOX_ADDRESS[chain.networkId] : "",
         LOOTBOX_ABI,
@@ -22,11 +23,11 @@ export const TestUseLootbox = () => {
     }
 
     if (isWeb3Enabled) {
-      updateUI()
+      main()
     } else {
       enableWeb3()
     }
   }, [isWeb3Enabled])
-  // console.log(id, name)
+
   return { id, name }
 }
