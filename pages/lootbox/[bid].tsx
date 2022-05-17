@@ -1,56 +1,38 @@
 // pages/lootbox/[bid]
-import { FACTORY_ADDRESS, FACTORY_ABI } from "contract"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
-import { useMoralis, useChain, useWeb3Contract } from "react-moralis"
-import { ethers } from "ethers"
-import { useNFTsBalance } from "hooks"
+import { useMoralis } from "react-moralis"
+import { useLootbox, useNFTsBalance } from "hooks"
 
 //Todo: query onchain lootbox to display
 //add buy ticket
 //add refund
 //add claim reward
-const Bid = () => {
-  const router = useRouter()
-  const { enableWeb3, isWeb3Enabled, web3: moralisProvider } = useMoralis()
-  const { chain } = useChain()
-  const [name, setName] = useState<string>("")
-  const [address, setAddress] = useState<string>("")
-  const [image, setImage] = useState<Array<string>>([])
 
+interface Props {
+  lootboxAddress: string
+}
+const Bid: React.FC<Props> = ({ lootboxAddress }) => {
+  const router = useRouter()
+  const { enableWeb3, isWeb3Enabled } = useMoralis()
+  const { fetchLootbox, lootbox } = useLootbox()
+  const { name, address } = lootbox
   const { NFTBalances } = useNFTsBalance()
 
-  const { runContractFunction: getName } = useWeb3Contract({
-    contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
-    functionName: "getLootboxName",
-    abi: FACTORY_ABI,
-    params: {
-      _lootboxId: router.query.bid,
-    },
-  })
+  const [image, setImage] = useState<Array<string>>([])
+
   const addNFTHandler = (nft) => {
     setImage([...image, nft.image])
   }
+
   useEffect(() => {
-    async function updateUI() {
-      const contract = new ethers.Contract(
-        chain ? FACTORY_ADDRESS[chain.networkId] : "",
-        FACTORY_ABI,
-        moralisProvider
-      )
-      const name = (await getName()) as string
-      setName(name)
-      const address = router.query.bid
-        ? ((await contract.lootboxAddress(router.query.bid)) as string)
-        : (ethers.constants.AddressZero as string)
-      setAddress(address)
-    }
     if (isWeb3Enabled) {
-      updateUI()
+      fetchLootbox(lootboxAddress)
     } else {
       enableWeb3()
     }
-  }, [isWeb3Enabled, router.query.bid, chain])
+  }, [])
+
   return (
     <>
       <section>
