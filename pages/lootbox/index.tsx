@@ -4,7 +4,7 @@ const Lootbox = () => {
   return (
     <>
       <section>
-        <div>Market place page</div>
+        <div>Lootbox page</div>
       </section>
     </>
   )

@@ -1,11 +1,14 @@
 import { LOOTBOX_ABI } from "contract"
-import { useMoralis } from "react-moralis"
+import { useMoralis, useChain } from "react-moralis"
 import { useState } from "react"
 import { ethers } from "ethers"
-import { Lootbox } from "types"
+import { Lootbox, NFT } from "types"
+import { getNFTMetadata } from "api"
 
 export const useLootbox = () => {
   const { web3: moralisProvider } = useMoralis()
+  const { chain } = useChain()
+
   const [lootbox, setLootbox] = useState<Lootbox>({
     address: "",
     name: "",
@@ -13,15 +16,24 @@ export const useLootbox = () => {
   })
 
   const fetchLootbox = async (lootboxAddress: string) => {
-    const contract = new ethers.Contract(lootboxAddress, LOOTBOX_ABI, moralisProvider)
-    const name = await contract.name()
+    const lootboxContract = new ethers.Contract(lootboxAddress, LOOTBOX_ABI, moralisProvider)
+    const fetchNfts: NFT[] = lootboxContract.getAllNFTs() // wait for new deployed contract
 
-    //TODO: fetch nfts from this lootbox
-    setLootbox({
-      address: lootboxAddress,
-      name: name.toString(),
-      nfts: [], // put fetch nfts in here
-    })
+    let nfts: NFT[] = []
+    for (let nft of fetchNfts) {
+      const nftAddress = nft.address.toString()
+      const tokenId = +nft.tokenId.toString()
+
+      const nftMetadata = await getNFTMetadata(chain.networkId, nftAddress, tokenId)
+      console.log("nft metadata", nftMetadata)
+
+      nfts.push({ tokenId, address: nftAddress, imageURI: "" })
+    }
+    const name = (await lootboxContract.name()).toString()
+    const loot: Lootbox = { name, address: lootboxAddress, nfts }
+
+    setLootbox(loot)
+    return loot
   }
 
   return { fetchLootbox, lootbox }
