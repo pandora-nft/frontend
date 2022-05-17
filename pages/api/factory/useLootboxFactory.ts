@@ -23,11 +23,12 @@ export const useLootboxFactory = () => {
       setAllLootboxAddresses(lootboxAddresses)
 
       let lootboxes: Lootbox[] = []
-      if (lootboxAddresses) for (let addr of lootboxAddresses) {
-        const contract = new ethers.Contract(addr, LOOTBOX_ABI, moralisProvider)
-        const name = await contract.name()
-        lootboxes.push({ name, address: addr })
-      }
+      if (lootboxAddresses)
+        for (let addr of lootboxAddresses) {
+          const contract = new ethers.Contract(addr, LOOTBOX_ABI, moralisProvider)
+          const name = await contract.name()
+          lootboxes.push({ name, address: addr })
+        }
       setAllLootboxes(lootboxes)
     }
 
