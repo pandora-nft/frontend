@@ -1,3 +1,3 @@
-export * from "./factory/useLootboxFactory"
-export * from "./NFTs/useNFTsBalance"
-export * from "./lootbox/testuseLootbox"
+export * from "./useLootboxFactory"
+export * from "./useNFTsBalance"
+export * from "./useLootbox"
