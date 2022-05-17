@@ -17,7 +17,7 @@ export const useLootbox = () => {
 
   const fetchLootbox = async (lootboxAddress: string) => {
     const lootboxContract = new ethers.Contract(lootboxAddress, LOOTBOX_ABI, moralisProvider)
-    const fetchNfts: NFT[] = lootboxContract.getAllNFTs() // wait for new deployed contract
+    const fetchNfts = await lootboxContract.getAllNFTs()
 
     let nfts: NFT[] = []
     for (let nft of fetchNfts) {

@@ -8,6 +8,7 @@
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
+  { "inputs": [], "name": "LootboxFactory__Unauthorized", "type": "error" },
   {
     "inputs": [
       { "internalType": "address", "name": "have", "type": "address" },
@@ -83,9 +84,9 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "_owner", "type": "address" }],
-    "name": "getLootboxOwned",
-    "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }],
+    "inputs": [{ "internalType": "address", "name": "_user", "type": "address" }],
+    "name": "getLootboxesOwnedByUser",
+    "outputs": [{ "internalType": "address[]", "name": "", "type": "address[]" }],
     "stateMutability": "view",
     "type": "function"
   },

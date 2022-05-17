@@ -18,7 +18,6 @@ export const useLootboxFactory = () => {
 
   useEffect(() => {
     const main = async () => {
-      // const lootboxAddresses = ["0x24Fd4716985DAee8cDcaACDC5B3A06F15b498374"]
       const lootboxAddresses = (await getAllLootboxes()) as string[]
 
       let lootboxes: Lootbox[] = []
@@ -26,7 +25,6 @@ export const useLootboxFactory = () => {
         const lootbox: Lootbox = await fetchLootbox(addr)
         lootboxes.push(lootbox)
       }
-      // console.log(lootboxes)
       setAllLootboxes(lootboxes)
     }
 
