@@ -1,8 +1,8 @@
 // pages/lootbox/[bid]
 import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
-import { useMoralis } from "react-moralis"
-import { useLootbox, useNFTsBalance } from "hooks"
+import { useChain, useMoralis } from "react-moralis"
+import { useLootbox } from "hooks"
 
 //Todo: query onchain lootbox to display
 //add buy ticket
@@ -17,34 +17,29 @@ const Bid: React.FC<Props> = () => {
   const router = useRouter()
   const { enableWeb3, isWeb3Enabled } = useMoralis()
   const { fetchLootbox, lootbox } = useLootbox()
-  const { name, address } = lootbox
-  const { NFTBalances } = useNFTsBalance()
 
   const [image, setImage] = useState<Array<string>>([])
 
   const addNFTHandler = (nft) => {
     setImage([...image, nft.image])
   }
-
   useEffect(() => {
     if (isWeb3Enabled) {
-      // fetchLootbox(lootboxAddress)
       // TODO: get lootboxAddress passed from Link or url
-      fetchLootbox("0x382C6F730503Ec5846Af16081f75B68290a79A14")
+      fetchLootbox("", Number(router.query.bid))
     } else {
       enableWeb3()
     }
-  }, [])
+  }, [isWeb3Enabled])
 
   return (
     <>
       <section>
-        <div>Loot box index</div>
-        <div>boxId: {router.query.bid}</div>
-        <div>LootBoxName: {name}</div>
-        <div>LootBoxName: {address}</div>
-        {NFTBalances ? (
-          NFTBalances.result.map((nft, index) => {
+        <div>Pandora box ID: {router.query.bid}</div>
+        <div>Name: {lootbox.name}</div>
+        <div>Address: {lootbox.address}</div>
+        {lootbox.nfts ? (
+          lootbox.nfts.map((nft, index) => {
             return (
               <div
                 key={index}
@@ -52,16 +47,16 @@ const Bid: React.FC<Props> = () => {
                 onClick={() => addNFTHandler(nft)}
               >
                 {index}
-                <img src={nft?.image || "error"} alt="" style={{ height: "36px" }} />
-                <span>{nft.name} </span>
-                <span>{nft.token_address} </span>
+                <img src={nft?.imageURI || "error"} alt="" style={{ height: "36px" }} />
+                <span>{nft.tokenId} </span>
+                <span>{nft.address} </span>
               </div>
             )
           })
         ) : (
           <></>
         )}
-        {image.map((item, i) => (
+        {/* {image.map((item, i) => (
           <div
             key={i}
             className="rounded-xl w-36 h-36 mx-auto mt-16 mb-10 bg-gradient-to-r p-[6px] from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]"
@@ -86,7 +81,7 @@ const Bid: React.FC<Props> = () => {
               </div>
             </div>
           </div>
-        ))}
+        ))} */}
       </section>
     </>
   )

@@ -8,4 +8,6 @@ export interface NFT {
   tokenId: number
   address: string
   imageURI: string
+  name: string
+  description: string
 }
