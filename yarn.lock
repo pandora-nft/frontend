@@ -2,7 +2,6 @@
 # yarn lockfile v1
 
 
-
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.16.7":
   version "7.16.7"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.16.7.tgz#44416b6bd7624b998f5b1af5d470856c40138789"
@@ -4972,6 +4971,11 @@ mmd-parser@^1.0.4:
   resolved "https://registry.yarnpkg.com/mmd-parser/-/mmd-parser-1.0.4.tgz#87cc05782cb5974ca854f0303fc5147bc9d690e7"
   integrity sha512-Qi0VCU46t2IwfGv5KF0+D/t9cizcDug7qnNoy9Ggk7aucp0tssV8IwTMkBlDbm+VqAf3cdQHTCARKSsuS2MYFg==
 
+moment@^2.29.3:
+  version "2.29.3"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.3.tgz#edd47411c322413999f7a5940d526de183c031f3"
+  integrity sha512-c6YRvhEo//6T2Jz/vVtYzqBzwvPT95JBQ+smCytzf7c50oMZRsR/a4w88aD34I+/QVSfnoAnSBFPJHItlOMJVw==
+
 moralis@^1.5.9, moralis@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/moralis/-/moralis-1.7.0.tgz#2d39fd54e56982402c0b5177c4c5b1457e2a81ec"
@@ -6980,10 +6984,10 @@ web3-utils@1.7.3, web3-utils@^1.7.0:
     randombytes "^2.1.0"
     utf8 "3.0.0"
 
-web3uikit@^0.1.141:
-  version "0.1.145"
-  resolved "https://registry.yarnpkg.com/web3uikit/-/web3uikit-0.1.145.tgz#2bcfab9c087edb8c2acd82f0a36cfee96dd6f0c8"
-  integrity sha512-R2WcdFAzl/voH5W0oXaOAz2HxYynN2f51XqFnGRmpwOUNCM+i5YZYJLAma7I/ce3JvhwASbpgmvlTSSsQ/k3jw==
+web3uikit@^0.1.41:
+  version "0.1.146"
+  resolved "https://registry.yarnpkg.com/web3uikit/-/web3uikit-0.1.146.tgz#397c67ed96588a77162ccd88df536311b32f3144"
+  integrity sha512-phUMpPFvhQYWCpSfHVXzrsT4DrRxTH+KHyT8jIuj1gXRFDgijO828e3QVUXY39xEBBVQIOF1qAI6PP8oECpu9Q==
   dependencies:
     "@storybook/theming" "^6.4.21"
     "@walletconnect/web3-provider" "^1.7.1"
@@ -7239,4 +7243,3 @@ zustand@^3.5.13, zustand@^3.7.1:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.7.2.tgz#7b44c4f4a5bfd7a8296a3957b13e1c346f42514d"
   integrity sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA==
-

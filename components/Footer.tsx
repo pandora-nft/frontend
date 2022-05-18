@@ -1,5 +1,3 @@
-import Image from "next/image"
-
 export const Footer = () => {
   const createNavLink = (label: string, link: string) => {
     return (
@@ -11,7 +9,7 @@ export const Footer = () => {
 
   const createIcon = (logoName: string) => {
     return (
-      <Image
+      <img
         className="w-10 h-10 p-2 hover:opacity-50 cursor-pointer"
         src={`/logo/${logoName}.svg`}
         alt="logo"

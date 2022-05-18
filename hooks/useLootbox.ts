@@ -5,7 +5,6 @@ import { ethers } from "ethers"
 import { Lootbox, NFT } from "types"
 import { getNFTMetadata } from "api"
 
-
 export const useLootbox = () => {
   const { web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
@@ -61,13 +60,13 @@ export const useLootbox = () => {
       lootboxContract.isRefundable(),
     ]).then((values) => {
       name = values[0].toString()
-      ticketPrice = Moralis.Units.FromWei(values[1].toString())
-      ticketSold = values[2].toString()
-      minimumTicketRequired = values[3].toString()
-      maxTicketPerWallet = values[4].toString()
-      drawTimestamp = values[5].toString()
-      isDrawn = values[6].toString()
-      isRefundable = values[7].toString()
+      ticketPrice = Number(values[1].toString())
+      ticketSold = Number(values[2].toString())
+      minimumTicketRequired = Number(values[3].toString())
+      maxTicketPerWallet = Number(values[4].toString())
+      drawTimestamp = Number(values[5].toString())
+      isDrawn = values[6]
+      isRefundable = values[7]
     })
 
     let nfts: NFT[] = []

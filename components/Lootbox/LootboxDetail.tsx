@@ -2,8 +2,8 @@ import { convertToCountdown } from "utils"
 
 interface LootboxDetailProps {
   numItems: number
-  ticketPrice: string
-  ticketSold: string
+  ticketPrice: number
+  ticketSold: number
   drawTimestamp: number
 }
 

@@ -19,6 +19,7 @@ const Bid: React.FC<Props> = () => {
 
   const onNFTClick = (nft) => {
     //TODO onOpenViewNFTDialog
+    console.log(nft)
   }
   useEffect(() => {
     if (isWeb3Enabled) {
@@ -26,7 +27,7 @@ const Bid: React.FC<Props> = () => {
     } else {
       enableWeb3()
     }
-  }, [router.query.bid])
+  }, [router.query.bid, isWeb3Enabled])
 
   return (
     <>
@@ -59,7 +60,7 @@ const Bid: React.FC<Props> = () => {
             <div className="text-sm mx-8">
               <div>Name: {lootbox.name}</div>
 
-              <div>{`Draw at: ${new Date(lootbox.drawTimestamp * 1000).toUTCString()}`}</div>
+              <div>{`Draw time: ${new Date(lootbox.drawTimestamp * 1000).toUTCString()}`}</div>
               <div className="flex flex-row-reverse">
                 <button className="mx-2">Buy Tickets</button>
                 <button className="mx-2">Claim</button>
