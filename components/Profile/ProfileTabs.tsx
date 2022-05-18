@@ -1,7 +1,15 @@
 import Link from "next/link"
+import { useRouter } from "next/router"
 
 export const ProfileTabs = () => {
+  const router = useRouter()
+
   const createTabLink = (pathname: string, label: string) => {
+    const activeStyle =
+      router.pathname === pathname
+        ? "text-black border-b-4 border-mainPink"
+        : "text-gray-500 hover:text-gray-700 "
+
     return (
       <li className="mr-2">
         <Link
@@ -9,9 +17,7 @@ export const ProfileTabs = () => {
             pathname,
           }}
         >
-          <a className="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300">
-            {label}
-          </a>
+          <a className={`inline-block p-4 ${activeStyle}`}>{label}</a>
         </Link>
       </li>
     )
@@ -19,7 +25,7 @@ export const ProfileTabs = () => {
 
   return (
     <>
-      <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
+      <ul className="flex flex-wrap text-sm font-medium text-center border-b border-gray-200">
         {createTabLink("/profile/nft", "NFTs")}
         {createTabLink("/profile/lootbox", "Lootbox")}
       </ul>

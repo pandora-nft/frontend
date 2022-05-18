@@ -15,6 +15,7 @@ const Lootbox = () => {
       enableWeb3()
     }
   }, [isWeb3Enabled])
+
   return (
     <>
       This is profile/lootbox

@@ -1,4 +1,4 @@
-import { ProfileTabs } from "components/ProfileTabs"
+import { ProfilePic, ProfileTabs } from "components"
 import { ReactNode } from "react"
 
 type ProfileLayoutProps = {
@@ -9,7 +9,7 @@ const ProfileLayout = ({ children }: ProfileLayoutProps) => {
   return (
     <>
       <div className="centered mt-10">
-        <h2 className="font-medium mb-10">Profile Layout</h2>
+        <ProfilePic />
         <div className="grid grid-cols-2 gap-10 border-black p-4"></div>
         <ProfileTabs />
         {children}
