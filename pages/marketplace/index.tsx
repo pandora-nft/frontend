@@ -1,22 +1,22 @@
 import { useLootboxFactory } from "hooks"
+import { LootboxCard } from "./LootboxCard"
 
 const Marketplace = () => {
   const { allLootboxes } = useLootboxFactory()
 
   return (
-    <>
-      This is Market place
-      <div className="flex flex-col border border-black p-4">
-        <h2>All lootbox</h2>
-        {allLootboxes.map(({ address, name }) => {
+    <div className="centered mt-10">
+      <h2 className="font-medium mb-10">Marketplace</h2>
+      <div className="grid grid-cols-2 gap-10 border-black p-4">
+        {allLootboxes.map((lootbox) => {
           return (
-            <h3 key={address}>
-              {address}: {name}
-            </h3>
+            <>
+              <LootboxCard lootbox={lootbox} />
+            </>
           )
         })}
       </div>
-    </>
+    </div>
   )
 }
 
