@@ -1,11 +1,21 @@
 import { ConnectButton } from "web3uikit"
 import Link from "next/link"
+import { useRouter } from "next/router"
 
 export const Header = () => {
+  const router = useRouter()
+
   const createNavLink = (label: string, endpoint: string) => {
+    const activeStyle =
+      router.pathname === endpoint ? "text-black" : "text-gray-500 hover:text-black"
+
     return (
-      <Link href={{ pathname: `${endpoint}` }} replace>
-        <a className="pt-5 pr-5 font-light text-gray-500">{label}</a>
+      <Link
+        className="flex items-center border border-blue-500"
+        href={{ pathname: `${endpoint}` }}
+        replace
+      >
+        <a className={`pt-5 pr-5 font-medium ${activeStyle}`}>{label}</a>
       </Link>
     )
   }
@@ -20,8 +30,7 @@ export const Header = () => {
             </Link>
           </div>
         </div>
-        <div className="flex flex-row justify-between">
-          {createNavLink("Home", "/")}
+        <div className="flex flex-row items-center justify-between">
           {createNavLink("Marketplace", "/marketplace")}
           {createNavLink("Create", "/create")}
           {createNavLink("Lootbox", "/lootbox/0")}
