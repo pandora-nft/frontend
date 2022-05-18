@@ -1,7 +1,10 @@
 {
   "name": "pandora-frontend",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/pandora-nft/frontend.git",
+  "author": "Krittamook Aksornchindarat <krittamook@hotmail.com>",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
