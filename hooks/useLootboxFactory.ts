@@ -9,6 +9,7 @@ export const useLootboxFactory = () => {
   const { chain } = useChain()
   const [allLootboxes, setAllLootboxes] = useState<Lootbox[]>([])
   const { fetchLootbox } = useLootbox()
+
   const { runContractFunction: getAllLootboxes } = useWeb3Contract({
     contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
     functionName: "getAllLootboxes",
