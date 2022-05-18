@@ -5,6 +5,7 @@ import { ethers } from "ethers"
 import { Lootbox, NFT } from "types"
 import { getNFTMetadata } from "api"
 
+
 export const useLootbox = () => {
   const { web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
@@ -41,6 +42,34 @@ export const useLootbox = () => {
     const lootboxContract = new ethers.Contract(lootboxAddress, LOOTBOX_ABI, moralisProvider)
     const fetchNfts = await lootboxContract.getAllNFTs()
 
+    let name,
+      ticketPrice,
+      ticketSold,
+      minimumTicketRequired,
+      maxTicketPerWallet,
+      drawTimestamp,
+      isDrawn,
+      isRefundable
+    await Promise.all([
+      lootboxContract.name(),
+      lootboxContract.ticketPrice(),
+      lootboxContract.ticketSold(),
+      lootboxContract.minimumTicketRequired(),
+      lootboxContract.maxTicketPerWallet(),
+      lootboxContract.drawTimestamp(),
+      lootboxContract.isDrawn(),
+      lootboxContract.isRefundable(),
+    ]).then((values) => {
+      name = values[0].toString()
+      ticketPrice = Moralis.Units.FromWei(values[1].toString())
+      ticketSold = values[2].toString()
+      minimumTicketRequired = values[3].toString()
+      maxTicketPerWallet = values[4].toString()
+      drawTimestamp = values[5].toString()
+      isDrawn = values[6].toString()
+      isRefundable = values[7].toString()
+    })
+
     let nfts: NFT[] = []
     for (const nft of fetchNfts) {
       const nftAddress = nft._address.toString()
@@ -68,14 +97,7 @@ export const useLootbox = () => {
         description: nftMetadata?.description,
       })
     }
-    const name = (await lootboxContract.functions.name()).toString()
-    const isDrawn = await lootboxContract.isDrawn()
-    const isRefundable = await lootboxContract.isRefundable()
-    const drawTimestamp = await lootboxContract.drawTimestamp()
-    const ticketPrice = await lootboxContract.ticketPrice()
-    const minimumTicketRequired = await lootboxContract.minimumTicketRequired()
-    const maxTicketPerWallet = await lootboxContract.maxTicketPerWallet()
-    const ticketSold = await lootboxContract.ticketSold()
+
     const loot: Lootbox = {
       name,
       address: lootboxAddress,
