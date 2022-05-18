@@ -3,7 +3,7 @@ import { useMoralis, useChain, useMoralisWeb3Api } from "react-moralis"
 import Moralis from "moralis"
 import { useState } from "react"
 import { ethers } from "ethers"
-import { Lootbox, NFT } from "types"
+import { Chain, Lootbox, NFT } from "types"
 
 export const useLootbox = () => {
   const { web3: moralisProvider } = useMoralis()
@@ -26,7 +26,7 @@ export const useLootbox = () => {
   const fetchLootbox = async (lootboxAddress: string) => {
     const lootboxContract = new ethers.Contract(lootboxAddress, LOOTBOX_ABI, moralisProvider)
     const fetchNfts = await lootboxContract.getAllNFTs()
-    console.log("fetchNFTs", lootboxAddress, fetchNfts)
+    // console.log("fetchNFTs", lootboxAddress, fetchNfts)
 
     let name,
       ticketPrice,
@@ -44,7 +44,6 @@ export const useLootbox = () => {
       lootboxContract.drawTimestamp(),
       lootboxContract.isDrawn(),
     ]).then((values) => {
-      console.log("values", values)
       name = values[0].toString()
       ticketPrice = Moralis.Units.FromWei(values[1].toString())
       ticketSold = values[2].toString()
@@ -62,7 +61,7 @@ export const useLootbox = () => {
       // const nftMetadata = await getNFTMetadata(chain.networkId, nftAddress, tokenId)
       const nftMetadata = await Web3Api.token.getNFTMetadata({
         address: TICKET_ADDRESS[chain.networkId],
-        chain: "rinkeby",
+        chain: chain.chainId as Chain,
       })
       console.log("nft metadata", nftMetadata)
 
