@@ -1,5 +1,5 @@
 import { useLootboxFactory } from "hooks"
-import { LootboxCard } from "./LootboxCard"
+import { LootboxCard } from "components"
 
 const Marketplace = () => {
   const { allLootboxes } = useLootboxFactory()

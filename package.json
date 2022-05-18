@@ -1,10 +1,6 @@
 {
   "name": "pandora-frontend",
   "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/pandora-nft/frontend.git",
-  "author": "Krittamook Aksornchindarat <krittamook@hotmail.com>",
-  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,9 +10,9 @@
     "check-lint": "eslint . --ext ts --ext tsx --ext js",
     "check-types": "tsc --pretty --noEmit",
     "format": "prettier --write .",
-    "test-all": "yarn check-format && yarn check-lint && yarn check-types",
+    "test-all": "yarn check-format && yarn check-lint && yarn check-types && yarn build",
     "pre-commit": "yarn format && yarn test-all",
-    "pre-push": "yarn lint --fix && yarn format && git add -A . && yarn test-all && yarn build",
+    "pre-push": "yarn lint --fix && yarn format && git add -A . && yarn test-all",
     "prepare": "husky install"
   },
   "dependencies": {

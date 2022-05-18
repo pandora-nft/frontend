@@ -25,6 +25,7 @@ export const Header = () => {
           {createNavLink("Marketplace", "/marketplace")}
           {createNavLink("Create", "/create")}
           {createNavLink("Lootbox", "/lootbox/0")}
+          {createNavLink("Profile", "/profile")}
           {createNavLink("Roadmap", "/")}
           {createNavLink("Whitepaper", "/")}
         </div>
