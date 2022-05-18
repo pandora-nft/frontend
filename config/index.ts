@@ -20,3 +20,7 @@ export const BSCTESTNET_RPC_URL = process.env.NEXT_PUBLIC_BSCTESTNET_RPC_URL
 export const MUMBAI_RPC_URL = process.env.NEXT_PUBLIC_MUMBAI_RPC_URL
   ? process.env.NEXT_PUBLIC_MUMBAI_RPC_URL
   : ""
+
+export const COVALENT_API_KEY = process.env.NEXT_PUBLIC_COVALENT_API_KEY
+  ? process.env.NEXT_PUBLIC_COVALENT_API_KEY
+  : ""

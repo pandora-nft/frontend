@@ -1,15 +1,14 @@
-import { FACTORY_ADDRESS, FACTORY_ABI, LOOTBOX_ABI } from "contract"
 import { useMoralis, useWeb3Contract, useChain } from "react-moralis"
+import { FACTORY_ADDRESS, FACTORY_ABI } from "contract"
 import { useEffect, useState } from "react"
-import { ethers } from "ethers"
 import { Lootbox } from "types"
+import { useLootbox } from "./useLootbox"
 
 export const useLootboxFactory = () => {
-  const { enableWeb3, isWeb3Enabled, web3: moralisProvider } = useMoralis()
+  const { enableWeb3, isWeb3Enabled } = useMoralis()
   const { chain } = useChain()
-  const [allLootboxAddresses, setAllLootboxAddresses] = useState<string[]>([""])
   const [allLootboxes, setAllLootboxes] = useState<Lootbox[]>([])
-  console.log(chain ? FACTORY_ADDRESS[chain.networkId] : "")
+  const { fetchLootbox } = useLootbox()
   const { runContractFunction: getAllLootboxes } = useWeb3Contract({
     contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
     functionName: "getAllLootboxes",
@@ -18,26 +17,23 @@ export const useLootboxFactory = () => {
   })
 
   useEffect(() => {
-    async function updateUI() {
+    const main = async () => {
       const lootboxAddresses = (await getAllLootboxes()) as string[]
-      setAllLootboxAddresses(lootboxAddresses)
 
       let lootboxes: Lootbox[] = []
-      if (lootboxAddresses)
-        for (let addr of lootboxAddresses) {
-          const contract = new ethers.Contract(addr, LOOTBOX_ABI, moralisProvider)
-          const name = await contract.name()
-          lootboxes.push({ name, address: addr })
-        }
+      for (let addr of lootboxAddresses) {
+        const lootbox: Lootbox = await fetchLootbox(addr)
+        lootboxes.push(lootbox)
+      }
       setAllLootboxes(lootboxes)
     }
 
     if (isWeb3Enabled) {
-      updateUI()
+      main()
     } else {
       enableWeb3()
     }
   }, [isWeb3Enabled])
 
-  return { allLootboxes, allLootboxAddresses }
+  return { allLootboxes }
 }
