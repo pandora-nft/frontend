@@ -1,14 +1,9 @@
 import { useMoralis, useNFTBalances } from "react-moralis"
 import { useEffect } from "react"
 
-export const useNFTsBalance = (address?: string) => {
+export const useNFTsBalance = () => {
   const { enableWeb3, isWeb3Enabled } = useMoralis()
-  const { getNFTBalances, data: NFTBalances } =
-    address && address !== ""
-      ? useNFTBalances({
-          address,
-        })
-      : useNFTBalances()
+  const { getNFTBalances, data: NFTBalances } = useNFTBalances()
 
   useEffect(() => {
     const main = async () => {

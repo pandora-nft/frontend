@@ -1,9 +1,8 @@
 import { FACTORY_ABI, FACTORY_ADDRESS, LOOTBOX_ABI, ERC721_ABI } from "contract"
-import { useMoralis, useChain, useMoralisWeb3Api } from "react-moralis"
-import { useEffect, useState } from "react"
+import { useMoralis, useChain } from "react-moralis"
+import { useState } from "react"
 import { ethers } from "ethers"
 import { Lootbox, NFT } from "types"
-import { CHAIN } from "network"
 import { getNFTMetadata } from "api"
 
 export const useLootbox = () => {
@@ -11,14 +10,22 @@ export const useLootbox = () => {
   const { chain } = useChain()
 
   // const Web3Api = useMoralisWeb3Api()
-
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [lootbox, setLootbox] = useState<Lootbox>({
     address: "",
     name: "",
     nfts: [],
+    isDrawn: false,
+    isRefundable: false,
+    drawTimestamp: 0,
+    ticketPrice: 0,
+    minimumTicketRequired: 0,
+    maxTicketPerWallet: 0,
+    ticketSold: 0,
   })
 
   const fetchLootbox = async (_lootboxAddress: string, lootboxId?: number) => {
+    setIsLoading(true)
     let lootboxAddress: string
     if (!isNaN(lootboxId)) {
       const factory = new ethers.Contract(
@@ -30,6 +37,7 @@ export const useLootbox = () => {
     } else {
       lootboxAddress = _lootboxAddress
     }
+
     const lootboxContract = new ethers.Contract(lootboxAddress, LOOTBOX_ABI, moralisProvider)
     const fetchNfts = await lootboxContract.getAllNFTs()
 
@@ -61,11 +69,30 @@ export const useLootbox = () => {
       })
     }
     const name = (await lootboxContract.functions.name()).toString()
-    const loot: Lootbox = { name, address: lootboxAddress, nfts }
+    const isDrawn = await lootboxContract.isDrawn()
+    const isRefundable = await lootboxContract.isRefundable()
+    const drawTimestamp = await lootboxContract.drawTimestamp()
+    const ticketPrice = await lootboxContract.ticketPrice()
+    const minimumTicketRequired = await lootboxContract.minimumTicketRequired()
+    const maxTicketPerWallet = await lootboxContract.maxTicketPerWallet()
+    const ticketSold = await lootboxContract.ticketSold()
+    const loot: Lootbox = {
+      name,
+      address: lootboxAddress,
+      nfts,
+      isDrawn,
+      isRefundable,
+      drawTimestamp,
+      ticketPrice,
+      minimumTicketRequired,
+      maxTicketPerWallet,
+      ticketSold,
+    }
 
     setLootbox(loot)
+    setIsLoading(false)
     return loot
   }
 
-  return { fetchLootbox, lootbox }
+  return { fetchLootbox, lootbox, isLoading }
 }

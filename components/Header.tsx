@@ -1,5 +1,6 @@
 import { ConnectButton } from "web3uikit"
 import Link from "next/link"
+import Image from "next/image"
 
 export const Header = () => {
   const createNavLink = (label: string, endpoint: string) => {
@@ -13,7 +14,7 @@ export const Header = () => {
     <>
       <nav className="p-5 flex flex-row items-center justify-between border-gray-200">
         <div className="flex flex-row items-center justify-center">
-          <img className="w-8 h-8" src={"/box.png"} alt="icon" />
+          <Image className="w-8 h-8" src={"/box.png"} alt="icon" />
           <div className="text-3xl font-bold pt-[2px] pl-2">{createNavLink("Pandora", "/")}</div>
         </div>
         <div className="flex flex-row justify-between">
