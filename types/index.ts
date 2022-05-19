@@ -11,6 +11,9 @@ export interface Lootbox {
 }
 
 export interface NFT {
+  name: string
+  description: string
+  collectionName: string
   tokenId: number
   address: string
   imageURI: string

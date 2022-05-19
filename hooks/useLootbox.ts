@@ -65,7 +65,14 @@ export const useLootbox = () => {
       })
       console.log("nft metadata", nftMetadata)
 
-      nfts.push({ tokenId, address: nftAddress, imageURI: "" })
+      nfts.push({
+        name: nft.name,
+        collectionName: nft.name,
+        description: "",
+        tokenId: tokenId,
+        address: nftAddress,
+        imageURI: nft.image,
+      })
     }
     const loot: Lootbox = {
       name,
