@@ -1,7 +1,6 @@
 {
   "name": "pandora-frontend",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -24,6 +23,7 @@
     "axios": "^0.27.2",
     "moralis": "^1.7.0",
     "next": "12.1.6",
+    "moment": "2.29.3",
     "postcss": "^8.4.13",
     "react": "18.1.0",
     "react-animation-on-scroll": "^5.1.0",
@@ -32,7 +32,7 @@
     "react-parallax-tilt": "^1.7.34",
     "three": "^0.140.2",
     "valtio": "^1.6.0",
-    "web3uikit": "^0.1.141"
+    "web3uikit": "^0.1.41"
   },
   "devDependencies": {
     "@types/node": "17.0.32",
