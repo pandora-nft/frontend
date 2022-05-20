@@ -5,3 +5,6 @@ export * from "./Card"
 export * from "./Lootbox/LootboxCard"
 export * from "./Lootbox/LootboxDetail"
 export * from "./Modal"
+export * from "./Profile/ProfilePic"
+export * from "./Profile/ProfileTabs"
+

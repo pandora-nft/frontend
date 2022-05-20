@@ -1,5 +1,12 @@
 import moment from "moment"
 
+export const shortenAddress = (address: string) => {
+  if (!address || address.length === 0) {
+    return "0x000...00000"
+  }
+  return address.substring(0, 6) + "..." + address.substring(address.length - 6, address.length)
+}
+
 export const convertToCountdown = (drawTimestamp: number) => {
   const currentTime = new Date().getTime()
   var diffTime = drawTimestamp - currentTime
