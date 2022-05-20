@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Lootbox } from "types"
 import { useLootbox } from "./useLootbox"
 import { ethers } from "ethers"
+import { useLoading } from "./useLoading"
 
 export const useLootboxFactory = () => {
   const { enableWeb3, isWeb3Enabled, web3: moralisProvider } = useMoralis()
@@ -11,6 +12,7 @@ export const useLootboxFactory = () => {
   const { chain } = useChain()
   const [allLootboxes, setAllLootboxes] = useState<Lootbox[]>([])
   const [lootboxOwned, setLootboxOwned] = useState<Lootbox[]>([])
+  const { isLoading, onLoad, onDone } = useLoading()
   const { fetchLootbox } = useLootbox()
 
   const { runContractFunction: getAllLootboxes } = useWeb3Contract({
@@ -39,14 +41,15 @@ export const useLootboxFactory = () => {
 
   useEffect(() => {
     const main = async () => {
+      onLoad()
       const lootboxAddresses = (await getAllLootboxes()) as string[]
-
       let lootboxes: Lootbox[] = []
       for (let addr of lootboxAddresses) {
         const lootbox: Lootbox = await fetchLootbox(addr)
         lootboxes.push(lootbox)
       }
       setAllLootboxes(lootboxes)
+      onDone()
     }
 
     if (isWeb3Enabled) {
@@ -56,5 +59,5 @@ export const useLootboxFactory = () => {
     }
   }, [isWeb3Enabled])
 
-  return { allLootboxes, fetchLootboxOwned, lootboxOwned }
+  return { allLootboxes, fetchLootboxOwned, lootboxOwned, isLoading }
 }
