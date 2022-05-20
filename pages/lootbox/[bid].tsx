@@ -1,11 +1,14 @@
 // pages/lootbox/[bid]
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import { useMoralis } from "react-moralis"
+import { useMoralis, useChain } from "react-moralis"
 import { useLootbox } from "hooks"
 import { LootboxCanvas } from "canvas"
-
-//TODO viewNFTDialog: show NFT and metadata
+import { LoadingIndicator, Modal } from "components"
+import { NFT, Ticket } from "types"
+import { ethers } from "ethers"
+import { NATIVE } from "network"
+import { LOOTBOX_ABI } from "contract"
 //TODO claimNFTDialog: show ticket, and select ticket to claim,
 //TODO Refund: show ticket, and select ticket to refund
 interface Props {
@@ -14,13 +17,19 @@ interface Props {
 
 const Bid: React.FC<Props> = () => {
   const router = useRouter()
-  const { enableWeb3, isWeb3Enabled } = useMoralis()
-  const { fetchLootbox, lootbox, isLoading } = useLootbox()
 
-  const onNFTClick = (nft) => {
-    //TODO onOpenViewNFTDialog
-    console.log(nft)
+  const { enableWeb3, isWeb3Enabled, Moralis, account } = useMoralis()
+  const { chain } = useChain()
+  const { fetchLootbox, lootbox, isLoading, tickets } = useLootbox()
+  const [showClaimNFTDialog, setShowClaimNFTDialog] = useState(false)
+  const [showRefundDialog, setShowRefundDialog] = useState(false)
+  const [showBuyTicketsDialog, setShowBuyTicketsDialog] = useState(false)
+  const [currentNFT, setCurrentNFT] = useState<NFT>()
+
+  const onNFTClick = (nft: NFT) => {
+    setCurrentNFT(nft)
   }
+
   useEffect(() => {
     if (isWeb3Enabled) {
       fetchLootbox("", Number(router.query.bid))
@@ -29,62 +38,295 @@ const Bid: React.FC<Props> = () => {
     }
   }, [router.query.bid, isWeb3Enabled])
 
+  const NFTDialog = () => {
+    const content = (
+      <div className="flex flex-col space-y-4 justify-between items-center">
+        <img className="w-40" src={currentNFT?.imageURI} alt="image" />
+        <div className="w-100">Address: {currentNFT?.address}</div>
+        <div className="w-100">Description: {currentNFT?.description} </div>
+      </div>
+    )
+    return (
+      <Modal
+        open={!!currentNFT}
+        setOpen={setCurrentNFT}
+        title={currentNFT?.name}
+        content={content}
+      />
+    )
+  }
+  const ClaimDialog = () => {
+    const [ticket, setTicket] = useState<Ticket>()
+    const [isSuccess, setIsSuccess] = useState(false)
+
+    async function claimTickets(tickets: number) {
+      const sendOptions = {
+        contractAddress: lootbox?.address,
+        functionName: "claimNFT",
+        abi: LOOTBOX_ABI,
+        params: {
+          _ticketId: tickets,
+        },
+      }
+      console.log(sendOptions)
+      await Moralis.executeFunction(sendOptions)
+      setIsSuccess(true)
+    }
+
+    const ownWonTicket = tickets.filter((ticket) => {
+      return (
+        ticket.owner.toLowerCase() === account.toLowerCase() && ticket.isWinner && !ticket.isClaimed
+      )
+    })
+    const content = !isSuccess ? (
+      <>
+        <div className="grid grid-rows-2 grid-flow-col">
+          {ownWonTicket.length > 0 ? (
+            ownWonTicket.map((_ticket, index) => {
+              return _ticket.tokenId === ticket?.tokenId ? (
+                <div
+                  key={index}
+                  className="border-2 shadow-lg shadow-indigo-500/40 cursor-pointer max-w-sm mt-2"
+                  onClick={() => {
+                    if (ticket == _ticket) {
+                      setTicket(null)
+                    } else {
+                      setTicket(_ticket)
+                    }
+                  }}
+                >
+                  <img src={_ticket?.imageURI || "error"} alt="" className="w-20 h-auto" />
+                </div>
+              ) : (
+                <div
+                  key={index}
+                  className="border-2 hover:shadow-xl cursor-pointer max-w-sm mt-2"
+                  onClick={() => {
+                    if (ticket == _ticket) {
+                      setTicket(null)
+                    } else {
+                      setTicket(_ticket)
+                    }
+                  }}
+                >
+                  <img src={_ticket?.imageURI || "error"} alt="" className="w-20 h-auto" />
+                </div>
+              )
+            })
+          ) : (
+            <div className="text-center">You have no winning tickets to claim</div>
+          )}
+        </div>
+        {ticket && (
+          <div className="flex flex-row my-4 space-x-4 justify-center">
+            <div className="border-2 shadow-lg shadow-indigo-500/40 cursor-pointer max-w-sm mt-2">
+              <img src={ticket?.imageURI || "error"} alt="" className="w-20 h-auto" />
+            </div>
+            <div className="border-2 shadow-lg shadow-indigo-500/40 cursor-pointer max-w-sm mt-2">
+              <img
+                src={lootbox?.nfts[ticket?.wonTicket].imageURI || "error"}
+                alt=""
+                className="w-20 h-auto"
+              />
+            </div>
+          </div>
+        )}
+      </>
+    ) : (
+      <div className="flex items-center justify-center">Transaction Submitted 🎉</div>
+    )
+
+    const claimButton = (
+      <button disabled={!ticket} onClick={() => claimTickets(ticket.tokenId)}>
+        Claim
+      </button>
+    )
+    return (
+      <Modal
+        open={showClaimNFTDialog}
+        setOpen={setShowClaimNFTDialog}
+        title="Claim NFT"
+        content={content}
+        confirmButton={claimButton}
+      />
+    )
+  }
+  const RefundDialog = () => {
+    const [isSuccess, setIsSuccess] = useState(false)
+
+    async function refundTickets() {
+      const sendOptions = {
+        contractAddress: lootbox?.address,
+        functionName: "refund",
+        abi: LOOTBOX_ABI,
+        params: {
+          tokenIds: ownTicket?.map((ticket) => ticket?.tokenId),
+        },
+      }
+      await Moralis.executeFunction(sendOptions)
+      setIsSuccess(true)
+    }
+
+    const ownTicket = tickets?.filter((ticket) => {
+      return ticket?.owner?.toLowerCase() === account?.toLowerCase() && !ticket?.isRefunded
+    })
+    const content = !isSuccess ? (
+      <>
+        <div className="grid grid-rows-2 grid-flow-col">
+          {ownTicket.length > 0 ? (
+            ownTicket.map((_ticket, index) => {
+              return (
+                <div key={index} className="border-2 cursor-pointer max-w-sm mt-2">
+                  <img src={_ticket?.imageURI || "error"} alt="" className="w-20 h-auto" />
+                </div>
+              )
+            })
+          ) : (
+            <div className="text-center">You have no tickets to refund</div>
+          )}
+        </div>
+      </>
+    ) : (
+      <div className="flex items-center justify-center">Transaction Submitted 🎉</div>
+    )
+
+    const claimButton = (
+      <button disabled={ownTicket.length === 0} onClick={() => refundTickets()}>
+        Refund All
+      </button>
+    )
+    return (
+      <Modal
+        open={showRefundDialog}
+        setOpen={setShowRefundDialog}
+        title="Refund Tickets"
+        content={content}
+        confirmButton={claimButton}
+      />
+    )
+  }
+  const BuyDialog = () => {
+    const [value, setValue] = useState<number>()
+    const [isSuccess, setIsSuccess] = useState(false)
+    async function buyTickets(tickets: number) {
+      const sendOptions = {
+        contractAddress: lootbox?.address,
+        functionName: "buyTickets",
+        abi: LOOTBOX_ABI,
+        params: {
+          _amount: tickets,
+        },
+        msgValue: (tickets * lootbox?.ticketPrice).toString(),
+      }
+      console.log(sendOptions)
+      await Moralis.executeFunction(sendOptions)
+      setIsSuccess(true)
+    }
+    const content = !isSuccess ? (
+      <div className="flex flex-col space-y-4 justify-between">
+        <div>
+          Ticket Price: {ethers.utils.formatEther(lootbox?.ticketPrice?.toString())}{" "}
+          {NATIVE[chain.networkId!]}
+        </div>
+        <input
+          className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+          placeholder="Number of tickets..."
+          type="number"
+          value={value}
+          onChange={(e) => setValue(Number(e.target.value))}
+        />
+        <div>
+          Total:{" "}
+          {value ? ethers.utils.formatEther((lootbox?.ticketPrice * Number(value)).toString()) : 0}{" "}
+          {NATIVE[chain.networkId!]}
+        </div>
+      </div>
+    ) : (
+      <div className="flex items-center justify-center">Transaction Submitted 🎉</div>
+    )
+    const buyButton = <button onClick={() => buyTickets(value)}>Buy</button>
+    console.log(value)
+
+    return (
+      <Modal
+        open={showBuyTicketsDialog}
+        setOpen={setShowBuyTicketsDialog}
+        title={`Buy tickets for ${lootbox?.name}`}
+        content={content}
+        confirmButton={buyButton}
+      />
+    )
+  }
+
   return (
     <>
       {isLoading ? (
-        <div className="h-[30vh] flex flex-col items-center justify-between">
-          <svg
-            role="status"
-            className="w-[20vh] h-[20vh] mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-            viewBox="0 0 100 101"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-              fill="currentColor"
-            />
-            <path
-              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-              fill="currentFill"
-            />
-          </svg>
+        <div className="h-[30vh] mt-[10vh] flex flex-col items-center justify-between">
+          <LoadingIndicator />
         </div>
       ) : (
-        <div className="flex flex-row mx-8 mt-8">
-          <div className="shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] m-8">
-            <div className="mx-8">ID: {router.query.bid}</div>
-            <div className="h-30 w-auto motion-safe:animate-bounce">
-              <LootboxCanvas />
-            </div>
-            <div className="text-sm mx-8">
-              <div>Name: {lootbox.name}</div>
+        <>
+          <div className="flex flex-row mx-8 mt-8">
+            <div className="shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] m-8">
+              <div className="mx-8">ID: {router.query.bid}</div>
+              <div className="h-30 motion-safe:animate-bounce">
+                <LootboxCanvas />
+              </div>
+              <div className="text-sm mx-8">
+                <div>Name: {lootbox?.name}</div>
 
-              <div>{`Draw time: ${new Date(lootbox.drawTimestamp * 1000).toUTCString()}`}</div>
-              <div className="flex flex-row-reverse">
-                <button className="mx-2">Buy Tickets</button>
-                <button className="mx-2">Claim</button>
+                <div>{`Draw time: ${new Date(lootbox?.drawTimestamp * 1000).toUTCString()}`}</div>
+                <div className="flex flex-row-reverse">
+                  {!lootbox?.isDrawn && (
+                    <button
+                      className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                      onClick={() => setShowBuyTicketsDialog(true)}
+                    >
+                      Buy Tickets
+                    </button>
+                  )}
+                  {lootbox?.isDrawn && !lootbox?.isRefundable && (
+                    <button
+                      className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                      onClick={() => setShowClaimNFTDialog(true)}
+                    >
+                      Claim
+                    </button>
+                  )}
+                  {lootbox?.isRefundable && (
+                    <button
+                      className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                      onClick={() => setShowRefundDialog(true)}
+                    >
+                      Refund
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div>{"What's in the box?"}</div>
+              <div className="grid grid-rows-3 grid-flow-col">
+                {lootbox.nfts &&
+                  lootbox.nfts.map((nft, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="border-2 hover:shadow-xl cursor-pointer max-w-sm mt-2"
+                        onClick={() => onNFTClick(nft)}
+                      >
+                        <img src={nft?.imageURI || "error"} alt="" className="w-20 h-auto" />
+                      </div>
+                    )
+                  })}
               </div>
             </div>
           </div>
-          <div>
-            <div>NFTs</div>
-            <div className="grid grid-rows-3 grid-flow-col">
-              {lootbox.nfts &&
-                lootbox.nfts.map((nft, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="border-2 hover:shadow-xl cursor-pointer max-w-sm mt-2"
-                      onClick={() => onNFTClick(nft)}
-                    >
-                      <img src={nft?.imageURI || "error"} alt="" className="w-20 h-auto" />
-                    </div>
-                  )
-                })}
-            </div>
-          </div>
-        </div>
+          <NFTDialog />
+          <BuyDialog />
+          <ClaimDialog />
+          <RefundDialog />
+        </>
       )}
     </>
   )
