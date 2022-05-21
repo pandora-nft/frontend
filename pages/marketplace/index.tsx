@@ -11,11 +11,11 @@ const Marketplace = () => {
         <>
           {Array(6)
             .fill(null)
-            .map(() => {
+            .map((_, index) => {
               return (
-                <>
+                <div key={index}>
                   <LootboxCardSkeleton />
-                </>
+                </div>
               )
             })}
         </>
@@ -38,6 +38,7 @@ const Marketplace = () => {
       )
     }
   }
+
   return (
     <div className="centered mt-10">
       <h2 className="font-medium mb-10">Marketplace</h2>
