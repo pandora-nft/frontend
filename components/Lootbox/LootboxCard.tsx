@@ -1,5 +1,6 @@
 import { LootboxDetail } from "./LootboxDetail"
 import { Lootbox } from "types"
+import { shortenAddress } from "utils"
 
 interface LootboxCardProps {
   lootbox: Lootbox
@@ -16,9 +17,12 @@ export const LootboxCard: React.FC<LootboxCardProps> = ({ lootbox }) => {
             .fill(null)
             .map((_, index) => {
               return (
-                <div key={index} className="w-48 mr-5">
-                  <img className="rounded w-[110px] h-[100px]" src="EmptyPic.png" />
-                </div>
+                <img
+                  key={index}
+                  className="rounded w-full h-48 md:h-24"
+                  alt="emptyNFT"
+                  src="EmptyPic.png"
+                />
               )
             })}
         </>
@@ -28,9 +32,12 @@ export const LootboxCard: React.FC<LootboxCardProps> = ({ lootbox }) => {
         <>
           {nfts.map((nft, index) => {
             return (
-              <div key={index} className="w-48 mr-5">
-                <img className="rounded" src={nft.imageURI} />
-              </div>
+              <img
+                key={index}
+                alt="nft"
+                className="rounded w-full h-48 md:h-24"
+                src={nft.imageURI}
+              />
             )
           })}
         </>
@@ -38,11 +45,14 @@ export const LootboxCard: React.FC<LootboxCardProps> = ({ lootbox }) => {
     }
   }
   return (
-    <div className="rounded border border-gray-800 shadow-xl h-[350px] p-10 flex flex-col hover:scale-[101%] transition duration-500">
+    <div
+      className="rounded border border-gray-800 shadow-xl w-full  
+                    pt-8 p-6 flex flex-col hover:scale-[101%] transition duration-500"
+    >
       <h2 className="text-left font-medium">
         #{id} {name}
       </h2>
-      <h3 className="text-left font-medium mb-5">{address}</h3>
+      <h3 className="text-left font-medium mb-5">{shortenAddress(address)}</h3>
 
       <LootboxDetail
         numItems={nfts.length}
@@ -50,7 +60,7 @@ export const LootboxCard: React.FC<LootboxCardProps> = ({ lootbox }) => {
         ticketSold={ticketSold}
         drawTimestamp={drawTimestamp}
       />
-      <div className="flex flex-row justify-between p-5">{showNFTs()}</div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{showNFTs()}</div>
     </div>
   )
 }

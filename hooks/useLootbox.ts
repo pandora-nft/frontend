@@ -5,12 +5,14 @@ import { ethers } from "ethers"
 import { Lootbox, NFT, Ticket } from "types"
 import { getNFTMetadata } from "api"
 import { useLoading } from "./useLoading"
+import { useTicket } from "./useTicket"
 
 export const useLootbox = () => {
   const { web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
 
   // const Web3Api = useMoralisWeb3Api()
+  const { fetchTicket } = useTicket()
   const { isLoading, onLoad, onDone } = useLoading()
   const [lootbox, setLootbox] = useState<Lootbox>({
     id: 0,
@@ -50,9 +52,9 @@ export const useLootbox = () => {
 
     const fetchNfts = await lootboxContract.getAllNFTs()
 
-    let fetchTickets = []
+    let ticketIds = []
     if (lootboxId) {
-      fetchTickets = await ticketContract.getTicketsForLootbox(lootboxId)
+      ticketIds = await ticketContract.getTicketsForLootbox(lootboxId)
     }
 
     let id,
@@ -104,38 +106,14 @@ export const useLootbox = () => {
     }
 
     let tickets: Ticket[] = []
-    for (const ticketId of fetchTickets) {
-      let owner, isClaimed, isWinner, isRefunded, wonTicket
-      const nftMetadata = (
-        await getNFTMetadata(chain.networkId, TICKET_ADDRESS[chain.networkId], ticketId)
-      )?.data?.items[0]?.nft_data[0]?.external_data
-      await Promise.all([
-        ticketContract.ownerOf(ticketId),
-        ticketContract.isClaimed(ticketId),
-        ticketContract.isWinner(ticketId),
-        ticketContract.isRefunded(ticketId),
-        lootboxContract.wonTicket(ticketId),
-      ]).then((values) => {
-        owner = values[0].toString()
-        isClaimed = values[1]
-        isWinner = values[2]
-        isRefunded = values[3]
-        wonTicket = values[4]
+    for (const ticketId of ticketIds) {
+      let ticket, wonTicket
+      Promise.all([fetchTicket(ticketId), lootboxContract.wonTicket(ticketId)]).then((values) => {
+        ticket = values[0]
+        wonTicket = values[1]
       })
 
-      tickets.push({
-        tokenId: ticketId,
-        collectionName: nftMetadata?.name || null,
-        address: TICKET_ADDRESS[chain.networkId],
-        imageURI: nftMetadata?.image || null,
-        name: nftMetadata?.name || null,
-        description: nftMetadata?.description || null,
-        owner,
-        isClaimed,
-        isWinner,
-        isRefunded,
-        wonTicket,
-      })
+      tickets.push({ ...ticket, wonTicket })
     }
 
     const loot: Lootbox = {
