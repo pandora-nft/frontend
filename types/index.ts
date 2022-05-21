@@ -19,13 +19,11 @@ export interface Ticket extends NFT {
 }
 export interface NFT {
   name: string
-  description: string
+  description?: string
   collectionName: string
   tokenId: number
   address: string
   imageURI: string
-  name: string
-  description?: string
 }
 
 export type Chain =

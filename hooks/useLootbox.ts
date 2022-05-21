@@ -98,8 +98,6 @@ export const useLootbox = () => {
         description: nftMetadata?.description || null,
       })
       console.log("nft metadata", nftMetadata)
-
-  
     }
 
     let tickets: Ticket[] = []
@@ -135,7 +133,6 @@ export const useLootbox = () => {
         isRefunded,
         wonTicket,
       })
-      
     }
 
     const loot: Lootbox = {
