@@ -10,7 +10,13 @@ export interface Lootbox {
   maxTicketPerWallet: number
   ticketSold: number
 }
-
+export interface Ticket extends NFT {
+  owner: string
+  isClaimed: boolean
+  isWinner: boolean
+  isRefunded: boolean
+  wonTicket?: number
+}
 export interface NFT {
   tokenId: number
   address: string
