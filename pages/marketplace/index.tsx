@@ -1,5 +1,6 @@
 import { useLootboxFactory } from "hooks"
 import { LootboxCard, LootboxCardSkeleton } from "components"
+import Link from "next/link"
 
 const Marketplace = () => {
   const { allLootboxes, isLoading } = useLootboxFactory()
@@ -26,9 +27,11 @@ const Marketplace = () => {
         <>
           {allLootboxes.map((lootbox) => {
             return (
-              <>
-                <LootboxCard lootbox={lootbox} />
-              </>
+              <Link key={lootbox.id} href={`/lootbox/${lootbox.id}`}>
+                <a>
+                  <LootboxCard lootbox={lootbox} />
+                </a>
+              </Link>
             )
           })}
         </>

@@ -13,6 +13,7 @@ export const useLootbox = () => {
   // const Web3Api = useMoralisWeb3Api()
   const { isLoading, onLoad, onDone } = useLoading()
   const [lootbox, setLootbox] = useState<Lootbox>({
+    id: 0,
     address: "",
     name: "",
     nfts: [],
@@ -54,7 +55,8 @@ export const useLootbox = () => {
       fetchTickets = await ticketContract.getTicketsForLootbox(lootboxId)
     }
 
-    let name,
+    let id,
+      name,
       ticketPrice,
       ticketSold,
       minimumTicketRequired,
@@ -63,6 +65,7 @@ export const useLootbox = () => {
       isDrawn,
       isRefundable
     await Promise.all([
+      lootboxContract.id(),
       lootboxContract.name(),
       lootboxContract.ticketPrice(),
       lootboxContract.ticketSold(),
@@ -72,14 +75,15 @@ export const useLootbox = () => {
       lootboxContract.isDrawn(),
       lootboxContract.isRefundable(),
     ]).then((values) => {
-      name = values[0].toString()
-      ticketPrice = Number(values[1].toString())
-      ticketSold = Number(values[2].toString())
-      minimumTicketRequired = Number(values[3].toString())
-      maxTicketPerWallet = Number(values[4].toString())
-      drawTimestamp = Number(values[5].toString())
-      isDrawn = values[6]
-      isRefundable = values[7]
+      id = Number(values[0].toString())
+      name = values[1].toString()
+      ticketPrice = Number(values[2].toString())
+      ticketSold = Number(values[3].toString())
+      minimumTicketRequired = Number(values[4].toString())
+      maxTicketPerWallet = Number(values[5].toString())
+      drawTimestamp = Number(values[6].toString())
+      isDrawn = values[7]
+      isRefundable = values[8]
     })
 
     let nfts: NFT[] = []
@@ -135,6 +139,7 @@ export const useLootbox = () => {
     }
 
     const loot: Lootbox = {
+      id,
       name,
       address: lootboxAddress,
       nfts,

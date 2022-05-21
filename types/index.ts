@@ -1,4 +1,5 @@
 export interface Lootbox {
+  id: number
   address: string
   name: string
   nfts: NFT[]
