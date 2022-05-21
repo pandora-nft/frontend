@@ -19,7 +19,7 @@ const Marketplace = () => {
             })}
         </>
       )
-    } else if (allLootboxes.length) {
+    } else if (allLootboxes.length === 0) {
       return <h2>No lootbox found</h2>
     } else {
       return (

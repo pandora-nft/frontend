@@ -42,7 +42,9 @@ export const useLootboxFactory = () => {
   useEffect(() => {
     const main = async () => {
       onLoad()
+
       const lootboxAddresses = (await getAllLootboxes()) as string[]
+
       let lootboxes: Lootbox[] = []
       for (let addr of lootboxAddresses) {
         const lootbox: Lootbox = await fetchLootbox(addr)
