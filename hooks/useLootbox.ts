@@ -97,7 +97,6 @@ export const useLootbox = () => {
         name: nftMetadata?.name || null,
         description: nftMetadata?.description || null,
       })
-      console.log("nft metadata", nftMetadata)
     }
 
     let tickets: Ticket[] = []
