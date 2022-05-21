@@ -1,15 +1,22 @@
 export interface Lootbox {
   address: string
   name: string
-  minimumTicketRequired: string
-  maxTicketPerWallet: string
-  ticketPrice: string
-  ticketSold: string
-  drawTimestamp: number // in unix e.g 1652738315
-  isDrawn: boolean
   nfts: NFT[]
+  isDrawn: boolean
+  isRefundable: boolean
+  drawTimestamp: number
+  ticketPrice: number
+  minimumTicketRequired: number
+  maxTicketPerWallet: number
+  ticketSold: number
 }
-
+export interface Ticket extends NFT {
+  owner: string
+  isClaimed: boolean
+  isWinner: boolean
+  isRefunded: boolean
+  wonTicket?: number
+}
 export interface NFT {
   name: string
   description: string
@@ -17,6 +24,8 @@ export interface NFT {
   tokenId: number
   address: string
   imageURI: string
+  name: string
+  description?: string
 }
 
 export type Chain =

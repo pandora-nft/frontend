@@ -20,11 +20,10 @@ export const LootboxCard: React.FC<LootboxCardProps> = ({ lootbox }) => {
         drawTimestamp={drawTimestamp}
       />
       <div className="flex flex-row justify-between p-5">
-        {[1, 2, 3, 4].map((item, index) => {
+        {nfts.map((nft, index) => {
           return (
             <div key={index} className="w-48 mr-5">
-              {/* <img src={`${imageURI}/${tokenId}`} /> */}
-              <img className="rounded" src="NFTs/1.png" />
+              <img className="rounded" src={nft.imageURI} />
             </div>
           )
         })}
