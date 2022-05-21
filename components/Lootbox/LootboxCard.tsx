@@ -47,7 +47,7 @@ export const LootboxCard: React.FC<LootboxCardProps> = ({ lootbox }) => {
   return (
     <div
       className="rounded border border-gray-800 shadow-xl w-full  
-                    pt-10 p-5 flex flex-col hover:scale-[101%] transition duration-500"
+                    pt-8 p-6 flex flex-col hover:scale-[101%] transition duration-500"
     >
       <h2 className="text-left font-medium">
         #{id} {name}

@@ -39,7 +39,9 @@ const Lootbox = () => {
   return (
     <>
       <div className="centered mt-10">
-        <div className="grid grid-cols-2 gap-10 border-black p-4">{showLootboxOwned()}</div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+          {showLootboxOwned()}
+        </div>
       </div>
     </>
   )
