@@ -55,6 +55,7 @@ const Bid: React.FC<Props> = () => {
       />
     )
   }
+
   const ClaimDialog = () => {
     const [ticket, setTicket] = useState<Ticket>()
     const [isSuccess, setIsSuccess] = useState(false)
@@ -68,12 +69,11 @@ const Bid: React.FC<Props> = () => {
           _ticketId: tickets,
         },
       }
-      console.log(sendOptions)
       await Moralis.executeFunction(sendOptions)
       setIsSuccess(true)
     }
 
-    const ownWonTicket = tickets.filter((ticket) => {
+    const ownWonTicket = tickets?.filter((ticket) => {
       return (
         ticket.owner.toLowerCase() === account.toLowerCase() && ticket.isWinner && !ticket.isClaimed
       )
@@ -81,7 +81,7 @@ const Bid: React.FC<Props> = () => {
     const content = !isSuccess ? (
       <>
         <div className="grid grid-rows-2 grid-flow-col">
-          {ownWonTicket.length > 0 ? (
+          {ownWonTicket?.length > 0 ? (
             ownWonTicket.map((_ticket, index) => {
               return _ticket.tokenId === ticket?.tokenId ? (
                 <div
@@ -173,7 +173,7 @@ const Bid: React.FC<Props> = () => {
     const content = !isSuccess ? (
       <>
         <div className="grid grid-rows-2 grid-flow-col">
-          {ownTicket.length > 0 ? (
+          {ownTicket?.length > 0 ? (
             ownTicket.map((_ticket, index) => {
               return (
                 <div key={index} className="border-2 cursor-pointer max-w-sm mt-2">
@@ -191,7 +191,7 @@ const Bid: React.FC<Props> = () => {
     )
 
     const claimButton = (
-      <button disabled={ownTicket.length === 0} onClick={() => refundTickets()}>
+      <button disabled={ownTicket?.length === 0} onClick={() => refundTickets()}>
         Refund All
       </button>
     )
@@ -222,11 +222,13 @@ const Bid: React.FC<Props> = () => {
       await Moralis.executeFunction(sendOptions)
       setIsSuccess(true)
     }
+
     const content = !isSuccess ? (
       <div className="flex flex-col space-y-4 justify-between">
         <div>
-          Ticket Price: {ethers.utils.formatEther(lootbox?.ticketPrice?.toString())}{" "}
-          {NATIVE[chain.networkId!]}
+          Ticket Price:
+          {lootbox.ticketPrice ? ethers.utils.formatEther(lootbox.ticketPrice.toString()) : "0"}
+          {NATIVE[chain?.networkId!]}
         </div>
         <input
           className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
@@ -238,14 +240,13 @@ const Bid: React.FC<Props> = () => {
         <div>
           Total:{" "}
           {value ? ethers.utils.formatEther((lootbox?.ticketPrice * Number(value)).toString()) : 0}{" "}
-          {NATIVE[chain.networkId!]}
+          {NATIVE[chain?.networkId!]}
         </div>
       </div>
     ) : (
       <div className="flex items-center justify-center">Transaction Submitted 🎉</div>
     )
     const buyButton = <button onClick={() => buyTickets(value)}>Buy</button>
-    console.log(value)
 
     return (
       <Modal

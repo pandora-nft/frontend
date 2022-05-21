@@ -4,13 +4,14 @@ import { useState } from "react"
 import { ethers } from "ethers"
 import { Lootbox, NFT, Ticket } from "types"
 import { getNFTMetadata } from "api"
+import { useLoading } from "./useLoading"
 
 export const useLootbox = () => {
   const { web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
 
   // const Web3Api = useMoralisWeb3Api()
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const { isLoading, onLoad, onDone } = useLoading()
   const [lootbox, setLootbox] = useState<Lootbox>({
     address: "",
     name: "",
@@ -26,7 +27,7 @@ export const useLootbox = () => {
   const [tickets, setTickets] = useState<Ticket[]>()
 
   const fetchLootbox = async (_lootboxAddress: string, lootboxId?: number) => {
-    setIsLoading(true)
+    onLoad()
     let lootboxAddress: string
     if (!isNaN(lootboxId)) {
       const factory = new ethers.Contract(
@@ -45,8 +46,13 @@ export const useLootbox = () => {
       moralisProvider
     )
     const lootboxContract = new ethers.Contract(lootboxAddress, LOOTBOX_ABI, moralisProvider)
+
     const fetchNfts = await lootboxContract.getAllNFTs()
-    const fetchTickets: number[] = await ticketContract.getTicketsForLootbox(lootboxId)
+
+    let fetchTickets = []
+    if (lootboxId) {
+      fetchTickets = await ticketContract.getTicketsForLootbox(lootboxId)
+    }
 
     let name,
       ticketPrice,
@@ -139,7 +145,7 @@ export const useLootbox = () => {
     }
     setLootbox(loot)
     setTickets(tickets)
-    setIsLoading(false)
+    onDone()
     return loot
   }
 
