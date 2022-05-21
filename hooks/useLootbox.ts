@@ -134,7 +134,7 @@ export const useLootbox = () => {
     const loot: Lootbox = {
       name,
       address: lootboxAddress,
-      nfts: fetchNfts,
+      nfts,
       isDrawn,
       isRefundable,
       drawTimestamp,
