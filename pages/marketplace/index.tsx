@@ -1,25 +1,14 @@
-import { useLootboxFactory } from "hooks"
+import { useLootboxFactory, useSkeleton } from "hooks"
 import { LootboxCard, LootboxCardSkeleton } from "components"
 import Link from "next/link"
 
 const Marketplace = () => {
   const { allLootboxes, isLoading } = useLootboxFactory()
+  const { showSkeleton } = useSkeleton()
 
   const showLootboxes = () => {
     if (isLoading) {
-      return (
-        <>
-          {Array(6)
-            .fill(null)
-            .map((_, index) => {
-              return (
-                <div key={index}>
-                  <LootboxCardSkeleton />
-                </div>
-              )
-            })}
-        </>
-      )
+      return showSkeleton(<LootboxCardSkeleton />)
     } else if (allLootboxes.length === 0) {
       return <h2>No lootbox found</h2>
     } else {

@@ -1,4 +1,4 @@
-import { useLootboxFactory } from "hooks"
+import { useLootboxFactory, useSkeleton } from "hooks"
 import ProfileLayout from "layouts/profileLayout"
 import { ReactElement, useEffect } from "react"
 import { LootboxCard, LootboxCardSkeleton } from "components"
@@ -7,6 +7,7 @@ import { useMoralis } from "react-moralis"
 const Lootbox = () => {
   const { enableWeb3, isWeb3Enabled, account } = useMoralis()
   const { lootboxOwned, fetchLootboxOwned, isLoading } = useLootboxFactory()
+  const { showSkeleton } = useSkeleton()
 
   useEffect(() => {
     if (isWeb3Enabled) {
@@ -18,19 +19,7 @@ const Lootbox = () => {
 
   const showLootboxOwned = () => {
     if (isLoading) {
-      return (
-        <>
-          {Array(6)
-            .fill(null)
-            .map(() => {
-              return (
-                <>
-                  <LootboxCardSkeleton />
-                </>
-              )
-            })}
-        </>
-      )
+      return showSkeleton(<LootboxCardSkeleton />)
     } else if (lootboxOwned.length === 0) {
       return <h2>No lootbox found</h2>
     } else {

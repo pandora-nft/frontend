@@ -6,7 +6,7 @@ import { useLoading } from "./useLoading"
 import { getNFTMetadata } from "api"
 import { ethers } from "ethers"
 
-const useTicket = () => {
+export const useTicket = () => {
   const Web3Api = useMoralisWeb3Api()
   const { isWeb3Enabled, enableWeb3, account, web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
@@ -80,5 +80,3 @@ const useTicket = () => {
 
   return { fetchTicket, tickets, isLoading }
 }
-
-export default useTicket

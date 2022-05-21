@@ -1,27 +1,17 @@
 import ProfileLayout from "layouts/profileLayout"
 import { ReactElement } from "react"
-import { useNFTsBalance } from "hooks"
+import { useNFTsBalance, useSkeleton } from "hooks"
 import { NFTCard } from "components/NFTs/NFTCard"
 import { NFTCardSkeleton } from "components/NFTs/NFTCardSkeleton"
 
 const Nft = () => {
   const { NFTBalances, isLoading } = useNFTsBalance()
 
+  const { showSkeleton } = useSkeleton()
+
   const showNFTs = () => {
     if (isLoading) {
-      return (
-        <>
-          {Array(9)
-            .fill(null)
-            .map((_, index) => {
-              return (
-                <div key={index}>
-                  <NFTCardSkeleton />
-                </div>
-              )
-            })}
-        </>
-      )
+      return showSkeleton(<NFTCardSkeleton />)
     } else if (!NFTBalances) {
       return <h2>You have no NFTs</h2>
     } else {

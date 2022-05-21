@@ -1,6 +1,6 @@
 import { ReactElement } from "react"
 import { NFTCard } from "components/NFTs/NFTCard"
-import useTicket from "hooks/useTicket"
+import { useTicket } from "hooks"
 import ProfileLayout from "layouts/profileLayout"
 import { Ticket as TicketType } from "types"
 import { NFTCardSkeleton } from "components/NFTs/NFTCardSkeleton"

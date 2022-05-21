@@ -5,7 +5,7 @@ import { ethers } from "ethers"
 import { Lootbox, NFT, Ticket } from "types"
 import { getNFTMetadata } from "api"
 import { useLoading } from "./useLoading"
-import useTicket from "./useTicket"
+import { useTicket } from "./useTicket"
 
 export const useLootbox = () => {
   const { web3: moralisProvider } = useMoralis()
