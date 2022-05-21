@@ -1,10 +1,22 @@
 import "styles/globals.css"
+import { ReactNode } from "react"
+import { NextPage } from "next"
 import type { AppProps } from "next/app"
 import { MoralisProvider } from "react-moralis"
 import { isMoralisEnvProvided, MORALIS_APP_ID, MORALIS_SERVER_URL } from "config"
 import { Header, Footer } from "components"
 
-function MyApp({ Component, pageProps }: AppProps) {
+type NextPageWithLayout = NextPage & {
+  getLayout?: () => ReactNode
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => page)
+
   return (
     <MoralisProvider
       serverUrl={MORALIS_SERVER_URL}
@@ -12,7 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       initializeOnMount={isMoralisEnvProvided}
     >
       <Header />
-      <Component {...pageProps} />
+      {getLayout(<Component {...pageProps} />)}
       <Footer />
     </MoralisProvider>
   )

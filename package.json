@@ -1,11 +1,11 @@
 {
   "name": "pandora-frontend",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "export": "next export",
     "lint": "next lint",
     "check-format": "prettier --check .",
     "check-lint": "eslint . --ext ts --ext tsx --ext js",
@@ -22,6 +22,8 @@
     "animate.css": "^4.1.1",
     "autoprefixer": "^10.4.7",
     "axios": "^0.27.2",
+    "magic-sdk": "^8.1.1",
+    "moment": "^2.29.3",
     "moralis": "^1.7.0",
     "next": "12.1.6",
     "postcss": "^8.4.13",
@@ -32,7 +34,7 @@
     "react-parallax-tilt": "^1.7.34",
     "three": "^0.140.2",
     "valtio": "^1.6.0",
-    "web3uikit": "^0.1.141"
+    "web3uikit": "^0.1.41"
   },
   "devDependencies": {
     "@types/node": "17.0.32",
