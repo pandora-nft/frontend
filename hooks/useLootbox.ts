@@ -73,7 +73,7 @@ export const useLootbox = () => {
       lootboxContract.isRefundable(),
     ]).then((values) => {
       name = values[0].toString()
-      ticketPrice = Number(ethers.utils.formatEther(values[1].toString()))
+      ticketPrice = Number(values[1].toString())
       ticketSold = Number(values[2].toString())
       minimumTicketRequired = Number(values[3].toString())
       maxTicketPerWallet = Number(values[4].toString())
