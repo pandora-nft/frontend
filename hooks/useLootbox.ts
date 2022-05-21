@@ -46,8 +46,13 @@ export const useLootbox = () => {
       moralisProvider
     )
     const lootboxContract = new ethers.Contract(lootboxAddress, LOOTBOX_ABI, moralisProvider)
+
     const fetchNfts = await lootboxContract.getAllNFTs()
-    const fetchTickets: number[] = await ticketContract.getTicketsForLootbox(lootboxId)
+
+    let fetchTickets = []
+    if (lootboxId) {
+      fetchTickets = await ticketContract.getTicketsForLootbox(lootboxId)
+    }
 
     let name,
       ticketPrice,
@@ -68,7 +73,7 @@ export const useLootbox = () => {
       lootboxContract.isRefundable(),
     ]).then((values) => {
       name = values[0].toString()
-      ticketPrice = Number(values[1].toString())
+      ticketPrice = Number(ethers.utils.formatEther(values[1].toString()))
       ticketSold = Number(values[2].toString())
       minimumTicketRequired = Number(values[3].toString())
       maxTicketPerWallet = Number(values[4].toString())
