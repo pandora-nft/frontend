@@ -91,6 +91,7 @@ export const useLootbox = () => {
 
       nfts.push({
         tokenId,
+        collectionName: nft.name,
         address: nftAddress,
         imageURI: nftMetadata?.image || null,
         name: nftMetadata?.name || null,
@@ -117,8 +118,10 @@ export const useLootbox = () => {
         isRefunded = values[3]
         wonTicket = values[4]
       })
+
       tickets.push({
         tokenId: ticketId,
+        collectionName: nftMetadata?.name || null,
         address: TICKET_ADDRESS[chain.networkId],
         imageURI: nftMetadata?.image || null,
         name: nftMetadata?.name || null,
