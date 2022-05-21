@@ -1,28 +1,16 @@
 import { ReactElement } from "react"
-import { NFTCard } from "components/NFTs/NFTCard"
-import { useTicket } from "hooks"
+import { NFTCard, NFTCardSkeleton } from "components"
+import { useSkeleton, useTicket } from "hooks"
 import ProfileLayout from "layouts/profileLayout"
 import { Ticket as TicketType } from "types"
-import { NFTCardSkeleton } from "components/NFTs/NFTCardSkeleton"
 
 const Ticket = () => {
   const { tickets, isLoading } = useTicket()
+  const { showSkeleton } = useSkeleton()
 
   const showTickets = () => {
     if (isLoading) {
-      return (
-        <>
-          {Array(9)
-            .fill(null)
-            .map((_, index) => {
-              return (
-                <div key={index}>
-                  <NFTCardSkeleton />
-                </div>
-              )
-            })}
-        </>
-      )
+      return showSkeleton(<NFTCardSkeleton />)
     } else if (tickets.length === 0) {
       return <h2>You have not bought any ticket yet!</h2>
     } else {

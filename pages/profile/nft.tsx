@@ -1,8 +1,7 @@
 import ProfileLayout from "layouts/profileLayout"
 import { ReactElement } from "react"
 import { useNFTsBalance, useSkeleton } from "hooks"
-import { NFTCard } from "components/NFTs/NFTCard"
-import { NFTCardSkeleton } from "components/NFTs/NFTCardSkeleton"
+import { NFTCard, NFTCardSkeleton } from "components"
 
 const Nft = () => {
   const { NFTBalances, isLoading } = useNFTsBalance()
