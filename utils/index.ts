@@ -8,7 +8,7 @@ export const shortenAddress = (address: string) => {
 }
 
 export const convertToCountdown = (drawTimestamp: number) => {
-  const currentTime = new Date().getTime()
+  const currentTime = new Date().getTime() / 1000
   var diffTime = drawTimestamp - currentTime
   var duration = moment.duration(diffTime * 1000, "milliseconds")
 
