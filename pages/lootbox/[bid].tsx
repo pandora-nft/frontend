@@ -229,7 +229,6 @@ const Bid: React.FC<Props> = () => {
         },
         msgValue: (tickets * lootbox?.ticketPrice).toString(),
       }
-      console.log(sendOptions)
       await Moralis.executeFunction(sendOptions)
       setIsSuccess(true)
     }
