@@ -22,7 +22,7 @@ export const useLootbox = () => {
     minimumTicketRequired: 0,
     maxTicketPerWallet: 0,
     ticketSold: 0,
-    owner: ""
+    owner: "",
   })
   const [tickets, setTickets] = useState<Ticket[]>()
 
@@ -140,7 +140,7 @@ export const useLootbox = () => {
       minimumTicketRequired,
       maxTicketPerWallet,
       ticketSold,
-      owner
+      owner,
     }
     setLootbox(loot)
     setTickets(tickets)
