@@ -1,4 +1,5 @@
 export interface Lootbox {
+  id: number
   address: string
   name: string
   nfts: NFT[]
@@ -11,6 +12,7 @@ export interface Lootbox {
   ticketSold: number
   owner: string
 }
+
 export interface Ticket extends NFT {
   owner: string
   isClaimed: boolean
@@ -19,11 +21,12 @@ export interface Ticket extends NFT {
   wonTicket?: number
 }
 export interface NFT {
+  name: string
+  description?: string
+  collectionName: string
   tokenId: number
   address: string
   imageURI: string
-  name: string
-  description?: string
 }
 
 export type Chain =

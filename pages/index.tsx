@@ -44,7 +44,7 @@ const Home: NextPage = () => {
         </AnimationOnScroll>
       </section>
 
-      <section className="mt-24 -mb-64 text-center justify-center items-center">
+      <section className="mt-24 mb-36 text-center justify-center items-center">
         <AnimationOnScroll animateIn="animate__fadeInRight">
           <h1>Now is your chance to win high-valuable NFTs</h1>
           <div className="w-full h-120 -py-100 border-red-400">

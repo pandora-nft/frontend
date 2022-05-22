@@ -26,8 +26,9 @@ export const ProfileTabs = () => {
   return (
     <>
       <ul className="flex flex-wrap text-sm font-medium text-center border-b border-gray-200">
-        {createTabLink("/profile/nft", "NFTs")}
+        {createTabLink("/profile/nft", "NFT")}
         {createTabLink("/profile/lootbox", "Lootbox")}
+        {createTabLink("/profile/ticket", "Ticket")}
       </ul>
     </>
   )
