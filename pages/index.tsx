@@ -1,5 +1,4 @@
 import type { NextPage } from "next"
-import Image from "next/image"
 import { LootboxCanvas, NFTShowcase } from "canvas"
 import Tilt from "react-parallax-tilt"
 import { AnimationOnScroll } from "react-animation-on-scroll"
@@ -72,16 +71,16 @@ const Home: NextPage = () => {
           <h1>Available Now On</h1>
           <div className="pt-20 grid grid-cols-3 gap-10">
             <div className="flex flex-col items-center justify-center">
-              <Image width={60} height={100} src="/chain/Ethereum.png" alt="EthChain" />
+              <img width={60} height={100} src="/chain/Ethereum.png" alt="EthChain" />
               <h3 className="pt-4">Ethereum</h3>
             </div>
             <div className="flex flex-col items-center justify-center">
-              <Image width={100} height={100} src="/chain/BNB.png" alt="BNBChain" />
+              <img width={100} height={100} src="/chain/BNB.png" alt="BNBChain" />
               <h3 className="pt-4">Binance</h3>
             </div>
 
             <div className="ml-2 flex flex-col items-center justify-center">
-              <Image width={100} height={100} src="/chain/Polygon.png" alt="PolygonChain" />
+              <img width={100} height={100} src="/chain/Polygon.png" alt="PolygonChain" />
               <h3 className="pt-4">Polygon</h3>
             </div>
           </div>
