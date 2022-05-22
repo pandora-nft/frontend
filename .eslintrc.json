@@ -4,7 +4,7 @@
     "es2021": true
   },
   // "extends": ["plugin:react/recommended", "google", "prettier"],
-  "extends": ["next", "next/core-web-vitals"],
+  "extends": ["next", "next/core-web-vitals", "eslint:recommended"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -15,12 +15,25 @@
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    "no-unused-vars": "error",
     "no-console": "warn",
     "semi": ["warn", "never"],
     "indent": ["warn", 2],
     "quotes": ["warn", "double"],
-    "@next/next/no-img-element": "off"
+    "@next/next/no-img-element": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
     // "unused-imports/no-unused-imports": "warn"
+  },
+  "globals": {
+    "React": true,
+    "google": true,
+    "mount": true,
+    "mountWithRouter": true,
+    "shallow": true,
+    "shallowWithRouter": true,
+    "context": true,
+    "expect": true,
+    "jsdom": true,
+    "JSX": true
   }
 }
