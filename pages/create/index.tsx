@@ -1,12 +1,14 @@
 import Link from "next/link"
 import { useState } from "react"
 import { useChain, useWeb3Contract, useMoralis } from "react-moralis"
+import { useNFTsBalance, useLootbox } from "hooks"
 import { FACTORY_ABI, FACTORY_ADDRESS } from "contract"
 import { ethers } from "ethers"
-
+import { Modal } from "components"
+import { NFTCard } from "components/NFTs/NFTCard"
 const initialFormData = {
   name: "",
-  drawTimestamp: Math.floor(Date.now() / 1000) + 60, //1 day = +86400
+  drawTimestamp: 86400, //1day
   ticketPrice: 0.001,
   minimumTicketRequired: 1,
   maxTicketPerWallet: 1,
@@ -15,19 +17,27 @@ const initialFormData = {
 const Create = () => {
   const { account } = useMoralis()
   const { chain } = useChain()
+  const { fetchLootbox, lootbox } = useLootbox()
   const [formData, setFormData] = useState(initialFormData)
   const [image, setImage] = useState<Array<string>>([])
+  const [isCreated, setIsCreated] = useState<boolean>(false)
   const { runContractFunction: deployLootbox } = useWeb3Contract({
     contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
-    functionName: "deployLootbox",
+    functionName: "deployLootbox(string,uint256,uint256,uint256,uint256)",
     abi: FACTORY_ABI,
     params: {
       _name: formData.name,
-      _drawTimestamp: formData.drawTimestamp,
+      _drawTimestamp: Math.floor(Date.now() / 1000) + formData.drawTimestamp,
       _ticketPrice: ethers.utils.parseEther(formData.ticketPrice.toString()).toString(),
       _minimumTicketRequired: formData.minimumTicketRequired,
       _maxTicketPerWallet: formData.maxTicketPerWallet,
     },
+  })
+  const { runContractFunction: getAllLootbox } = useWeb3Contract({
+    contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
+    functionName: "getAllLootboxes",
+    abi: FACTORY_ABI,
+    params: {},
   })
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -38,10 +48,63 @@ const Create = () => {
 
   async function handleFormSumbit(e) {
     e.preventDefault()
-    const deploy_res = await deployLootbox()
+    const deploy_res: any = await deployLootbox()
     console.log(deploy_res)
+    console.log("created box at ", deploy_res?.to)
+    const allLootBox: any = await getAllLootbox()
+    console.log(allLootBox)
+    await fetchLootbox("", allLootBox?.length - 1)
+    console.log("bid", allLootBox.length - 1, lootbox)
+
+    setIsCreated(true)
+    setFormData(initialFormData)
   }
+
   if (formData) console.log(formData)
+
+  const DepositDialog = () => {
+    const { NFTBalances } = useNFTsBalance()
+    const content = (
+      <div className="flex">
+        <div className="container mx-auto max-w-4/5 min-w-sm pr-3">
+          <h3>`Name` Lootbox </h3>
+        </div>
+        <div className="container w-fit pl-3 border-l ">
+          <h3>NFTs Owned </h3>
+          <div className="grid grid-cols-3 gap-2 pt-6">
+            {NFTBalances ? (
+              NFTBalances.result.map((nft, index) => {
+                const NFT = {
+                  name: nft?.metadata?.name,
+                  collectionName: nft?.name,
+                  description: "",
+                  tokenId: nft?.token_id,
+                  address: nft?.token_address,
+                  imageURI: nft?.image,
+                }
+                return (
+                  <div key={index}>
+                    <NFTCard NFT={NFT} />
+                  </div>
+                )
+              })
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+    return (
+      <Modal
+        open={isCreated}
+        setOpen={setIsCreated}
+        title={"Deposit Your NFTs"}
+        content={content}
+      />
+    )
+  }
+
   return (
     <div className="w-0.8 p-16 grid justify-items-center ">
       <div className="grid pl-16 w-full justify-items-start ">
@@ -122,7 +185,7 @@ const Create = () => {
                 />
               </div>
             </div>
-            <div className="grid-row xl:grid-cols-2 xl:gap-6 pt-6">
+            {/* <div className="grid-row xl:grid-cols-2 xl:gap-6 pt-6">
               <label
                 htmlFor="message"
                 className="block mb-4 text-m font-medium text-gray-900 dark:text-gray-400"
@@ -134,7 +197,7 @@ const Create = () => {
                 className="block p-2.5 w-full text-m text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="add description"
               ></textarea>
-            </div>
+            </div> */}
             <div className="grid pt-6 xl:grid-cols-2 xl:gap-6">
               <div className="relative z-0 w-full pb-2 group">
                 <label
@@ -209,16 +272,43 @@ const Create = () => {
                   htmlFor="message"
                   className="block text-m font-medium text-gray-900 dark:text-gray-400"
                 >
-                  Expiration Date
+                  Expiration Period
                 </label>
-                <input
-                  type="text"
-                  name="floating_company"
-                  id="floating_company"
-                  className="block py-2.5 px-0 w-full text-m text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  required
-                />
+
+                <div className="relative inline-flex">
+                  <svg
+                    className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 412 232"
+                  >
+                    <path
+                      d="M206 171.144L42.678 7.822c-9.763-9.763-25.592-9.763-35.355 0-9.763 9.764-9.763 25.592 0 35.355l181 181c4.88 4.882 11.279 7.323 17.677 7.323s12.796-2.441 17.678-7.322l181-181c9.763-9.764 9.763-25.592 0-35.355-9.763-9.763-25.592-9.763-35.355 0L206 171.144z"
+                      fill="#648299"
+                      fillRule="nonzero"
+                    />
+                  </svg>
+                  <select
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        drawTimestamp: Number(e.target.value),
+                      })
+                    }
+                    value={formData.drawTimestamp}
+                    className="border border-gray-300 rounded-md text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none"
+                    required
+                  >
+                    <option disabled>Choose expiration period</option>
+                    <option value={1 * 60 * 60}>1 hours</option>
+                    <option value={3 * 60 * 60}>3 hours</option>
+                    <option value={6 * 60 * 60}>6 hours</option>
+                    <option value={12 * 60 * 60}>12 hours</option>
+                    <option value={24 * 60 * 60}>1 day</option>
+                    <option value={72 * 60 * 60}>3 days</option>
+                    <option value={168 * 60 * 60}>7 days</option>
+                    <option value={336 * 60 * 60}>14 days</option>
+                  </select>
+                </div>
               </div>
             </div>
             <fieldset className="pt-4">
@@ -229,6 +319,7 @@ const Create = () => {
                   type="checkbox"
                   value=""
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  required
                 />
                 <div>
                   <label
@@ -250,6 +341,7 @@ const Create = () => {
                     type="checkbox"
                     value=""
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    required
                   />
                 </div>
                 <div>
@@ -273,36 +365,24 @@ const Create = () => {
               Submit
             </button>
           </form>
+          <button
+            onClick={() => {
+              setIsCreated(!isCreated)
+            }}
+            type="button"
+            className="text-white pt-4 mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            open modal
+          </button>
+          {isCreated ? (
+            <div>
+              <DepositDialog />
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
-
-      {/* show uploaded pic */}
-      {image.map((item, i) => (
-        <div
-          key={i}
-          className="rounded-xl w-36 h-36 mx-auto mt-16 mb-10 bg-gradient-to-r p-[6px] from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]"
-        >
-          <div
-            key={i}
-            className="flex flex-col justify-between h-full bg-white text-white rounded-lg"
-          >
-            <div key={i} className="rounded-lg  h-full w-full relative cursor-pointer ">
-              <div
-                key={i}
-                className="absolute inset-0 bg-red opacity-25 rounded-lg shadow-2xl"
-              ></div>
-              <div
-                key={i}
-                className="absolute inset-0 transform  hover:scale-90 transition duration-300"
-              >
-                <div key={i} className="h-full w-full bg-white rounded-lg shadow-2xl">
-                  <img key={i} className="w-full h-full rounded-lg" src={item} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
     </div>
   )
 }
