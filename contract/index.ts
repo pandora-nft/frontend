@@ -15,6 +15,10 @@ export const FACTORY_ADDRESS: { [chainId: number]: string } = {
   97: "0x5dA7a5af90fe291cE1bef49C819273A78F82D450",
   // Polygon Testnet
   80001: "0x8c7cf4db37B42cc231B0e821Dae03c842d8D367f",
+  //Fuji
+  43113: "",
+  //Avax
+  43114: "",
   // BNB Chain
   56: "",
   // Polygon Mainnet
@@ -28,7 +32,10 @@ export const TICKET_ADDRESS: { [chainId: number]: string } = {
   97: "0x36DF42342293ab2fbff56360dAb65498f1675156",
   //Polygon Testnet
   80001: "0x11Eb327528F2f760143BC5d19D8E9E71ABcf405d",
-
+  //Fuji
+  43113: "",
+  //Avax
+  43114: "",
   //BNB Chain
   56: "",
   //Polygon Mainnet
@@ -41,7 +48,10 @@ export const LOOTBOX_ADDRESS: { [chainId: number]: string } = {
   97: "0x24Fd4716985DAee8cDcaACDC5B3A06F15b498374",
   //Polygon Testnet
   80001: "0xbEBEc9f178E732052763Eba026A877e2F357A53F",
-
+  //Fuji
+  43113: "",
+  //Avax
+  43114: "",
   //BNB Chain
   56: "",
   //Polygon Mainnet

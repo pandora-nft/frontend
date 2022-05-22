@@ -26,6 +26,7 @@ export const useLootbox = () => {
     minimumTicketRequired: 0,
     maxTicketPerWallet: 0,
     ticketSold: 0,
+    owner: "",
   })
   const [tickets, setTickets] = useState<Ticket[]>()
 
@@ -65,7 +66,8 @@ export const useLootbox = () => {
       maxTicketPerWallet,
       drawTimestamp,
       isDrawn,
-      isRefundable
+      isRefundable,
+      owner
     await Promise.all([
       lootboxContract.id(),
       lootboxContract.name(),
@@ -76,6 +78,7 @@ export const useLootbox = () => {
       lootboxContract.drawTimestamp(),
       lootboxContract.isDrawn(),
       lootboxContract.isRefundable(),
+      lootboxContract.owner(),
     ]).then((values) => {
       id = Number(values[0].toString())
       name = values[1].toString()
@@ -86,6 +89,7 @@ export const useLootbox = () => {
       drawTimestamp = Number(values[6].toString())
       isDrawn = values[7]
       isRefundable = values[8]
+      owner = values[9].toString()
     })
 
     let nfts: NFT[] = []
@@ -128,6 +132,7 @@ export const useLootbox = () => {
       minimumTicketRequired,
       maxTicketPerWallet,
       ticketSold,
+      owner,
     }
     setLootbox(loot)
     setTickets(tickets)
