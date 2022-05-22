@@ -19,7 +19,8 @@
     "no-console": "warn",
     "semi": ["warn", "never"],
     "indent": ["warn", 2],
-    "quotes": ["warn", "double"]
+    "quotes": ["warn", "double"],
+    "@next/next/no-img-element": "off"
     // "unused-imports/no-unused-imports": "warn"
   }
 }

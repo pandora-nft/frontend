@@ -1,5 +1,4 @@
 import React from "react"
-import Image from "next/image"
 import { NFT } from "types"
 
 interface NFTCardProps {
@@ -11,8 +10,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({ NFT }) => {
 
   return (
     <div className="grid grid-flow-row min-h-64 rounded-[5px] border border-gray-300 cursor-pointer bg-gray-25 transform  hover:scale-[103%] transition duration-300">
-      <Image className="rounded-t" width={300} height={300} src={imageURI} alt="NFT" />
-      {/* <img className="h-full rounded-t-[5px]" src={imageURI || "error"} alt="" /> */}
+      <img className="h-full rounded-t-[5px]" src={imageURI} alt="NFT" />
       <div className="w-full h-[100px] min-h-20 border-t border-gray-300 text-left pt-2 pl-2">
         <p className="font-normal text-gray-600 text-sm">
           {collectionName} #{tokenId}

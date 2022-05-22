@@ -75,7 +75,9 @@ const Bid: React.FC<Props> = () => {
 
     const ownWonTicket = tickets?.filter((ticket) => {
       return (
-        ticket.owner.toLowerCase() === account.toLowerCase() && ticket.isWinner && !ticket.isClaimed
+        ticket.owner?.toLowerCase() === account.toLowerCase() &&
+        ticket.isWinner &&
+        !ticket.isClaimed
       )
     })
     const content = !isSuccess ? (
