@@ -18,18 +18,20 @@ const Nft = () => {
         <>
           {NFTBalances.result.map((nft, index) => {
             return (
-              <div key={index}>
-                <NFTCard
-                  NFT={{
-                    name: nft.metadata.name,
-                    collectionName: nft.name,
-                    description: nft.metadata.description,
-                    tokenId: nft.token_id,
-                    address: nft.token_address,
-                    imageURI: nft.image,
-                  }}
-                />
-              </div>
+              nft.metadata && (
+                <div key={index}>
+                  <NFTCard
+                    NFT={{
+                      name: nft.metadata.name,
+                      collectionName: nft.name,
+                      description: nft.metadata.description,
+                      tokenId: nft.token_id,
+                      address: nft.token_address,
+                      imageURI: nft.image,
+                    }}
+                  />
+                </div>
+              )
             )
           })}
         </>

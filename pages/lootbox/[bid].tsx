@@ -9,8 +9,7 @@ import { NFT, Ticket } from "types"
 import { ethers } from "ethers"
 import { NATIVE } from "network"
 import { LOOTBOX_ABI } from "contract"
-//TODO claimNFTDialog: show ticket, and select ticket to claim,
-//TODO Refund: show ticket, and select ticket to refund
+import { DepositNFTDialog } from "./depositNFT"
 interface Props {
   lootboxAddress: string
 }
@@ -22,8 +21,10 @@ const Bid: React.FC<Props> = () => {
   const { chain } = useChain()
   const { fetchLootbox, lootbox, isLoading, tickets } = useLootbox()
   const [showClaimNFTDialog, setShowClaimNFTDialog] = useState(false)
+  const [showDepositNFTDialog, setShowDepositNFTDialog] = useState(false)
   const [showRefundDialog, setShowRefundDialog] = useState(false)
   const [showBuyTicketsDialog, setShowBuyTicketsDialog] = useState(false)
+
   const [currentNFT, setCurrentNFT] = useState<NFT>()
 
   const onNFTClick = (nft: NFT) => {
@@ -75,7 +76,9 @@ const Bid: React.FC<Props> = () => {
 
     const ownWonTicket = tickets?.filter((ticket) => {
       return (
-        ticket.owner.toLowerCase() === account.toLowerCase() && ticket.isWinner && !ticket.isClaimed
+        ticket.owner?.toLowerCase() === account.toLowerCase() &&
+        ticket.isWinner &&
+        !ticket.isClaimed
       )
     })
     const content = !isSuccess ? (
@@ -137,7 +140,11 @@ const Bid: React.FC<Props> = () => {
     )
 
     const claimButton = (
-      <button disabled={!ticket} onClick={() => claimTickets(ticket.tokenId)}>
+      <button
+        className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+        disabled={!ticket}
+        onClick={() => claimTickets(ticket.tokenId)}
+      >
         Claim
       </button>
     )
@@ -191,7 +198,11 @@ const Bid: React.FC<Props> = () => {
     )
 
     const claimButton = (
-      <button disabled={ownTicket?.length === 0} onClick={() => refundTickets()}>
+      <button
+        className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+        disabled={ownTicket?.length === 0}
+        onClick={() => refundTickets()}
+      >
         Refund All
       </button>
     )
@@ -246,7 +257,14 @@ const Bid: React.FC<Props> = () => {
     ) : (
       <div className="flex items-center justify-center">Transaction Submitted 🎉</div>
     )
-    const buyButton = <button onClick={() => buyTickets(value)}>Buy</button>
+    const buyButton = (
+      <button
+        className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+        onClick={() => buyTickets(value)}
+      >
+        Buy
+      </button>
+    )
 
     return (
       <Modal
@@ -284,15 +302,18 @@ const Bid: React.FC<Props> = () => {
                   {!lootbox?.isDrawn && (
                     <>
                       <button
-                        className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                        className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        // className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
                         onClick={() => setShowBuyTicketsDialog(true)}
                       >
                         Buy Tickets
                       </button>
                       {lootbox?.owner?.toLowerCase() === account?.toLowerCase() && (
                         <button
-                          className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
-                          // onClick={() => {setShowBuyTicketsDialog(true)}}
+                          className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                          onClick={() => {
+                            setShowDepositNFTDialog(true)
+                          }}
                         >
                           Deposit NFTs
                         </button>
@@ -302,14 +323,14 @@ const Bid: React.FC<Props> = () => {
                   {lootbox?.isDrawn && !lootbox?.isRefundable && (
                     <>
                       <button
-                        className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                        className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         onClick={() => setShowClaimNFTDialog(true)}
                       >
                         Claim
                       </button>
                       {lootbox?.owner?.toLowerCase() === account?.toLowerCase() && (
                         <button
-                          className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                          className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                           onClick={async () => {
                             const sendOptions = {
                               contractAddress: lootbox?.address,
@@ -328,14 +349,14 @@ const Bid: React.FC<Props> = () => {
                   {lootbox?.isRefundable && (
                     <>
                       <button
-                        className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                        className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         onClick={() => setShowRefundDialog(true)}
                       >
                         Refund
                       </button>
                       {lootbox?.owner?.toLowerCase() === account?.toLowerCase() && (
                         <button
-                          className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                          className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                           onClick={async () => {
                             const sendOptions = {
                               contractAddress: lootbox?.address,
@@ -375,6 +396,11 @@ const Bid: React.FC<Props> = () => {
           <BuyDialog />
           <ClaimDialog />
           <RefundDialog />
+          <DepositNFTDialog
+            lootbox={lootbox}
+            showDepositNFTDialog={showDepositNFTDialog}
+            setShowDepositNFTDialog={setShowDepositNFTDialog}
+          />
         </>
       )}
     </>
