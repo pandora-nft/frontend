@@ -1,4 +1,5 @@
 export interface Lootbox {
+  id: number
   address: string
   name: string
   nfts: NFT[]
@@ -9,7 +10,9 @@ export interface Lootbox {
   minimumTicketRequired: number
   maxTicketPerWallet: number
   ticketSold: number
+  owner: string
 }
+
 export interface Ticket extends NFT {
   owner: string
   isClaimed: boolean
