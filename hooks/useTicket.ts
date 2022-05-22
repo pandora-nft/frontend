@@ -5,12 +5,13 @@ import { Chain } from "types"
 import { useLoading } from "./useLoading"
 import { getNFTMetadata } from "api"
 import { ethers } from "ethers"
+import { Ticket } from "types"
 
 export const useTicket = () => {
   const Web3Api = useMoralisWeb3Api()
   const { isWeb3Enabled, enableWeb3, account, web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
-  const [tickets, setTickets] = useState([])
+  const [tickets, setTickets] = useState<Ticket[]>([])
   const { isLoading, onLoad, onDone } = useLoading()
 
   const fetchTicket = async (ticketId: number) => {
@@ -20,7 +21,7 @@ export const useTicket = () => {
       moralisProvider
     )
 
-    let owner, isClaimed, isWinner, isRefunded
+    let owner, isClaimed, isWinner, isRefunded, lootboxId
     const nftMetadata = (
       await getNFTMetadata(chain.networkId, TICKET_ADDRESS[chain.networkId], ticketId)
     )?.data?.items[0]?.nft_data[0]?.external_data
@@ -30,11 +31,13 @@ export const useTicket = () => {
       ticketContract.isClaimed(ticketId),
       ticketContract.isWinner(ticketId),
       ticketContract.isRefunded(ticketId),
+      ticketContract.lootboxIds(ticketId),
     ]).then((values) => {
       owner = values[0].toString()
       isClaimed = values[1]
       isWinner = values[2]
       isRefunded = values[3]
+      lootboxId = Number(values[4].toString())
     })
 
     const ticket = {
@@ -48,6 +51,7 @@ export const useTicket = () => {
       isClaimed,
       isWinner,
       isRefunded,
+      lootboxId,
     }
 
     return ticket
@@ -66,6 +70,7 @@ export const useTicket = () => {
         const ticket = await fetchTicket(Number(tk.token_id))
         tickets.push(ticket)
       }
+      console.log("ticket", tickets)
       setTickets(tickets)
       onDone()
     }
