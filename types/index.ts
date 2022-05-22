@@ -9,6 +9,7 @@ export interface Lootbox {
   minimumTicketRequired: number
   maxTicketPerWallet: number
   ticketSold: number
+  owner: string
 }
 export interface Ticket extends NFT {
   owner: string

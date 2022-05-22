@@ -266,6 +266,9 @@ const Bid: React.FC<Props> = () => {
         </div>
       ) : (
         <>
+          {lootbox?.owner?.toLowerCase() === account?.toLowerCase() && (
+            <div className="mx-20">You are the owner of this Lootbox! 🎉</div>
+          )}
           <div className="flex flex-row mx-8 mt-8">
             <div className="shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] m-8">
               <div className="mx-8">ID: {router.query.bid}</div>
@@ -278,28 +281,73 @@ const Bid: React.FC<Props> = () => {
                 <div>{`Draw time: ${new Date(lootbox?.drawTimestamp * 1000).toUTCString()}`}</div>
                 <div className="flex flex-row-reverse">
                   {!lootbox?.isDrawn && (
-                    <button
-                      className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
-                      onClick={() => setShowBuyTicketsDialog(true)}
-                    >
-                      Buy Tickets
-                    </button>
+                    <>
+                      <button
+                        className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                        onClick={() => setShowBuyTicketsDialog(true)}
+                      >
+                        Buy Tickets
+                      </button>
+                      {lootbox?.owner?.toLowerCase() === account?.toLowerCase() && (
+                        <button
+                          className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                          // onClick={() => {setShowBuyTicketsDialog(true)}}
+                        >
+                          Deposit NFTs
+                        </button>
+                      )}
+                    </>
                   )}
                   {lootbox?.isDrawn && !lootbox?.isRefundable && (
-                    <button
-                      className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
-                      onClick={() => setShowClaimNFTDialog(true)}
-                    >
-                      Claim
-                    </button>
+                    <>
+                      <button
+                        className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                        onClick={() => setShowClaimNFTDialog(true)}
+                      >
+                        Claim
+                      </button>
+                      {lootbox?.owner?.toLowerCase() === account?.toLowerCase() && (
+                        <button
+                          className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                          onClick={async () => {
+                            const sendOptions = {
+                              contractAddress: lootbox?.address,
+                              functionName: "withdraw",
+                              abi: LOOTBOX_ABI,
+                            }
+                            await Moralis.executeFunction(sendOptions)
+                          }}
+                        >
+                          Withdraw Revenue
+                        </button>
+                      )}
+                    </>
                   )}
+
                   {lootbox?.isRefundable && (
-                    <button
-                      className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
-                      onClick={() => setShowRefundDialog(true)}
-                    >
-                      Refund
-                    </button>
+                    <>
+                      <button
+                        className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                        onClick={() => setShowRefundDialog(true)}
+                      >
+                        Refund
+                      </button>
+                      {lootbox?.owner?.toLowerCase() === account?.toLowerCase() && (
+                        <button
+                          className="m-2 px-2 rounded border-2 hover:shadow-xl cursor-pointer"
+                          onClick={async () => {
+                            const sendOptions = {
+                              contractAddress: lootbox?.address,
+                              functionName: "withdrawNFT",
+                              abi: LOOTBOX_ABI,
+                            }
+                            await Moralis.executeFunction(sendOptions)
+                          }}
+                        >
+                          withdraw NFT
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
