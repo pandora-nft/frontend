@@ -1,22 +1,38 @@
-import { useLootboxFactory } from "hooks"
+import { useLootboxFactory, useSkeleton } from "hooks"
+import { LootboxCard, LootboxCardSkeleton } from "components"
+import Link from "next/link"
 
 const Marketplace = () => {
-  const { allLootboxes } = useLootboxFactory()
+  const { allLootboxes, isLoading } = useLootboxFactory()
+  const { showSkeleton } = useSkeleton()
+
+  const showLootboxes = () => {
+    if (isLoading) {
+      return showSkeleton(<LootboxCardSkeleton />)
+    } else if (allLootboxes.length === 0) {
+      return <h2>No lootbox found</h2>
+    } else {
+      return (
+        <>
+          {allLootboxes.map((lootbox) => {
+            return (
+              <Link key={lootbox.id} href={`/lootbox/${lootbox.id}`}>
+                <a>
+                  <LootboxCard lootbox={lootbox} />
+                </a>
+              </Link>
+            )
+          })}
+        </>
+      )
+    }
+  }
 
   return (
-    <>
-      This is Market place
-      <div className="flex flex-col border border-black p-4">
-        <h2>All lootbox</h2>
-        {allLootboxes.map(({ address, name }) => {
-          return (
-            <h3 key={address}>
-              {address}: {name}
-            </h3>
-          )
-        })}
-      </div>
-    </>
+    <div className="centered mt-10">
+      <h2 className="font-medium mb-10">Marketplace</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">{showLootboxes()}</div>
+    </div>
   )
 }
 

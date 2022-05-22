@@ -12,6 +12,7 @@ export const Footer = () => {
       <img
         className="w-10 h-10 p-2 hover:opacity-50 cursor-pointer"
         src={`/logo/${logoName}.svg`}
+        alt="logo"
       />
     )
   }
