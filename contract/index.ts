@@ -57,3 +57,53 @@ export const LOOTBOX_ADDRESS: { [chainId: number]: string } = {
   //Polygon Mainnet
   137: "",
 }
+
+export const SUPPORT_CHAINID = ["0x38", "0x61", "0x89", "0x13881", "0xa86a", "0xa869"]
+
+export enum CHAIN_SUPPORT {
+  "BSC" = "Binace Smart Chain",
+  "BSC_TESTNET" = "Binance Smart Chain Testnet",
+  "POLYGON" = "Polygon",
+  "POLYGON_MUMBAI" = "Polygon Testnet Mumbai",
+  "AVALANCHE" = "Avalanche",
+  "AVALANCHE_FUJI" = "Avalanche Testnet Fuji",
+}
+
+interface CHAIN_DETAIL {
+  name: CHAIN_SUPPORT
+  shortName: string
+  src: string
+}
+
+export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
+  "0x38": {
+    name: CHAIN_SUPPORT.BSC,
+    shortName: "BSC",
+    src: "binance",
+  },
+  "0x61": {
+    name: CHAIN_SUPPORT.BSC_TESTNET,
+    shortName: "BSC Testnet",
+    src: "testnet",
+  },
+  "0x89": {
+    name: CHAIN_SUPPORT.POLYGON,
+    shortName: "Polygon",
+    src: "polygon",
+  },
+  "0x13881": {
+    name: CHAIN_SUPPORT.POLYGON_MUMBAI,
+    shortName: "Mumbai",
+    src: "testnet",
+  },
+  "0xa86a": {
+    name: CHAIN_SUPPORT.AVALANCHE,
+    shortName: "Avax",
+    src: "avalanche",
+  },
+  "0xa869": {
+    name: CHAIN_SUPPORT.AVALANCHE_FUJI,
+    shortName: "Fuji",
+    src: "testnet",
+  },
+}
