@@ -168,3 +168,5 @@ export const DepositNFTDialog = ({
     />
   )
 }
+
+export default DepositNFTDialog;
