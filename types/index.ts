@@ -19,6 +19,7 @@ export interface Ticket extends NFT {
   isWinner: boolean
   isRefunded: boolean
   wonTicket?: number
+  lootboxId: number
 }
 export interface NFT {
   name: string

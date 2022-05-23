@@ -3,6 +3,7 @@ import { NFTCard, NFTCardSkeleton } from "components"
 import { useSkeleton, useTicket } from "hooks"
 import ProfileLayout from "layouts/profileLayout"
 import { Ticket as TicketType } from "types"
+import Link from "next/link"
 
 const Ticket = () => {
   const { tickets, isLoading } = useTicket()
@@ -18,9 +19,11 @@ const Ticket = () => {
         <>
           {tickets.map((ticket: TicketType, index) => {
             return (
-              <div key={index}>
-                <NFTCard NFT={ticket} />
-              </div>
+              <Link key={index} href={`/lootbox/${ticket.lootboxId}`}>
+                <a>
+                  <NFTCard NFT={ticket} />
+                </a>
+              </Link>
             )
           })}
         </>

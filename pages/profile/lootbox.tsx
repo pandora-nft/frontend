@@ -3,6 +3,7 @@ import ProfileLayout from "layouts/profileLayout"
 import { ReactElement, useEffect } from "react"
 import { LootboxCard, LootboxCardSkeleton } from "components"
 import { useMoralis } from "react-moralis"
+import Link from "next/link"
 
 const Lootbox = () => {
   const { enableWeb3, isWeb3Enabled, account } = useMoralis()
@@ -27,9 +28,11 @@ const Lootbox = () => {
         <>
           {lootboxOwned.map((lootbox) => {
             return (
-              <>
-                <LootboxCard lootbox={lootbox} />
-              </>
+              <Link key={lootbox.id} href={`/lootbox/${lootbox.id}`}>
+                <a>
+                  <LootboxCard lootbox={lootbox} />
+                </a>
+              </Link>
             )
           })}
         </>

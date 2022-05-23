@@ -1,9 +1,14 @@
 import { ConnectButton } from "web3uikit"
-import Link from "next/link"
+import { useMoralis } from "react-moralis"
 import { useRouter } from "next/router"
+import { useState } from "react"
+import { ConnectChain } from "./ConnectChain"
+import Link from "next/link"
 
 export const Header = () => {
   const router = useRouter()
+  const { isAuthenticated } = useMoralis()
+  const [modalOpen, setModalOpen] = useState(false)
 
   const createNavLink = (label: string, endpoint: string) => {
     const activeStyle =
@@ -19,6 +24,7 @@ export const Header = () => {
       </Link>
     )
   }
+
   return (
     <>
       <nav className="p-5 flex flex-row items-center justify-between border-gray-200">
@@ -39,7 +45,21 @@ export const Header = () => {
           {createNavLink("Whitepaper", "/")}
         </div>
 
-        <div className="py-2 px-4">
+        <div className="flex flex-row py-2 px-4">
+          {/* <Link href={{ pathname: "/profile" }} replace>
+          <a className="pt-5 pr-5 font-medium text-xl">Pandora</a>
+          <img className="cursor-pointer mt-1 w-8 h-8" alt="user" src="User.png" />
+          </Link> */}
+
+          {isAuthenticated ? (
+            <div
+              className="rounded-[15px] pl-2 pr-4 flex items-center 
+              bg-blue-50 hover:bg-gray-300 cursor-pointer"
+            >
+              <ConnectChain modalOpen={modalOpen} setModalOpen={setModalOpen} />
+            </div>
+          ) : null}
+
           <ConnectButton moralisAuth={true} signingMessage="Moralis Authentication" />
         </div>
       </nav>

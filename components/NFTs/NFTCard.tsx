@@ -9,14 +9,13 @@ export const NFTCard: React.FC<NFTCardProps> = ({ NFT }) => {
   const { name, description, collectionName, tokenId, imageURI } = NFT
 
   return (
-
-    <div className="grid grid-flow-row w-full h-full rounded border border-gray-400 cursor-pointer bg-gray-25 transform  hover:scale-[103%] transition duration-300">
+    <div className="grid grid-flow-row w-full h-full rounded border border-gray-300 cursor-pointer bg-gray-25 transform  hover:scale-[101%] transition duration-300">
       <img
         className="block object-cover object-center w-full h-full rounded-lg"
-        src={imageURI || "error"}
-        alt=""
+        src={imageURI}
+        alt="NFT"
       />
-      <div className="pt-2 pl-2 border-t border-gray-400 text-left max-h-fit">
+      <div className="pt-2 pl-2 border-t border-gray-300 text-left max-h-fit">
         <h5 className="break-words font-medium ">{name}</h5>
         <p className="text-gray-700 font-medium text-medium mb-2">
           {collectionName} #{tokenId}{" "}
