@@ -5,7 +5,7 @@ import { useLootbox } from "hooks"
 import { FACTORY_ABI, FACTORY_ADDRESS } from "contract"
 import { ethers } from "ethers"
 
-import { DepositAfterCreateModal } from "./DepositAfterCreateModal"
+import { DepositAfterCreateModal } from "../../components/DepositAfterCreateModal"
 import { LoadingIndicator } from "components"
 const initialFormData = {
   name: "",
