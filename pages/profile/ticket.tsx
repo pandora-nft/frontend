@@ -1,5 +1,5 @@
 import { ReactElement } from "react"
-import { NFTCard, NFTCardSkeleton } from "components"
+import { NFTCard, NFTCardSkeleton, NotFound } from "components"
 import { useSkeleton, useTicket } from "hooks"
 import ProfileLayout from "layouts/profileLayout"
 import { Ticket as TicketType } from "types"
@@ -13,7 +13,7 @@ const Ticket = () => {
     if (isLoading) {
       return showSkeleton(<NFTCardSkeleton />)
     } else if (tickets.length === 0) {
-      return <h2>You have not bought any ticket yet!</h2>
+      return <NotFound info="You have not bought any ticket yet" />
     } else {
       return (
         <>

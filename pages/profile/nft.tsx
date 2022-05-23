@@ -1,17 +1,17 @@
 import ProfileLayout from "layouts/profileLayout"
 import { ReactElement } from "react"
 import { useNFTsBalance, useSkeleton } from "hooks"
-import { NFTCard, NFTCardSkeleton } from "components"
+import { NotFound, NFTCard, NFTCardSkeleton } from "components"
+
 const Nft = () => {
   const { NFTBalances, isLoading } = useNFTsBalance()
-
   const { showSkeleton } = useSkeleton()
 
   const showNFTs = () => {
     if (isLoading) {
       return showSkeleton(<NFTCardSkeleton />)
-    } else if (!NFTBalances) {
-      return <h2>You have no NFTs</h2>
+    } else if (!NFTBalances || NFTBalances.result.length === 0) {
+      return <NotFound info="You have no NFT yet" />
     } else {
       return (
         <>
@@ -47,6 +47,7 @@ const Nft = () => {
     </>
   )
 }
+
 Nft.getLayout = function getLayout(page: ReactElement) {
   return <ProfileLayout>{page}</ProfileLayout>
 }

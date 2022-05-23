@@ -1,7 +1,7 @@
 import { useLootboxFactory, useSkeleton } from "hooks"
 import ProfileLayout from "layouts/profileLayout"
 import { ReactElement, useEffect } from "react"
-import { LootboxCard, LootboxCardSkeleton } from "components"
+import { NotFound, LootboxCard, LootboxCardSkeleton } from "components"
 import { useMoralis } from "react-moralis"
 import Link from "next/link"
 
@@ -22,7 +22,7 @@ const Lootbox = () => {
     if (isLoading) {
       return showSkeleton(<LootboxCardSkeleton />)
     } else if (lootboxOwned.length === 0) {
-      return <h2>No lootbox found</h2>
+      return <NotFound info="You have not create any lootbox yet" />
     } else {
       return (
         <>

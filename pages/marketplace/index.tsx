@@ -1,5 +1,5 @@
 import { useLootboxFactory, useSkeleton } from "hooks"
-import { LootboxCard, LootboxCardSkeleton } from "components"
+import { NotFound, LootboxCard, LootboxCardSkeleton } from "components"
 import Link from "next/link"
 
 const Marketplace = () => {
@@ -9,8 +9,8 @@ const Marketplace = () => {
   const showLootboxes = () => {
     if (isLoading) {
       return showSkeleton(<LootboxCardSkeleton />)
-    } else if (allLootboxes.length === 0) {
-      return <h2>No lootbox found</h2>
+    } else if (allLootboxes.length > 0) {
+      return <NotFound info="No one create a lootbox yet" />
     } else {
       return (
         <>
