@@ -22,7 +22,7 @@ const Create = () => {
   const [image, setImage] = useState<Array<string>>([])
   const [isCreated, setIsCreated] = useState<boolean>(false)
   const { runContractFunction: deployLootbox } = useWeb3Contract({
-    contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
+    contractAddress: chain ? FACTORY_ADDRESS[chain.chainId] : "",
     functionName: "deployLootbox(string,uint256,uint256,uint256,uint256)",
     abi: FACTORY_ABI,
     params: {
@@ -34,7 +34,7 @@ const Create = () => {
     },
   })
   const { runContractFunction: getAllLootbox } = useWeb3Contract({
-    contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
+    contractAddress: chain ? FACTORY_ADDRESS[chain.chainId] : "",
     functionName: "getAllLootboxes",
     abi: FACTORY_ABI,
     params: {},
@@ -114,7 +114,7 @@ const Create = () => {
       {/* <div>{JSON.stringify(formData)}</div> */}
       <div className="grid pl-16 pt-8 justify-items-start rounded-lg  w-full ">
         <div className="h-24 lg:w-2/5 shadow-xl bg-gray-50">
-          connected to {chain ? chain.name : "..."} chainId: {chain ? chain.networkId : "..."}
+          connected to {chain ? chain.name : "..."} chainId: {chain ? chain.chainId : "..."}
           <img className="w-6" src="/chain/Ethereum.png"></img>
           <span>address:{account}</span>
         </div>

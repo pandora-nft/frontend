@@ -16,15 +16,15 @@ export const useTicket = () => {
 
   const fetchTicket = async (ticketId: number) => {
     const ticketContract = new ethers.Contract(
-      TICKET_ADDRESS[chain.networkId],
+      TICKET_ADDRESS[chain.chainId],
       TICKET_ABI,
       moralisProvider
     )
-
+    let collectionName = await ticketContract.name()
     let owner, isClaimed, isWinner, isRefunded, lootboxId
-    const nftMetadata = (
-      await getNFTMetadata(chain.networkId, TICKET_ADDRESS[chain.networkId], ticketId)
-    )?.data?.items[0]?.nft_data[0]?.external_data
+    let nftMetadata = (
+      await getNFTMetadata(chain.chainId, TICKET_ADDRESS[chain.chainId], ticketId)
+    )
 
     await Promise.all([
       ticketContract.ownerOf(ticketId),
@@ -39,11 +39,17 @@ export const useTicket = () => {
       isRefunded = values[3]
       lootboxId = Number(values[4].toString())
     })
-
+    if(isWinner){
+      const tokenURI = await ticketContract.tokenURI(ticketId)
+      const base64 = tokenURI.substr(tokenURI.indexOf(",") + 1)
+      nftMetadata = JSON.parse(window.atob(base64))
+      nftMetadata.image = nftMetadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")
+    }
+    console.log(nftMetadata)
     const ticket = {
       tokenId: ticketId,
-      collectionName: nftMetadata?.name || null,
-      address: TICKET_ADDRESS[chain.networkId],
+      collectionName,
+      address: TICKET_ADDRESS[chain.chainId],
       imageURI: nftMetadata?.image || null,
       name: nftMetadata?.name || null,
       description: nftMetadata?.description || null,
@@ -62,7 +68,7 @@ export const useTicket = () => {
       const options = {
         chain: chain.chainId as Chain,
         address: account,
-        token_address: TICKET_ADDRESS[chain.networkId],
+        token_address: TICKET_ADDRESS[chain.chainId],
       }
       const response = await Web3Api.account.getNFTsForContract(options)
       let tickets = []

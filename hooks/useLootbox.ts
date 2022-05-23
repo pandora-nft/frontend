@@ -35,7 +35,7 @@ export const useLootbox = () => {
     let lootboxAddress: string
     if (!isNaN(lootboxId)) {
       const factory = new ethers.Contract(
-        FACTORY_ADDRESS[chain.networkId],
+        FACTORY_ADDRESS[chain.chainId],
         FACTORY_ABI,
         moralisProvider
       )
@@ -45,7 +45,7 @@ export const useLootbox = () => {
     }
 
     const ticketContract = new ethers.Contract(
-      TICKET_ADDRESS[chain.networkId],
+      TICKET_ADDRESS[chain.chainId],
       TICKET_ABI,
       moralisProvider
     )
@@ -96,8 +96,7 @@ export const useLootbox = () => {
     for (const nft of fetchNfts) {
       const nftAddress = nft._address.toString()
       const tokenId = +nft._tokenId.toString()
-      const nftMetadata = (await getNFTMetadata(chain.networkId, nftAddress, tokenId))?.data
-        ?.items[0]?.nft_data[0]?.external_data
+      const nftMetadata = (await getNFTMetadata(chain.chainId, nftAddress, tokenId))
 
       nfts.push({
         tokenId,
