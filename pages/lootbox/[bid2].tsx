@@ -4,13 +4,12 @@ import { useRouter } from "next/router"
 import { useMoralis, useChain } from "react-moralis"
 import { useLootbox } from "hooks"
 import { LootboxCanvas } from "canvas"
-import { NFTCard, LoadingIndicator, Modal } from "components"
+import { LoadingIndicator, Modal } from "components"
 import { NFT, Ticket } from "types"
 import { ethers } from "ethers"
 import { NATIVE } from "network"
 import { LOOTBOX_ABI } from "contract"
 import { DepositNFTDialog } from "./depositNFT"
-import { Icon } from "web3uikit"
 
 interface Props {
   lootboxAddress: string
@@ -25,17 +24,6 @@ const Bid: React.FC<Props> = () => {
   const { enableWeb3, isWeb3Enabled, Moralis, account } = useMoralis()
   const { chain } = useChain()
   const { fetchLootbox, lootbox, isLoading, tickets } = useLootbox()
-  const {
-    id,
-    name,
-    address,
-    ticketPrice,
-    ticketSold,
-    nfts,
-    drawTimestamp,
-    minimumTicketRequired,
-    owner,
-  } = lootbox
   const [showClaimNFTDialog, setShowClaimNFTDialog] = useState(false)
   const [showDepositNFTDialog, setShowDepositNFTDialog] = useState(false)
   const [showRefundDialog, setShowRefundDialog] = useState(false)
@@ -294,94 +282,23 @@ const Bid: React.FC<Props> = () => {
     )
   }
 
-  const createLabel = (topic: string, value: any) => {
-    return (
-      <div className="rounded border bg-lightPink border-gray-200 p-4 items-center text-center">
-        <h3 className="text-mainPink font-medium">{value}</h3>
-        <h3 className="font-bold">{topic}</h3>
-      </div>
-    )
-  }
-
   return (
-    <div className="centered border-red-500">
+    <>
       {isLoading ? (
         <div className="h-[30vh] mt-[10vh] flex flex-col items-center justify-between">
           <LoadingIndicator />
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-3 w-full">
-            <div className="rounded-md h-100 col-span-1 border border-gray-200">
-              <LootboxCanvas />
-            </div>
-            <div className="flex flex-col justify-between pt-5 ml-10 col-span-2 text-left border-red-500">
-              <h1 className="text-4xl font-medium">
-                #{id} {name}
-              </h1>
-
-              <h3 className="text-xl">{address}</h3>
-
-              <h3 className="text-lg font-medium">
-                Owned by{" "}
-                <span className="text-mainPink">
-                  {account?.toUpperCase() === owner?.toUpperCase() ? "you" : "" + owner}
-                </span>
-              </h3>
-
-              <div className="p-5 rounded-xl border border-gray-200 bg-lightPink">
-                <button
-                  className="flex flex-row px-32 py-4 bg-white border border-mainPink text-mainPink
-                             rounded-xl hover:shadow-2xl transition duration-300
-                "
-                >
-                  <Icon fill="#E54090" size={28} svg="creditCard" />
-                  <h3 className="ml-2 mt-2">Buy Tickets</h3>
-                </button>
-              </div>
-
-              <h3>You owned 1 ticket</h3>
-
-              <div
-                className="flex flex-row font-medium rounded 
-                        border border-gray-200 p-4 items-center"
-              >
-                <Icon fill="rgb(30,30,30)" size={28} svg="calendar" />{" "}
-                <h3 className="ml-1 mt-3">
-                  Draw time:{" "}
-                  <span className="text-mainPink">
-                    {new Date(drawTimestamp * 1000).toUTCString()}
-                  </span>
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-4 gap-5">
-                {createLabel("items", nfts.length)}
-                {createLabel("ticket price", ethers.utils.formatEther(ticketPrice.toString()))}
-                {createLabel("ticket sold", ticketSold)}
-                {createLabel("ticket required", minimumTicketRequired)}
-              </div>
-            </div>
-          </div>
-
-          <h2 className="font-bold mt-20 mb-10">{"What's in the box?"}</h2>
-          <div
-            className="grid grid-cols-2 lg:grid-cols-3
-                     xl:grid-cols-4 3xl:grid-cols-5 5xl:grid-cols-6 gap-5"
-          >
-            {lootbox.nfts.map((nft, index) => {
-              return (
-                <div key={index}>
-                  <NFTCard NFT={nft} />
-                </div>
-              )
-            })}
-          </div>
-
+          {lootbox?.owner?.toLowerCase() === account?.toLowerCase() && (
+            <div className="mx-20">You are the owner of this Lootbox! 🎉</div>
+          )}
           <div className="flex flex-row mx-8 mt-8">
             <div className="shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] m-8">
               <div className="mx-8">ID: {router.query.bid}</div>
-              <div className="h-30 motion-safe:animate-bounce">{/* <LootboxCanvas /> */}</div>
+              <div className="h-30 motion-safe:animate-bounce">
+                <LootboxCanvas />
+              </div>
               <div className="text-sm mx-8">
                 <div>Name: {lootbox?.name}</div>
 
@@ -480,7 +397,6 @@ const Bid: React.FC<Props> = () => {
               </div>
             </div>
           </div>
-
           <NFTDialog />
           <BuyDialog />
           <ClaimDialog />
@@ -492,7 +408,7 @@ const Bid: React.FC<Props> = () => {
           />
         </>
       )}
-    </div>
+    </>
   )
 }
 export default Bid

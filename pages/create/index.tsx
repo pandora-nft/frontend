@@ -23,6 +23,7 @@ const Create = () => {
   const [showDepositNFTDialog, setShowDepositNFTDialog] = useState<boolean>(false)
   const [bid, setBid] = useState<number>(0)
   const [isListened, setIsListened] = useState(true)
+
   const { runContractFunction: deployLootbox } = useWeb3Contract({
     contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
     functionName: "deployLootbox(string,uint256,uint256,uint256,uint256)",
@@ -206,6 +207,8 @@ const Create = () => {
                     required
                   >
                     <option disabled>Choose expiration period</option>
+                    <option value={60}>1 min</option>
+                    <option value={5 * 60}>5 mins</option>
                     <option value={1 * 60 * 60}>1 hours</option>
                     <option value={3 * 60 * 60}>3 hours</option>
                     <option value={6 * 60 * 60}>6 hours</option>
