@@ -1,6 +1,7 @@
 import { LootboxDetail } from "./LootboxDetail"
 import { Lootbox } from "types"
 import { shortenAddress } from "utils"
+import { Illustration } from "web3uikit"
 
 interface LootboxCardProps {
   lootbox: Lootbox
@@ -16,15 +17,15 @@ export const LootboxCard: React.FC<LootboxCardProps> = ({ lootbox }) => {
   )
 
   const showNFTs = () => {
-    if (nfts.length < 4) {
+    if (nfts.length === 0) {
       return (
-        <>
-          {Array(4)
-            .fill(null)
-            .map((_, index) => {
-              return <div key={index}>{createImg("EmptyPic.png")}</div>
-            })}
-        </>
+        <div
+          className="col-span-4 border-red-500
+                        flex items-center"
+        >
+          <Illustration width="80px" height="80px" logo="looking" />
+          <h3 className="text-lg text-gray-500 font-light">This lootbox has no deposited NFT</h3>
+        </div>
       )
     } else if (nfts.length > 4) {
       return (
