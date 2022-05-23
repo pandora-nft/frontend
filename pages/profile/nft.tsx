@@ -15,24 +15,25 @@ const Nft = () => {
     } else {
       return (
         <>
-          {NFTBalances.result.map((nft, index) => {
-            return (
-              nft.metadata && (
+          {NFTBalances ? (
+            NFTBalances.result.map((nft, index) => {
+              const NFT = {
+                name: nft?.metadata?.name,
+                collectionName: nft?.name,
+                description: nft?.metadata?.description,
+                tokenId: nft?.token_id,
+                address: nft?.token_address,
+                imageURI: nft?.image,
+              }
+              return (
                 <div key={index}>
-                  <NFTCard
-                    NFT={{
-                      name: nft.metadata.name,
-                      collectionName: nft.name,
-                      description: nft.metadata.description,
-                      tokenId: nft.token_id,
-                      address: nft.token_address,
-                      imageURI: nft.image,
-                    }}
-                  />
+                  <NFTCard NFT={NFT} />
                 </div>
               )
-            )
-          })}
+            })
+          ) : (
+            <></>
+          )}
         </>
       )
     }
