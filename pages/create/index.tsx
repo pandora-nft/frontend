@@ -1,26 +1,28 @@
 import Link from "next/link"
 import { useState } from "react"
 import { useChain, useWeb3Contract, useMoralis } from "react-moralis"
-import { useNFTsBalance, useLootbox } from "hooks"
+import { useLootbox } from "hooks"
 import { FACTORY_ABI, FACTORY_ADDRESS } from "contract"
 import { ethers } from "ethers"
-import { Modal } from "components"
-import { NFTCard } from "components/NFTs/NFTCard"
+
+import { DepositAfterCreateModal } from "../../components/DepositAfterCreateModal"
+import { LoadingIndicator } from "components"
 const initialFormData = {
   name: "",
-  drawTimestamp: 86400, //1day
+  drawTimestamp: 86400, //1day = 24*60*60
   ticketPrice: 0.001,
   minimumTicketRequired: 1,
   maxTicketPerWallet: 1,
 }
 
 const Create = () => {
-  const { account } = useMoralis()
+  const { account, web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
-  const { fetchLootbox, lootbox } = useLootbox()
+  const { fetchLootbox, lootbox, isLoading } = useLootbox()
   const [formData, setFormData] = useState(initialFormData)
-  const [image, setImage] = useState<Array<string>>([])
-  const [isCreated, setIsCreated] = useState<boolean>(false)
+  const [showDepositNFTDialog, setShowDepositNFTDialog] = useState<boolean>(false)
+  const [bid, setBid] = useState<number>(0)
+  const [isListened, setIsListened] = useState(true)
   const { runContractFunction: deployLootbox } = useWeb3Contract({
     contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
     functionName: "deployLootbox(string,uint256,uint256,uint256,uint256)",
@@ -33,76 +35,37 @@ const Create = () => {
       _maxTicketPerWallet: formData.maxTicketPerWallet,
     },
   })
-  const { runContractFunction: getAllLootbox } = useWeb3Contract({
-    contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
-    functionName: "getAllLootboxes",
-    abi: FACTORY_ABI,
-    params: {},
-  })
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      let img = event.target.files[0]
-      setImage([...image, URL.createObjectURL(img)])
-    }
-  }
 
   async function handleFormSumbit(e) {
     e.preventDefault()
     const deploy_res: any = await deployLootbox()
     console.log(deploy_res)
-    console.log("created box at ", deploy_res?.to)
-    const allLootBox: any = await getAllLootbox()
-    console.log(allLootBox)
-    await fetchLootbox("", allLootBox?.length - 1)
-    console.log("bid", allLootBox.length - 1, lootbox)
-
-    setIsCreated(true)
+    setIsListened(false)
     setFormData(initialFormData)
   }
 
-  if (formData) console.log(formData)
+  const handleEventListener = async (bid: number) => {
+    await fetchLootbox("", bid)
+    setShowDepositNFTDialog(true)
+  }
 
-  const DepositDialog = () => {
-    const { NFTBalances } = useNFTsBalance()
-    const content = (
-      <div className="flex">
-        <div className="container mx-auto max-w-4/5 min-w-sm pr-3">
-          <h3>`Name` Lootbox </h3>
-        </div>
-        <div className="container w-fit pl-3 border-l ">
-          <h3>NFTs Owned </h3>
-          <div className="grid grid-cols-3 gap-2 pt-6">
-            {NFTBalances ? (
-              NFTBalances.result.map((nft, index) => {
-                const NFT = {
-                  name: nft?.metadata?.name,
-                  collectionName: nft?.name,
-                  description: "",
-                  tokenId: nft?.token_id,
-                  address: nft?.token_address,
-                  imageURI: nft?.image,
-                }
-                return (
-                  <div key={index}>
-                    <NFTCard NFT={NFT} />
-                  </div>
-                )
-              })
-            ) : (
-              <></>
-            )}
-          </div>
-        </div>
-      </div>
+  if (chain) {
+    const factory = new ethers.Contract(
+      FACTORY_ADDRESS[chain.networkId],
+      FACTORY_ABI,
+      moralisProvider
     )
-    return (
-      <Modal
-        open={isCreated}
-        setOpen={setIsCreated}
-        title={"Deposit Your NFTs"}
-        content={content}
-      />
-    )
+    if (!isListened) {
+      factory.on("LootboxDeployed", (lootboxId, lootboxAddress, owner) => {
+        setIsListened(true)
+        const listened_bid = Number(ethers.utils.formatUnits(lootboxId, 0))
+        console.log("event Listened", listened_bid, lootboxAddress, owner)
+        if (account?.toString().toLowerCase() == owner?.toString().toLowerCase()) {
+          setBid(listened_bid)
+          handleEventListener(listened_bid)
+        }
+      })
+    }
   }
 
   return (
@@ -111,12 +74,10 @@ const Create = () => {
         <h2 className="text-[42px] font-bold">Create Single LootBox on Ethereum</h2>
       </div>
 
-      {/* <div>{JSON.stringify(formData)}</div> */}
-      <div className="grid pl-16 pt-8 justify-items-start rounded-lg  w-full ">
-        <div className="h-24 lg:w-2/5 shadow-xl bg-gray-50">
+      <div className="grid pl-16 pt-8 justify-items-start rounded-xl  w-full ">
+        <div className="h-24 w-42 shadow-xl text-lg font-bold  bg-gray-50 p-4">
           connected to {chain ? chain.name : "..."} chainId: {chain ? chain.networkId : "..."}
           <img className="w-6" src="/chain/Ethereum.png"></img>
-          <span>address:{account}</span>
         </div>
       </div>
 
@@ -124,48 +85,7 @@ const Create = () => {
       <div className="grid pl-16 pt-8 justify-items-start rounded-lg  w-full ">
         <div className="w-3/4">
           <form onSubmit={(e) => handleFormSumbit(e)} className="w-full max-w-lg">
-            <label className="inline-block mb-2 text-[24px] font-bold">
-              Upload Image (jpg,png,svg,jpeg)
-            </label>
-            <div className="flex items-center justify-center w-full">
-              <label className="flex flex-col w-full h-full border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
-                <div className="flex flex-col items-center justify-center pt-7 ">
-                  {image.length !== 0 ? (
-                    <div>
-                      <img className="w-36 h-36" src={image[image.length - 1]} />
-                    </div>
-                  ) : (
-                    <>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-12 h-12 text-gray-400 group-hover:text-gray-600"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <p className="pt-1 text-m tracking-wider text-gray-400 group-hover:text-gray-600">
-                        Select a photo
-                      </p>
-                    </>
-                  )}
-                </div>
-                <input
-                  type="file"
-                  name="myImage"
-                  onChange={(e) => {
-                    handleImageChange(e)
-                  }}
-                  className="opacity-0"
-                />
-              </label>
-            </div>
-
-            <div className="grid xl:grid-cols-2 xl:gap-6 pt-6">
+            <div className="grid sm:grid-cols-1 md:grid-cols-1 xl:grid-cols-1 xl:gap-6 pt-6">
               <div className="relative z-0 w-full pb-2 group">
                 <label
                   htmlFor="message"
@@ -185,19 +105,6 @@ const Create = () => {
                 />
               </div>
             </div>
-            {/* <div className="grid-row xl:grid-cols-2 xl:gap-6 pt-6">
-              <label
-                htmlFor="message"
-                className="block mb-4 text-m font-medium text-gray-900 dark:text-gray-400"
-              >
-                Description
-              </label>
-              <textarea
-                id="message"
-                className="block p-2.5 w-full text-m text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="add description"
-              ></textarea>
-            </div> */}
             <div className="grid pt-6 xl:grid-cols-2 xl:gap-6">
               <div className="relative z-0 w-full pb-2 group">
                 <label
@@ -358,25 +265,30 @@ const Create = () => {
               </Link>
             </fieldset>
             <div></div>
-            <button
-              type="submit"
-              className="text-white pt-4 mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Submit
-            </button>
+            {isLoading || !isListened ? (
+              <button
+                type="button"
+                className="text-white pt-4 mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                <LoadingIndicator />
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="text-white pt-4 mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Submit
+              </button>
+            )}
           </form>
-          <button
-            onClick={() => {
-              setIsCreated(!isCreated)
-            }}
-            type="button"
-            className="text-white pt-4 mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            open modal
-          </button>
-          {isCreated ? (
+          {lootbox ? (
             <div>
-              <DepositDialog />
+              <DepositAfterCreateModal
+                lootbox={lootbox}
+                showDepositNFTDialog={showDepositNFTDialog}
+                setShowDepositNFTDialog={setShowDepositNFTDialog}
+                bid={bid}
+              />
             </div>
           ) : (
             <></>
