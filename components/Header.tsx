@@ -11,10 +11,9 @@ export const Header = () => {
   const [modalOpen, setModalOpen] = useState(false)
 
   const createNavLink = (label: string, endpoint: string) => {
-    const activeStyle =
-      router.pathname === endpoint
-        ? "text-black border-b-2 border-mainPink"
-        : "text-gray-500 hover:text-black"
+    const activeStyle = router.pathname.startsWith(endpoint)
+      ? "text-black border-b-2 border-mainPink"
+      : "text-gray-500 hover:text-black"
 
     return (
       <Link
@@ -38,31 +37,33 @@ export const Header = () => {
             </div>
           </a>
         </Link>
-        <div className="flex flex-row items-center justify-between">
-          {createNavLink("Marketplace", "/marketplace")}
-          {createNavLink("Create", "/create")}
-          {createNavLink("Lootbox", "/lootbox/0")}
-          {createNavLink("Profile", "/profile")}
-          {createNavLink("Roadmap", "/")}
-          {createNavLink("Whitepaper", "/")}
-        </div>
+        <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center justify-between mt-2">
+            {createNavLink("Marketplace", "/marketplace")}
+            {createNavLink("Create", "/create")}
+            {/* {createNavLink("Lootbox", "/lootbox/0")} */}
+            {createNavLink("Profile", "/profile")}
+            {/* {createNavLink("Roadmap", "/")} */}
+            {/* {createNavLink("Whitepaper", "/")} */}
+          </div>
 
-        <div className="flex flex-row py-2 px-4">
-          {/* <Link href={{ pathname: "/profile" }} replace>
+          <div className="flex flex-row py-2 px-4">
+            {/* <Link href={{ pathname: "/profile" }} replace>
           <a className="pt-5 pr-5 font-medium text-xl">Pandora</a>
           <img className="cursor-pointer mt-1 w-8 h-8" alt="user" src="User.png" />
           </Link> */}
 
-          {isAuthenticated ? (
-            <div
-              className="rounded-[15px] pl-2 pr-4 flex items-center 
+            {isAuthenticated ? (
+              <div
+                className="rounded-[15px] pl-2 pr-4 flex items-center 
               bg-blue-50 hover:bg-gray-300 cursor-pointer"
-            >
-              <ConnectChain modalOpen={modalOpen} setModalOpen={setModalOpen} />
-            </div>
-          ) : null}
+              >
+                <ConnectChain modalOpen={modalOpen} setModalOpen={setModalOpen} />
+              </div>
+            ) : null}
 
-          <ConnectButton moralisAuth={true} signingMessage="Moralis Authentication" />
+            <ConnectButton moralisAuth={true} signingMessage="Moralis Authentication" />
+          </div>
         </div>
       </nav>
     </>
