@@ -43,7 +43,6 @@ export const useTicket = () => {
       nftMetadata = JSON.parse(window.atob(base64))
       nftMetadata.image = nftMetadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")
     }
-    console.log(nftMetadata)
     const ticket = {
       tokenId: ticketId,
       collectionName,

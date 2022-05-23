@@ -74,7 +74,6 @@ const Create = () => {
         <h2 className="text-[42px] font-bold">Create Single LootBox on Ethereum</h2>
       </div>
 
-
       <div className="grid pl-16 pt-8 justify-items-start rounded-xl  w-full ">
         <div className="h-24 w-42 shadow-xl text-lg font-bold  bg-gray-50 p-4">
           connected to {chain ? chain.name : "..."} chainId: {chain ? chain.chainId : "..."}
