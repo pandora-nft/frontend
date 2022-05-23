@@ -1,4 +1,4 @@
-// pages/lootbox/[bid]
+// pages/lootbox/[oldBid]
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { useMoralis, useChain } from "react-moralis"
@@ -18,7 +18,7 @@ interface Props {
 //TODO refresh data when tx confirmed
 //TODO show total ticket, minum ticket
 //what's in the box ui bug when low nft amount
-const Bid: React.FC<Props> = () => {
+const OldBid: React.FC<Props> = () => {
   const router = useRouter()
 
   const { enableWeb3, isWeb3Enabled, Moralis, account } = useMoralis()
@@ -37,11 +37,11 @@ const Bid: React.FC<Props> = () => {
 
   useEffect(() => {
     if (isWeb3Enabled) {
-      fetchLootbox("", Number(router.query.bid))
+      fetchLootbox("", Number(router.query.oldBid))
     } else {
       enableWeb3()
     }
-  }, [router.query.bid, isWeb3Enabled])
+  }, [router.query.oldBid, isWeb3Enabled])
 
   const NFTDialog = () => {
     const content = (
@@ -295,7 +295,7 @@ const Bid: React.FC<Props> = () => {
           )}
           <div className="flex flex-row mx-8 mt-8">
             <div className="shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] m-8">
-              <div className="mx-8">ID: {router.query.bid}</div>
+              <div className="mx-8">ID: {router.query.oldBid}</div>
               <div className="h-30 motion-safe:animate-bounce">
                 <LootboxCanvas />
               </div>
@@ -411,4 +411,4 @@ const Bid: React.FC<Props> = () => {
     </>
   )
 }
-export default Bid
+export default OldBid
