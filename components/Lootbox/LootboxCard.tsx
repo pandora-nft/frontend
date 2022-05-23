@@ -9,6 +9,12 @@ interface LootboxCardProps {
 export const LootboxCard: React.FC<LootboxCardProps> = ({ lootbox }) => {
   const { id, name, address, ticketPrice, ticketSold, nfts, drawTimestamp } = lootbox
 
+  const createImg = (src: string) => (
+    <div className="rounded">
+      <img alt="nft" className="rounded w-full h-48 md:h-24" src={src} />
+    </div>
+  )
+
   const showNFTs = () => {
     if (nfts.length < 4) {
       return (
@@ -16,29 +22,36 @@ export const LootboxCard: React.FC<LootboxCardProps> = ({ lootbox }) => {
           {Array(4)
             .fill(null)
             .map((_, index) => {
-              return (
-                <img
-                  key={index}
-                  className="rounded w-full h-48 md:h-24"
-                  alt="emptyNFT"
-                  src="EmptyPic.png"
-                />
-              )
+              return <div key={index}>{createImg("EmptyPic.png")}</div>
             })}
+        </>
+      )
+    } else if (nfts.length > 4) {
+      return (
+        <>
+          {nfts.slice(0, 3).map((nft, index) => {
+            return <div key={index}> {createImg(nft.imageURI)}</div>
+          })}
+          <div className="relative">
+            <div className="rounded bg-black">
+              <div className="opacity-50"> {createImg(nfts[3].imageURI)}</div>
+            </div>
+
+            <h2
+              className="absolute top-1/2 left-1/2 transform 
+            -translate-x-1/2 -translate-y-1/3 
+            text-white font-medium text-sm"
+            >
+              +more
+            </h2>
+          </div>
         </>
       )
     } else {
       return (
         <>
           {nfts.map((nft, index) => {
-            return (
-              <img
-                key={index}
-                alt="nft"
-                className="rounded w-full h-48 md:h-24"
-                src={nft.imageURI}
-              />
-            )
+            return <div key={index}>{createImg(nft.imageURI)}</div>
           })}
         </>
       )
