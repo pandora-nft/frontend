@@ -118,7 +118,6 @@ export const useLootbox = () => {
         _tickets.push(ticket)
       })
     }
-    console.log("Tickets",_tickets)
     const loot: Lootbox = {
       id,
       name,

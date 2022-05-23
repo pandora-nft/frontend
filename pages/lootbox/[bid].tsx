@@ -63,7 +63,7 @@ const Bid: React.FC<Props> = () => {
   const ClaimDialog = () => {
     const [ticket, setTicket] = useState<Ticket>()
     const [isSuccess, setIsSuccess] = useState(false)
-    
+
     async function claimTickets(tickets: number) {
       const sendOptions = {
         contractAddress: lootbox?.address,
@@ -398,7 +398,7 @@ const Bid: React.FC<Props> = () => {
           </div>
           <NFTDialog />
           <BuyDialog />
-          <ClaimDialog/>
+          <ClaimDialog />
           <RefundDialog />
           <DepositNFTDialog
             lootbox={lootbox}
