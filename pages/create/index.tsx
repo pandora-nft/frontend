@@ -51,7 +51,7 @@ const Create = () => {
 
   if (chain) {
     const factory = new ethers.Contract(
-      FACTORY_ADDRESS[chain.networkId],
+      FACTORY_ADDRESS[chain.chainId],
       FACTORY_ABI,
       moralisProvider
     )
