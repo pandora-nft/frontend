@@ -12,30 +12,32 @@ export const Header = () => {
 
   const createNavLink = (label: string, endpoint: string) => {
     const activeStyle =
-      router.pathname === endpoint ? "text-black" : "text-gray-500 hover:text-black"
+      router.pathname === endpoint
+        ? "text-black border-b-2 border-mainPink"
+        : "text-gray-500 hover:text-black"
 
     return (
       <Link
-        className="flex items-center border border-blue-500"
+        className="flex items-center border border-blue-500 "
         href={{ pathname: `${endpoint}` }}
         replace
       >
-        <a className={`pt-5 pr-5 font-medium ${activeStyle}`}>{label}</a>
+        <a className={`mr-5 font-medium ${activeStyle}`}>{label}</a>
       </Link>
     )
   }
 
   return (
     <>
-      <nav className="p-5 flex flex-row items-center justify-between border-gray-200">
-        <div className="flex flex-row items-center justify-center">
-          <img className="w-6 h-6" src={"/box.png"} alt="icon" />
-          <div className="text-3xl font-bold pt-[2px] pl-2">
-            <Link href={{ pathname: "/" }} replace>
-              <a className="pt-5 pr-5 font-medium text-xl">Pandora</a>
-            </Link>
-          </div>
-        </div>
+      <nav className="p-5 flex flex-row items-center justify-between">
+        <Link href={{ pathname: "/" }} replace>
+          <a>
+            <div className="mb-2 flex flex-row items-center border-mainPink justify-center">
+              <img className="w-6 h-6" src={"/box.png"} alt="icon" />
+              <h1 className="font-medium ml-2 mt-[13px] text-xl">Pandora</h1>
+            </div>
+          </a>
+        </Link>
         <div className="flex flex-row items-center justify-between">
           {createNavLink("Marketplace", "/marketplace")}
           {createNavLink("Create", "/create")}
