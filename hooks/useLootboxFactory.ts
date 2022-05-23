@@ -1,5 +1,5 @@
 import { useMoralis, useWeb3Contract, useChain } from "react-moralis"
-import { FACTORY_ADDRESS, FACTORY_ABI } from "contract"
+import { FACTORY_ADDRESS, FACTORY_ABI, SUPPORT_CHAINID } from "contract"
 import { useEffect, useState } from "react"
 import { Lootbox } from "types"
 import { useLootbox } from "./useLootbox"
@@ -41,8 +41,6 @@ export const useLootboxFactory = () => {
 
   useEffect(() => {
     const main = async () => {
-      onLoad()
-
       const lootboxAddresses = (await getAllLootboxes()) as string[]
 
       let lootboxes: Lootbox[] = []
@@ -54,7 +52,11 @@ export const useLootboxFactory = () => {
       onDone()
     }
 
-    if (isWeb3Enabled) {
+    if (isWeb3Enabled && chain) {
+      onLoad()
+      if (!SUPPORT_CHAINID.includes(chain.chainId)) {
+        return
+      }
       main()
     } else {
       enableWeb3()

@@ -4,11 +4,31 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import { ConnectChain } from "./ConnectChain"
 import Link from "next/link"
+import { SUPPORT_CHAINID } from "contract"
+import { useChain } from "react-moralis"
+import { useEffect } from "react"
+import { useError } from "context/errors"
 
 export const Header = () => {
   const router = useRouter()
   const { isAuthenticated } = useMoralis()
   const [modalOpen, setModalOpen] = useState(false)
+
+  const { chain } = useChain()
+  const { setError } = useError()
+
+  useEffect(() => {
+    if (chain) {
+      if (!SUPPORT_CHAINID.includes(chain.chainId)) {
+        setError(`${chain.name} is not supported.`)
+        setTimeout(() => {
+          setError("Please connect to the supported chains.")
+        }, 1000)
+
+        setModalOpen(true)
+      }
+    }
+  }, [chain])
 
   const createNavLink = (label: string, endpoint: string) => {
     const activeStyle = router.pathname.startsWith(endpoint)
@@ -17,7 +37,7 @@ export const Header = () => {
 
     return (
       <Link
-        className="flex items-center border border-blue-500 "
+        className="flex items-center border border-blue-500"
         href={{ pathname: `${endpoint}` }}
         replace
       >

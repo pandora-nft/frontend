@@ -10,6 +10,7 @@ import { ethers } from "ethers"
 import { NATIVE } from "network"
 import { LOOTBOX_ABI } from "contract"
 import { DepositNFTDialog } from "./depositNFT"
+
 interface Props {
   lootboxAddress: string
 }

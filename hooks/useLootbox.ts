@@ -1,4 +1,11 @@
-import { FACTORY_ABI, FACTORY_ADDRESS, LOOTBOX_ABI, TICKET_ABI, TICKET_ADDRESS } from "contract"
+import {
+  FACTORY_ABI,
+  FACTORY_ADDRESS,
+  LOOTBOX_ABI,
+  TICKET_ABI,
+  TICKET_ADDRESS,
+  SUPPORT_CHAINID,
+} from "contract"
 import { useMoralis, useChain } from "react-moralis"
 import { useState } from "react"
 import { ethers } from "ethers"
@@ -11,7 +18,6 @@ export const useLootbox = () => {
   const { web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
 
-  // const Web3Api = useMoralisWeb3Api()
   const { fetchTicket } = useTicket()
   const { isLoading, onLoad, onDone } = useLoading()
   const [lootbox, setLootbox] = useState<Lootbox>({
@@ -32,6 +38,9 @@ export const useLootbox = () => {
 
   const fetchLootbox = async (_lootboxAddress: string, lootboxId?: number) => {
     onLoad()
+    if (!SUPPORT_CHAINID.includes(chain.chainId)) {
+      return
+    }
     let lootboxAddress: string
     if (!isNaN(lootboxId)) {
       const factory = new ethers.Contract(
