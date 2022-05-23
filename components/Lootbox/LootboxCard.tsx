@@ -20,11 +20,11 @@ export const LootboxCard: React.FC<LootboxCardProps> = ({ lootbox }) => {
     if (nfts.length === 0) {
       return (
         <div
-          className="col-span-4 border-red-500
+          className="col-span-4
                         flex items-center"
         >
           <Illustration width="80px" height="80px" logo="looking" />
-          <h3 className="text-lg text-gray-500 font-light">This lootbox has no deposited NFT</h3>
+          <h3 className="text-lg text-gray-500 font-light">No deposited NFT yet</h3>
         </div>
       )
     } else if (nfts.length > 4) {
