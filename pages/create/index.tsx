@@ -24,7 +24,7 @@ const Create = () => {
   const [bid, setBid] = useState<number>(0)
   const [isListened, setIsListened] = useState(true)
   const { runContractFunction: deployLootbox } = useWeb3Contract({
-    contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
+    contractAddress: chain ? FACTORY_ADDRESS[chain.chainId] : "",
     functionName: "deployLootbox(string,uint256,uint256,uint256,uint256)",
     abi: FACTORY_ABI,
     params: {
@@ -74,9 +74,10 @@ const Create = () => {
         <h2 className="text-[42px] font-bold">Create Single LootBox on Ethereum</h2>
       </div>
 
+
       <div className="grid pl-16 pt-8 justify-items-start rounded-xl  w-full ">
         <div className="h-24 w-42 shadow-xl text-lg font-bold  bg-gray-50 p-4">
-          connected to {chain ? chain.name : "..."} chainId: {chain ? chain.networkId : "..."}
+          connected to {chain ? chain.name : "..."} chainId: {chain ? chain.chainId : "..."}
           <img className="w-6" src="/chain/Ethereum.png"></img>
         </div>
       </div>
