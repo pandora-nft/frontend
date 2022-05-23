@@ -54,7 +54,7 @@ export const useLootbox = () => {
     const fetchNfts = await lootboxContract.getAllNFTs()
 
     let ticketIds = []
-    if (lootboxId) {
+    if (!isNaN(lootboxId)) {
       ticketIds = await ticketContract.getTicketsForLootbox(lootboxId)
     }
 
@@ -109,17 +109,15 @@ export const useLootbox = () => {
       })
     }
 
-    let tickets: Ticket[] = []
+    let _tickets: Ticket[] = []
     for (const ticketId of ticketIds) {
-      let ticket, wonTicket
+      let ticket: Ticket
       Promise.all([fetchTicket(ticketId), lootboxContract.wonTicket(ticketId)]).then((values) => {
         ticket = values[0]
-        wonTicket = values[1]
+        ticket.wonTicket = Number(values[1])
+        _tickets.push(ticket)
       })
-
-      tickets.push({ ...ticket, wonTicket })
     }
-
     const loot: Lootbox = {
       id,
       name,
@@ -135,7 +133,7 @@ export const useLootbox = () => {
       owner,
     }
     setLootbox(loot)
-    setTickets(tickets)
+    setTickets(_tickets)
     onDone()
     return loot
   }
