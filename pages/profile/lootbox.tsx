@@ -2,13 +2,14 @@ import { useLootboxFactory, useSkeleton } from "hooks"
 import ProfileLayout from "layouts/profileLayout"
 import { ReactElement, useEffect } from "react"
 import { NotFound, LootboxCard, LootboxCardSkeleton } from "components"
-import { useMoralis } from "react-moralis"
+import { useChain, useMoralis } from "react-moralis"
 import Link from "next/link"
 
 const Lootbox = () => {
   const { enableWeb3, isWeb3Enabled, account } = useMoralis()
   const { lootboxOwned, fetchLootboxOwned, isLoading } = useLootboxFactory()
   const { showSkeleton } = useSkeleton()
+  const { chain } = useChain()
 
   useEffect(() => {
     if (isWeb3Enabled) {
@@ -16,7 +17,7 @@ const Lootbox = () => {
     } else {
       enableWeb3()
     }
-  }, [isWeb3Enabled])
+  }, [isWeb3Enabled, chain])
 
   const showLootboxOwned = () => {
     if (isLoading) {

@@ -59,7 +59,7 @@ export const useLootboxFactory = () => {
     } else {
       enableWeb3()
     }
-  }, [isWeb3Enabled])
+  }, [isWeb3Enabled, chain])
 
   return { allLootboxes, fetchLootboxOwned, lootboxOwned, isLoading }
 }

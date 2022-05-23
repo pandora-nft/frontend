@@ -70,7 +70,6 @@ export const useTicket = () => {
         const ticket = await fetchTicket(Number(tk.token_id))
         tickets.push(ticket)
       }
-      console.log("ticket", tickets)
       setTickets(tickets)
       onDone()
     }
@@ -81,7 +80,7 @@ export const useTicket = () => {
     } else {
       enableWeb3()
     }
-  }, [isWeb3Enabled])
+  }, [isWeb3Enabled, chain])
 
   return { fetchTicket, tickets, isLoading }
 }
