@@ -6,9 +6,10 @@ import { FACTORY_ABI, FACTORY_ADDRESS } from "contract"
 import { ethers } from "ethers"
 import { Modal } from "components"
 import { NFTCard } from "components/NFTs/NFTCard"
+
 const initialFormData = {
   name: "",
-  drawTimestamp: 86400, //1day
+  drawTimestamp: 86400, // 1 day
   ticketPrice: 0.001,
   minimumTicketRequired: 1,
   maxTicketPerWallet: 1,
