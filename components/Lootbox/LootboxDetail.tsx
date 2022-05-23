@@ -17,7 +17,7 @@ export const LootboxDetail: React.FC<LootboxDetailProps> = ({
   const createLabel = (topic: string, value: any) => {
     return (
       <div>
-        <h3 className="font-medium">{value}</h3>
+        <h3 className="text-mainPink font-medium">{value}</h3>
         <h3 className="font-bold">{topic}</h3>
       </div>
     )
@@ -27,7 +27,7 @@ export const LootboxDetail: React.FC<LootboxDetailProps> = ({
       {createLabel("items", numItems)}
       {createLabel("ticket price", ethers.utils.formatEther(ticketPrice.toString()))}
       {createLabel("ticket sold", ticketSold)}
-      {createLabel("time left", convertToCountdown(drawTimestamp))}
+      {createLabel("draw in", convertToCountdown(drawTimestamp))}
     </div>
   )
 }

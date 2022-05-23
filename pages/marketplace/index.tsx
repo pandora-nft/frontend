@@ -1,5 +1,5 @@
 import { useLootboxFactory, useSkeleton } from "hooks"
-import { LootboxCard, LootboxCardSkeleton } from "components"
+import { NotFound, LootboxCard, LootboxCardSkeleton } from "components"
 import Link from "next/link"
 
 const Marketplace = () => {
@@ -10,7 +10,7 @@ const Marketplace = () => {
     if (isLoading) {
       return showSkeleton(<LootboxCardSkeleton />)
     } else if (allLootboxes.length === 0) {
-      return <h2>No lootbox found</h2>
+      return <NotFound info="No one create a lootbox yet" />
     } else {
       return (
         <>
@@ -31,7 +31,9 @@ const Marketplace = () => {
   return (
     <div className="centered mt-10">
       <h2 className="font-medium mb-10">Marketplace</h2>
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">{showLootboxes()}</div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 4xl:grid-cols-4 gap-5">
+        {showLootboxes()}
+      </div>
     </div>
   )
 }

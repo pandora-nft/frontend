@@ -13,7 +13,10 @@ import { DepositNFTDialog } from "./depositNFT"
 interface Props {
   lootboxAddress: string
 }
-
+//TODO refactor
+//TODO refresh data when tx confirmed
+//TODO show total ticket, minum ticket
+//what's in the box ui bug when low nft amount
 const Bid: React.FC<Props> = () => {
   const router = useRouter()
 
@@ -76,6 +79,7 @@ const Bid: React.FC<Props> = () => {
 
     const ownWonTicket = tickets?.filter((ticket) => {
       return (
+        ticket &&
         ticket.owner?.toLowerCase() === account.toLowerCase() &&
         ticket.isWinner &&
         !ticket.isClaimed
@@ -377,7 +381,7 @@ const Bid: React.FC<Props> = () => {
               <div>{"What's in the box?"}</div>
               <div className="grid grid-rows-3 grid-flow-col">
                 {lootbox.nfts &&
-                  lootbox.nfts.map((nft, index) => {
+                  lootbox.nfts?.map((nft, index) => {
                     return (
                       <div
                         key={index}

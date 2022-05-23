@@ -71,6 +71,7 @@ const Home: NextPage = () => {
           <h1>Available Now On</h1>
           <div className="pt-20 grid grid-cols-3 gap-10">
             <div className="flex flex-col items-center justify-center">
+              {/* // Please do not use Image from next/image since cannot static deploy */}
               <img width={60} height={100} src="/chain/Ethereum.png" alt="EthChain" />
               <h3 className="pt-4">Ethereum</h3>
             </div>

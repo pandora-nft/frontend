@@ -35,7 +35,7 @@ export const useLootbox = () => {
     let lootboxAddress: string
     if (!isNaN(lootboxId)) {
       const factory = new ethers.Contract(
-        FACTORY_ADDRESS[chain.networkId],
+        FACTORY_ADDRESS[chain.chainId],
         FACTORY_ABI,
         moralisProvider
       )
@@ -45,7 +45,7 @@ export const useLootbox = () => {
     }
 
     const ticketContract = new ethers.Contract(
-      TICKET_ADDRESS[chain.networkId],
+      TICKET_ADDRESS[chain.chainId],
       TICKET_ABI,
       moralisProvider
     )
@@ -54,7 +54,7 @@ export const useLootbox = () => {
     const fetchNfts = await lootboxContract.getAllNFTs()
 
     let ticketIds = []
-    if (lootboxId) {
+    if (!isNaN(lootboxId)) {
       ticketIds = await ticketContract.getTicketsForLootbox(lootboxId)
     }
 
@@ -96,8 +96,7 @@ export const useLootbox = () => {
     for (const nft of fetchNfts) {
       const nftAddress = nft._address.toString()
       const tokenId = +nft._tokenId.toString()
-      const nftMetadata = (await getNFTMetadata(chain.networkId, nftAddress, tokenId))?.data
-        ?.items[0]?.nft_data[0]?.external_data
+      const nftMetadata = await getNFTMetadata(chain.chainId, nftAddress, tokenId)
 
       nfts.push({
         tokenId,
@@ -109,17 +108,15 @@ export const useLootbox = () => {
       })
     }
 
-    let tickets: Ticket[] = []
+    let _tickets: Ticket[] = []
     for (const ticketId of ticketIds) {
-      let ticket, wonTicket
+      let ticket: Ticket
       Promise.all([fetchTicket(ticketId), lootboxContract.wonTicket(ticketId)]).then((values) => {
         ticket = values[0]
-        wonTicket = values[1]
+        ticket.wonTicket = Number(values[1])
+        _tickets.push(ticket)
       })
-
-      tickets.push({ ...ticket, wonTicket })
     }
-
     const loot: Lootbox = {
       id,
       name,
@@ -135,7 +132,7 @@ export const useLootbox = () => {
       owner,
     }
     setLootbox(loot)
-    setTickets(tickets)
+    setTickets(_tickets)
     onDone()
     return loot
   }

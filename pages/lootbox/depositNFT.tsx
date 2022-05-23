@@ -4,7 +4,8 @@ import { useNFTsBalance } from "hooks"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useMoralis } from "react-moralis"
 import { Lootbox } from "types"
-
+//TODO tell user if dont have to approve,
+//TODO refresh when tx confirmed
 export const DepositNFTDialog = ({
   lootbox,
   showDepositNFTDialog,
