@@ -22,9 +22,7 @@ export const useTicket = () => {
     )
     let collectionName = await ticketContract.name()
     let owner, isClaimed, isWinner, isRefunded, lootboxId
-    let nftMetadata = (
-      await getNFTMetadata(chain.chainId, TICKET_ADDRESS[chain.chainId], ticketId)
-    )
+    let nftMetadata = await getNFTMetadata(chain.chainId, TICKET_ADDRESS[chain.chainId], ticketId)
 
     await Promise.all([
       ticketContract.ownerOf(ticketId),
@@ -39,7 +37,7 @@ export const useTicket = () => {
       isRefunded = values[3]
       lootboxId = Number(values[4].toString())
     })
-    if(isWinner){
+    if (isWinner) {
       const tokenURI = await ticketContract.tokenURI(ticketId)
       const base64 = tokenURI.substr(tokenURI.indexOf(",") + 1)
       nftMetadata = JSON.parse(window.atob(base64))

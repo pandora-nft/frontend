@@ -96,7 +96,7 @@ export const useLootbox = () => {
     for (const nft of fetchNfts) {
       const nftAddress = nft._address.toString()
       const tokenId = +nft._tokenId.toString()
-      const nftMetadata = (await getNFTMetadata(chain.chainId, nftAddress, tokenId))
+      const nftMetadata = await getNFTMetadata(chain.chainId, nftAddress, tokenId)
 
       nfts.push({
         tokenId,
