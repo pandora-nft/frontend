@@ -87,6 +87,7 @@ export const ConnectChain = ({ modalOpen, setModalOpen }: ConnectChainProps) => 
       <Modal
         width="650px"
         isVisible={modalOpen}
+        onCloseButtonPressed={() => setModalOpen(false)}
         title={
           <div style={{ display: "flex", gap: 10 }}>
             <Icon fill="rgb(30,30,30)" size={28} svg="network" />
