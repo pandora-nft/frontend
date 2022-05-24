@@ -139,14 +139,6 @@ const Create = () => {
                 Submit
               </button>
             )}
-            <button
-              onClick={() => {
-                fetchLootbox("", 14)
-                setShowDepositNFTDialog(!showDepositNFTDialog)
-              }}
-            >
-              open
-            </button>
           </form>
           {lootbox ? (
             <div>
