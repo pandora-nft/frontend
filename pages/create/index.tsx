@@ -25,7 +25,7 @@ const Create = () => {
   const [isListened, setIsListened] = useState(true)
 
   const { runContractFunction: deployLootbox } = useWeb3Contract({
-    contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
+    contractAddress: chain ? FACTORY_ADDRESS[chain.chainId] : "",
     functionName: "deployLootbox(string,uint256,uint256,uint256,uint256)",
     abi: FACTORY_ABI,
     params: {
@@ -52,7 +52,7 @@ const Create = () => {
 
   if (chain) {
     const factory = new ethers.Contract(
-      FACTORY_ADDRESS[chain.networkId],
+      FACTORY_ADDRESS[chain.chainId],
       FACTORY_ABI,
       moralisProvider
     )
@@ -77,7 +77,7 @@ const Create = () => {
 
       <div className="grid pl-16 pt-8 justify-items-start rounded-xl  w-full ">
         <div className="h-24 w-42 shadow-xl text-lg font-bold  bg-gray-50 p-4">
-          connected to {chain ? chain.name : "..."} chainId: {chain ? chain.networkId : "..."}
+          connected to {chain ? chain.name : "..."} chainId: {chain ? chain.chainId : "..."}
           <img className="w-6" src="/chain/Ethereum.png"></img>
         </div>
       </div>
