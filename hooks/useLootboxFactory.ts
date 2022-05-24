@@ -16,14 +16,14 @@ export const useLootboxFactory = () => {
   const { fetchLootbox } = useLootbox()
 
   const { runContractFunction: getAllLootboxes } = useWeb3Contract({
-    contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
+    contractAddress: chain ? FACTORY_ADDRESS[chain.chainId] : "",
     functionName: "getAllLootboxes",
     abi: FACTORY_ABI,
   })
 
   const fetchLootboxOwned = async (account: string) => {
     const lootboxFactoryContract = new ethers.Contract(
-      FACTORY_ADDRESS[chain.networkId],
+      FACTORY_ADDRESS[chain.chainId],
       FACTORY_ABI,
       moralisProvider
     )
@@ -59,7 +59,7 @@ export const useLootboxFactory = () => {
     } else {
       enableWeb3()
     }
-  }, [isWeb3Enabled])
+  }, [isWeb3Enabled, chain])
 
   return { allLootboxes, fetchLootboxOwned, lootboxOwned, isLoading }
 }
