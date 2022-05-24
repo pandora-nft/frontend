@@ -32,10 +32,12 @@ export interface NFT {
 
 export interface formDataType {
   name: string
-  drawTimestamp: number
   ticketPrice: number
   minimumTicketRequired: number
-  maxTicketPerWallet: number
+  drawDays: number
+  drawHours: number
+  drawMinutes: number
+  drawSeconds: number
 }
 export type Chain =
   | "eth"

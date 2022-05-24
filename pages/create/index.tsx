@@ -11,10 +11,12 @@ import { chainType } from "web3uikit/dist/components/CryptoLogos/types"
 import { shortenAddress } from "utils"
 const initialFormData = {
   name: "",
-  drawTimestamp: 86400, //1day = 24*60*60
   ticketPrice: 0.001,
   minimumTicketRequired: 1,
-  maxTicketPerWallet: 1,
+  drawDays: 1, //1day = 24*60*60 s
+  drawHours: 0,
+  drawMinutes: 0,
+  drawSeconds: 0,
 }
 
 const Create = () => {
@@ -27,17 +29,20 @@ const Create = () => {
   const [isListened, setIsListened] = useState(true)
   const { runContractFunction: deployLootbox } = useWeb3Contract({
     contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
-    functionName: "deployLootbox(string,uint256,uint256,uint256,uint256)",
+    functionName: "deployLootbox(string,uint256,uint256,uint256)",
     abi: FACTORY_ABI,
     params: {
       _name: formData.name,
-      _drawTimestamp: Math.floor(Date.now() / 1000) + formData.drawTimestamp,
+      _drawTimestamp:
+        Math.floor(Date.now() / 1000) +
+        formData.drawDays * (24 * 60 * 60) +
+        formData.drawHours * (60 * 60) +
+        formData.drawMinutes * 60 +
+        formData.drawSeconds,
       _ticketPrice: ethers.utils.parseEther(formData.ticketPrice.toString()).toString(),
       _minimumTicketRequired: formData.minimumTicketRequired,
-      _maxTicketPerWallet: formData.maxTicketPerWallet,
     },
   })
-
   async function handleFormSumbit(e) {
     e.preventDefault()
     await deployLootbox()
