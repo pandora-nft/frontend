@@ -8,7 +8,7 @@ import { NFTCard, LoadingIndicator, Modal } from "components"
 import { NFT, Ticket } from "types"
 import { ethers } from "ethers"
 import { NATIVE } from "network"
-import { LOOTBOX_ABI } from "contract"
+import { CHAINID_TO_DETAIL, LOOTBOX_ABI } from "contract"
 import { DepositNFTDialog } from "./depositNFT"
 import { Icon } from "web3uikit"
 
@@ -319,7 +319,7 @@ const Bid: React.FC<Props> = () => {
                 #{id} {name}
               </h1>
 
-              <h3 className="text-xl">{address}</h3>
+              <h3 className="-mt-2 text-xl">{address}</h3>
 
               <h3 className="text-lg font-medium">
                 Owned by{" "}
@@ -327,19 +327,6 @@ const Bid: React.FC<Props> = () => {
                   {account?.toUpperCase() === owner?.toUpperCase() ? "you" : "" + owner}
                 </span>
               </h3>
-
-              <div className="p-5 rounded-xl border border-gray-200 bg-lightPink">
-                <button
-                  className="flex flex-row px-32 py-4 bg-white border border-mainPink text-mainPink
-                             rounded-xl hover:shadow-2xl transition duration-300
-                "
-                >
-                  <Icon fill="#E54090" size={28} svg="creditCard" />
-                  <h3 className="ml-2 mt-2">Buy Tickets</h3>
-                </button>
-              </div>
-
-              <h3>You owned 1 ticket</h3>
 
               <div
                 className="flex flex-row font-medium rounded 
@@ -354,9 +341,46 @@ const Bid: React.FC<Props> = () => {
                 </h3>
               </div>
 
-              <div className="grid grid-cols-4 gap-5">
+              <div className="p-5 rounded-xl border border-gray-200 bg-lightPink">
+                <div className="flex flex-col">
+                  <h3 className="font-medium -mb-2">Ticket Price</h3>
+                  <div className="flex flex-row mb-2 items-center">
+                    <Icon
+                      fill={chain ? CHAINID_TO_DETAIL[chain.chainId].color : "#1e1e1e"}
+                      size={26}
+                      // @ts-ignore
+                      svg={chain ? CHAINID_TO_DETAIL[chain.chainId].icon : "eth"}
+                    />
+                    <h2 className="ml-2 mt-5 font-medium text-3xl">
+                      {ethers.utils.formatEther(ticketPrice.toString())}
+                    </h2>
+                  </div>
+                </div>
+                <div className="flex flex-row border-blue-500 justify-start">
+                  <button
+                    className="mr-5 flex flex-row px-8 py-3 bg-mainPink text-white
+                             rounded-xl hover:bg-gray-800 hover:shadow-2xl transition duration-300
+                "
+                  >
+                    <Icon fill="#ffffff" size={28} svg="creditCard" />
+                    <h3 className="ml-2 mt-2">Buy Tickets</h3>
+                  </button>
+
+                  <button
+                    className="flex flex-row px-8 py-3 bg-white border border-mainPink text-mainPink
+                             rounded-xl hover:shadow-2xl transition duration-300
+                "
+                  >
+                    <Icon fill="#E54090" size={28} svg="speedyNode" />
+                    <h3 className="ml-2 mt-2">Deposit NFTs</h3>
+                  </button>
+                </div>
+              </div>
+
+              <h3>You owned 1 ticket</h3>
+
+              <div className="grid grid-cols-3 gap-5">
                 {createLabel("items", nfts.length)}
-                {createLabel("ticket price", ethers.utils.formatEther(ticketPrice.toString()))}
                 {createLabel("ticket sold", ticketSold)}
                 {createLabel("ticket required", minimumTicketRequired)}
               </div>

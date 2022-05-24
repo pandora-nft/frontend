@@ -3,7 +3,6 @@ import { useMoralis } from "react-moralis"
 import { Tooltip } from "web3uikit"
 import { useState } from "react"
 
-
 export const ProfilePic = () => {
   const { account } = useMoralis()
   const [isCopy, setIsCopy] = useState(false)
