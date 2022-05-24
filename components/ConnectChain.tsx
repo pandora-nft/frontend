@@ -63,7 +63,7 @@ export const ConnectChain = ({ modalOpen, setModalOpen }: ConnectChainProps) => 
     return (
       <div
         onClick={() => {
-          setModalOpen(true)
+          setModalOpen(!modalOpen)
         }}
         className="flex flex-row items-center"
       >
