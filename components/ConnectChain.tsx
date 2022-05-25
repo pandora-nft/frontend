@@ -51,7 +51,12 @@ export const ConnectChain = ({ modalOpen, setModalOpen }: ConnectChainProps) => 
   const showConnectingChain = () => {
     if (!chain || !SUPPORT_CHAINID.includes(chain.chainId)) {
       return (
-        <div className="flex flex-row items-center">
+        <div
+          onClick={() => {
+            setModalOpen(true)
+          }}
+          className="flex flex-row items-center"
+        >
           <Icon fill="rgb(30,30,30)" size={28} svg="exclamation" />
           <h3 className="ml-2 font-bold">??</h3>
         </div>

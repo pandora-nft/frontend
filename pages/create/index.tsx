@@ -9,6 +9,7 @@ import { DepositAfterCreateModal } from "../../components/DepositAfterCreateModa
 import { LoadingIndicator } from "components"
 import { chainType } from "web3uikit/dist/components/CryptoLogos/types"
 import { shortenAddress } from "utils"
+
 const initialFormData = {
   name: "",
   ticketPrice: 0.001,
@@ -27,6 +28,7 @@ const Create = () => {
   const [showDepositNFTDialog, setShowDepositNFTDialog] = useState<boolean>(false)
   const [bid, setBid] = useState<number>(0)
   const [isListened, setIsListened] = useState(true)
+
   const { runContractFunction: deployLootbox } = useWeb3Contract({
     contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
     functionName: "deployLootbox(string,uint256,uint256,uint256)",

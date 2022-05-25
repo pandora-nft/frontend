@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { TICKET_ADDRESS, TICKET_ABI } from "contract"
+import { TICKET_ADDRESS, TICKET_ABI, SUPPORT_CHAINID } from "contract"
 import { useMoralis, useChain, useMoralisWeb3Api } from "react-moralis"
 import { Chain } from "types"
 import { useLoading } from "./useLoading"
@@ -77,8 +77,11 @@ export const useTicket = () => {
       onDone()
     }
 
-    if (isWeb3Enabled) {
+    if (isWeb3Enabled && chain) {
       onLoad()
+      if (!SUPPORT_CHAINID.includes(chain.chainId)) {
+        return
+      }
       main()
     } else {
       enableWeb3()

@@ -5,6 +5,9 @@ import type { AppProps } from "next/app"
 import { MoralisProvider } from "react-moralis"
 import { isMoralisEnvProvided, MORALIS_APP_ID, MORALIS_SERVER_URL } from "config"
 import { Header, Footer } from "components"
+import { NotificationProvider } from "web3uikit"
+import { ErrorProvider, ErrorModal } from "context/errors"
+import { TxModal, TxProvider } from "context/transaction"
 
 type NextPageWithLayout = NextPage & {
   getLayout?: () => ReactNode
@@ -23,9 +26,17 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       appId={MORALIS_APP_ID}
       initializeOnMount={isMoralisEnvProvided}
     >
-      <Header />
-      {getLayout(<Component {...pageProps} />)}
-      <Footer />
+      <NotificationProvider>
+        <ErrorProvider>
+          <TxProvider>
+            <TxModal />
+            <ErrorModal />
+            <Header />
+            {getLayout(<Component {...pageProps} />)}
+            <Footer />
+          </TxProvider>
+        </ErrorProvider>
+      </NotificationProvider>
     </MoralisProvider>
   )
 }

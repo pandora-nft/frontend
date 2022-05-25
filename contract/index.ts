@@ -45,6 +45,16 @@ export const TICKET_ADDRESS: { [chainId: string]: string } = {
 
 export const SUPPORT_CHAINID = ["0x38", "0x61", "0x89", "0x13881", "0xa86a", "0xa869"]
 
+export const isChainSupport = (chain: any) => {
+  if (!chain || !chain.chainId) {
+    return false
+  }
+  if (!SUPPORT_CHAINID.includes(chain.chainId)) {
+    return false
+  }
+  return true
+}
+
 export enum CHAIN_SUPPORT {
   "BSC" = "Binace Smart Chain",
   "BSC_TESTNET" = "Binance Smart Chain Testnet",
@@ -58,6 +68,8 @@ interface CHAIN_DETAIL {
   name: CHAIN_SUPPORT
   shortName: string
   src: string
+  icon: string
+  color: string
 }
 
 export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
@@ -65,30 +77,42 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     name: CHAIN_SUPPORT.BSC,
     shortName: "BSC",
     src: "binance",
+    icon: "bnb",
+    color: "#e7b527",
   },
   "0x61": {
     name: CHAIN_SUPPORT.BSC_TESTNET,
     shortName: "BSC Testnet",
     src: "testnet",
+    icon: "bnb",
+    color: "#e7b527",
   },
   "0x89": {
     name: CHAIN_SUPPORT.POLYGON,
     shortName: "Polygon",
     src: "polygon",
+    icon: "matic",
+    color: "#6f38d6",
   },
   "0x13881": {
     name: CHAIN_SUPPORT.POLYGON_MUMBAI,
     shortName: "Mumbai",
     src: "testnet",
+    icon: "matic",
+    color: "#6f38d6",
   },
   "0xa86a": {
     name: CHAIN_SUPPORT.AVALANCHE,
     shortName: "Avax",
     src: "avalanche",
+    icon: "avax",
+    color: "#d0443b",
   },
   "0xa869": {
     name: CHAIN_SUPPORT.AVALANCHE_FUJI,
     shortName: "Fuji",
     src: "testnet",
+    icon: "avax",
+    color: "#d0443b",
   },
 }

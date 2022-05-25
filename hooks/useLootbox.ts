@@ -1,4 +1,12 @@
-import { FACTORY_ABI, FACTORY_ADDRESS, LOOTBOX_ABI, TICKET_ABI, TICKET_ADDRESS } from "contract"
+import {
+  FACTORY_ABI,
+  FACTORY_ADDRESS,
+  LOOTBOX_ABI,
+  TICKET_ABI,
+  TICKET_ADDRESS,
+  isChainSupport,
+} from "contract"
+import Router from "next/router"
 import { useMoralis, useChain } from "react-moralis"
 import { useState } from "react"
 import { ethers } from "ethers"
@@ -6,12 +14,13 @@ import { Lootbox, NFT, Ticket } from "types"
 import { getNFTMetadata } from "api"
 import { useLoading } from "./useLoading"
 import { useTicket } from "./useTicket"
+import { useError } from "context/errors"
 
 export const useLootbox = () => {
   const { web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
 
-  // const Web3Api = useMoralisWeb3Api()
+  const { setError } = useError()
   const { fetchTicket } = useTicket()
   const { isLoading, onLoad, onDone } = useLoading()
   const [lootbox, setLootbox] = useState<Lootbox>({
@@ -28,10 +37,14 @@ export const useLootbox = () => {
     ticketSold: 0,
     owner: "",
   })
-  const [tickets, setTickets] = useState<Ticket[]>()
+  const [tickets, setTickets] = useState<Ticket[]>([])
 
   const fetchLootbox = async (_lootboxAddress: string, lootboxId?: number) => {
     onLoad()
+    if (!isChainSupport(chain)) {
+      return onDone()
+    }
+
     let lootboxAddress: string
     if (!isNaN(lootboxId)) {
       const factory = new ethers.Contract(
@@ -40,6 +53,9 @@ export const useLootbox = () => {
         moralisProvider
       )
       lootboxAddress = (await factory.functions.lootboxAddress(lootboxId))[0] as string
+      if (lootboxAddress === "0x0000000000000000000000000000000000000000") {
+        return Router.push("/marketplace")
+      }
     } else {
       lootboxAddress = _lootboxAddress
     }
@@ -79,18 +95,22 @@ export const useLootbox = () => {
       lootboxContract.isDrawn(),
       lootboxContract.isRefundable(),
       lootboxContract.owner(),
-    ]).then((values) => {
-      id = Number(values[0].toString())
-      name = values[1].toString()
-      ticketPrice = Number(values[2].toString())
-      ticketSold = Number(values[3].toString())
-      minimumTicketRequired = Number(values[4].toString())
-      maxTicketPerWallet = Number(values[5].toString())
-      drawTimestamp = Number(values[6].toString())
-      isDrawn = values[7]
-      isRefundable = values[8]
-      owner = values[9].toString()
-    })
+    ])
+      .then((values) => {
+        id = Number(values[0].toString())
+        name = values[1].toString()
+        ticketPrice = Number(values[2].toString())
+        ticketSold = Number(values[3].toString())
+        minimumTicketRequired = Number(values[4].toString())
+        maxTicketPerWallet = Number(values[5].toString())
+        drawTimestamp = Number(values[6].toString())
+        isDrawn = values[7]
+        isRefundable = values[8]
+        owner = values[9].toString()
+      })
+      .catch((err) => {
+        setError(err.message)
+      })
 
     let nfts: NFT[] = []
     for (const nft of fetchNfts) {
@@ -111,11 +131,15 @@ export const useLootbox = () => {
     let _tickets: Ticket[] = []
     for (const ticketId of ticketIds) {
       let ticket: Ticket
-      Promise.all([fetchTicket(ticketId), lootboxContract.wonTicket(ticketId)]).then((values) => {
-        ticket = values[0]
-        ticket.wonTicket = Number(values[1])
-        _tickets.push(ticket)
-      })
+      Promise.all([fetchTicket(ticketId), lootboxContract.wonTicket(ticketId)])
+        .then((values) => {
+          ticket = values[0]
+          ticket.wonTicket = Number(values[1])
+          _tickets.push(ticket)
+        })
+        .catch((err) => {
+          setError(err.message)
+        })
     }
     const loot: Lootbox = {
       id,
