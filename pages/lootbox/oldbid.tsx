@@ -9,7 +9,7 @@ import { NFT, Ticket } from "types"
 import { ethers } from "ethers"
 import { NATIVE } from "network"
 import { LOOTBOX_ABI } from "contract"
-import { DepositNFTDialog } from "./depositNFT"
+// import { DepositNFTDialog } from "../../components/Dialog/DepositNFTDialog"
 
 interface Props {
   lootboxAddress: string
@@ -25,7 +25,7 @@ const OldBid: React.FC<Props> = () => {
   const { chain } = useChain()
   const { fetchLootbox, lootbox, isLoading, tickets } = useLootbox()
   const [showClaimNFTDialog, setShowClaimNFTDialog] = useState(false)
-  const [showDepositNFTDialog, setShowDepositNFTDialog] = useState(false)
+  // const [showDepositNFTDialog, setShowDepositNFTDialog] = useState(false)
   const [showRefundDialog, setShowRefundDialog] = useState(false)
   const [showBuyTicketsDialog, setShowBuyTicketsDialog] = useState(false)
 
@@ -54,7 +54,7 @@ const OldBid: React.FC<Props> = () => {
     return (
       <Modal
         open={!!currentNFT}
-        setOpen={setCurrentNFT}
+        onClose={() => setCurrentNFT(null)}
         title={currentNFT?.name}
         content={content}
       />
@@ -156,7 +156,7 @@ const OldBid: React.FC<Props> = () => {
     return (
       <Modal
         open={showClaimNFTDialog}
-        setOpen={setShowClaimNFTDialog}
+        onClose={() => setShowClaimNFTDialog(false)}
         title="Claim NFT"
         content={content}
         confirmButton={claimButton}
@@ -214,7 +214,7 @@ const OldBid: React.FC<Props> = () => {
     return (
       <Modal
         open={showRefundDialog}
-        setOpen={setShowRefundDialog}
+        onClose={() => setShowRefundDialog(false)}
         title="Refund Tickets"
         content={content}
         confirmButton={claimButton}
@@ -274,7 +274,7 @@ const OldBid: React.FC<Props> = () => {
     return (
       <Modal
         open={showBuyTicketsDialog}
-        setOpen={setShowBuyTicketsDialog}
+        onClose={() => setShowBuyTicketsDialog(false)}
         title={`Buy tickets for ${lootbox?.name}`}
         content={content}
         confirmButton={buyButton}
@@ -316,9 +316,9 @@ const OldBid: React.FC<Props> = () => {
                       {lootbox?.owner?.toLowerCase() === account?.toLowerCase() && (
                         <button
                           className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                          onClick={() => {
-                            setShowDepositNFTDialog(true)
-                          }}
+                          // onClick={() => {
+                          //   setShowDepositNFTDialog(true)
+                          // }}
                         >
                           Deposit NFTs
                         </button>
@@ -401,11 +401,11 @@ const OldBid: React.FC<Props> = () => {
           <BuyDialog />
           <ClaimDialog />
           <RefundDialog />
-          <DepositNFTDialog
+          {/* <DepositNFTDialog
             lootbox={lootbox}
-            showDepositNFTDialog={showDepositNFTDialog}
-            setShowDepositNFTDialog={setShowDepositNFTDialog}
-          />
+            open={showDepositNFTDialog}
+            setOpen={setShowDepositNFTDialog}
+          /> */}
         </>
       )}
     </>

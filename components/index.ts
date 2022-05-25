@@ -16,3 +16,9 @@ export * from "./NFTs/NFTCard"
 export * from "./NFTs/NFTCardSkeleton"
 
 export * from "./NotFound"
+
+export * from "./Dialog/BuyTicketsDialog"
+export * from "./Dialog/ClaimNFTDialog"
+export * from "./Dialog/DepositNFTDialog"
+export * from "./Dialog/NFTDialog"
+export * from "./Dialog/RefundDialog"
