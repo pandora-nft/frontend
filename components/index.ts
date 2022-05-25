@@ -14,3 +14,5 @@ export * from "./Profile/ProfileTabs"
 
 export * from "./NFTs/NFTCard"
 export * from "./NFTs/NFTCardSkeleton"
+
+export * from "./NotFound"
