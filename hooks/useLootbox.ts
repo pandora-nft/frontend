@@ -7,7 +7,7 @@ import {
   isChainSupport,
 } from "contract"
 import Router from "next/router"
-import { useMoralis, useChain } from "react-moralis"
+import { useMoralis, useChain, useNFTBalances } from "react-moralis"
 import { useState } from "react"
 import { ethers } from "ethers"
 import { Lootbox, NFT, Ticket } from "types"
@@ -15,6 +15,7 @@ import { getNFTMetadata } from "api"
 import { useLoading } from "./useLoading"
 import { useTicket } from "./useTicket"
 import { useError } from "context/errors"
+import { Chain } from "web3uikit"
 
 export const useLootbox = () => {
   const { web3: moralisProvider } = useMoralis()
@@ -38,6 +39,8 @@ export const useLootbox = () => {
     owner: "",
   })
   const [tickets, setTickets] = useState<Ticket[]>([])
+
+  const { getNFTBalances } = useNFTBalances()
 
   const fetchLootbox = async (_lootboxAddress: string, lootboxId?: number) => {
     onLoad()
@@ -66,8 +69,6 @@ export const useLootbox = () => {
       moralisProvider
     )
     const lootboxContract = new ethers.Contract(lootboxAddress, LOOTBOX_ABI, moralisProvider)
-
-    const fetchNfts = await lootboxContract.getAllNFTs()
 
     let ticketIds = []
     if (!isNaN(lootboxId)) {
@@ -113,19 +114,48 @@ export const useLootbox = () => {
       })
 
     let nfts: NFT[] = []
-    for (const nft of fetchNfts) {
-      const nftAddress = nft._address.toString()
-      const tokenId = +nft._tokenId.toString()
-      const nftMetadata = await getNFTMetadata(chain.chainId, nftAddress, tokenId)
 
-      nfts.push({
-        tokenId,
-        collectionName: nft.name,
-        address: nftAddress,
-        imageURI: nftMetadata?.image || null,
-        name: nftMetadata?.name || null,
-        description: nftMetadata?.description || null,
+    // NOTE: this is just for optimization
+    // if already drawn
+    // fetch nfts from the contract by covalent to show nft that is already claimed by some winners
+    if (isDrawn) {
+      const fetchNfts = await lootboxContract.getAllNFTs()
+      for (const nft of fetchNfts) {
+        const nftAddress = nft._address.toString()
+        const tokenId = +nft._tokenId.toString()
+        const nftMetadata = await getNFTMetadata(chain.chainId, nftAddress, tokenId)
+        nfts.push({
+          tokenId,
+          collectionName: nft.name,
+          address: nftAddress,
+          imageURI: nftMetadata?.image || null,
+          name: nftMetadata?.name || null,
+          description: nftMetadata?.description || null,
+        })
+      }
+
+      // if not drawn yet, fetch all nft balances in the box at once
+    } else {
+      const nftMetadata = await getNFTBalances({
+        params: {
+          chain: chain.chainId as Chain,
+          address: lootboxAddress,
+        },
       })
+
+      const result = nftMetadata.result
+      for (const nft of result) {
+        const metadata = JSON.parse(nft.metadata)
+        const imageURI = metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")
+        nfts.push({
+          tokenId: Number(nft.token_id),
+          collectionName: nft.name,
+          address: nft.token_address,
+          imageURI: imageURI,
+          name: metadata.name,
+          description: metadata.description,
+        })
+      }
     }
 
     let _tickets: Ticket[] = []
