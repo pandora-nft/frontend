@@ -39,7 +39,7 @@ export const DepositAfterCreateModal = ({
     return (
       <Modal
         open={!!currentNFT}
-        setOpen={setCurrentNFT}
+        onClose={() => setCurrentNFT(null)}
         title={currentNFT?.name}
         content={content}
       />
@@ -254,7 +254,7 @@ export const DepositAfterCreateModal = ({
   return (
     <Modal
       open={showDepositNFTDialog}
-      setOpen={setShowDepositNFTDialog}
+      onClose={() => setShowDepositNFTDialog(false)}
       title="Deposit NFTs"
       content={content}
       confirmButton={depositButton}
