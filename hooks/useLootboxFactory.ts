@@ -1,14 +1,14 @@
-import { useMoralis, useWeb3Contract, useChain } from "react-moralis"
-import { FACTORY_ADDRESS, FACTORY_ABI, SUPPORT_CHAINID } from "contract"
+import { useMoralis, useChain } from "react-moralis"
+import { SUPPORT_CHAINID } from "contract"
 import { useEffect, useState } from "react"
 import { Lootbox } from "types"
 import { useLootbox } from "./useLootbox"
-import { ethers } from "ethers"
+
 import { useLoading } from "./useLoading"
 import { useError } from "context/errors"
-
+import axios from "axios"
 export const useLootboxFactory = () => {
-  const { enableWeb3, isWeb3Enabled, web3: moralisProvider } = useMoralis()
+  const { enableWeb3, isWeb3Enabled } = useMoralis()
 
   const { chain } = useChain()
   const [allLootboxes, setAllLootboxes] = useState<Lootbox[]>([])
@@ -17,21 +17,12 @@ export const useLootboxFactory = () => {
   const { fetchLootbox } = useLootbox()
   const { setError } = useError()
 
-  const { runContractFunction: getAllLootboxes } = useWeb3Contract({
-    contractAddress: chain ? FACTORY_ADDRESS[chain.chainId] : "",
-    functionName: "getAllLootboxes",
-    abi: FACTORY_ABI,
-  })
-
-  const fetchManyLootboxByAddresses = async (lootboxAddresses: string[]) => {
+  const fetchManyLootboxByBid = async (bids: number[]) => {
     let lootboxes: Lootbox[] = []
-
     const promises = []
-
-    for (let addr of lootboxAddresses) {
-      promises.push(fetchLootbox(addr))
+    for (let bid of bids) {
+      promises.push(fetchLootbox("", bid))
     }
-
     await Promise.all(promises)
       .then((results) => {
         for (const result of results) {
@@ -44,16 +35,48 @@ export const useLootboxFactory = () => {
 
     return lootboxes
   }
+  const getAllLootboxes = async () => {
+    const singleLootboxes = await axios({
+      url: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-lootbox",
+      method: "post",
+      data: {
+        query: `{
+              singleLootboxes(owner: "0xafF2671aD7129DC23D05F83fF651601e9d1aea0a" ){
+                boxId
+                owner
+              }
+            }
+            `,
+      },
+    })
+    let lootboxOwnedBids: number[] = []
+    singleLootboxes.data.data.singleLootboxes.map((lootbox) => {
+      lootboxOwnedBids.push(Number(lootbox.boxId))
+    })
+    let lootboxes: Lootbox[] = await fetchManyLootboxByBid(lootboxOwnedBids) //lootboxOwnedAddresses
+    return lootboxes
+  }
 
   const fetchLootboxOwned = async (account: string) => {
-    const lootboxFactoryContract = new ethers.Contract(
-      FACTORY_ADDRESS[chain.chainId],
-      FACTORY_ABI,
-      moralisProvider
-    )
-    const lootboxOwnedAddresses = await lootboxFactoryContract.getLootboxesOwnedByUser(account)
-
-    let lootboxes: Lootbox[] = await fetchManyLootboxByAddresses(lootboxOwnedAddresses)
+    const singleLootboxes = await axios({
+      url: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-lootbox",
+      method: "post",
+      data: {
+        query: `{
+                singleLootboxes(owner: $account ){
+                  boxId
+                  owner
+                }
+              }
+              `,
+      },
+    })
+    let lootboxOwnedBids: number[] = []
+    singleLootboxes.data.data.singleLootboxes.map((lootbox) => {
+      if (account.toString().toLowerCase() === lootbox.owner.toString().toLowerCase())
+        lootboxOwnedBids.push(Number(lootbox.boxId))
+    })
+    let lootboxes: Lootbox[] = await fetchManyLootboxByBid(lootboxOwnedBids)
 
     setLootboxOwned(lootboxes)
     return lootboxes
@@ -61,10 +84,7 @@ export const useLootboxFactory = () => {
 
   useEffect(() => {
     const main = async () => {
-      const lootboxAddresses = (await getAllLootboxes()) as string[]
-
-      let lootboxes: Lootbox[] = await fetchManyLootboxByAddresses(lootboxAddresses)
-
+      let lootboxes: Lootbox[] = await getAllLootboxes()
       setAllLootboxes(lootboxes)
       onDone()
     }

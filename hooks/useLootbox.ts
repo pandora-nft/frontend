@@ -6,9 +6,7 @@ import { useLoading } from "./useLoading"
 import axios from "axios"
 
 export const useLootbox = () => {
-
   const { chain } = useChain()
-
 
   const { isLoading, onLoad, onDone } = useLoading()
   const [lootbox, setLootbox] = useState<Lootbox>({
@@ -30,8 +28,8 @@ export const useLootbox = () => {
     onLoad()
     if (!isNaN(lootboxId)) {
       const result = await axios({
-        url: 'https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-lootbox',
-        method: 'post',
+        url: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-lootbox",
+        method: "post",
         data: {
           query: `
         query {singleLootbox(id:${lootboxId}){
@@ -63,8 +61,8 @@ export const useLootbox = () => {
           }
 
         }}
-        `
-        }
+        `,
+        },
       })
       console.log(result)
       if (result?.data?.data?.singleLootbox) {
@@ -85,7 +83,6 @@ export const useLootbox = () => {
           owner: singleLootbox.owner,
         }
 
-
         for (let nft of singleLootbox.nft) {
           const nftAddress = nft.address.toString()
           const tokenId = Number(nft.tokenId)
@@ -105,13 +102,11 @@ export const useLootbox = () => {
         onDone()
         return loot
       }
-
     }
 
     onDone()
     return lootbox
   }
-
 
   return { fetchLootbox, lootbox, isLoading, tickets }
 }
