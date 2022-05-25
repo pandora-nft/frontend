@@ -28,13 +28,8 @@ const Create = () => {
   const [bid, setBid] = useState<number>(0)
   const [isListened, setIsListened] = useState(true)
   const { runContractFunction: deployLootbox } = useWeb3Contract({
-<<<<<<< HEAD
     contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
     functionName: "deployLootbox(string,uint256,uint256,uint256)",
-=======
-    contractAddress: chain ? FACTORY_ADDRESS[chain.chainId] : "",
-    functionName: "deployLootbox(string,uint256,uint256,uint256,uint256)",
->>>>>>> d09739ec51647b19100a425cbd49a4ba95320e09
     abi: FACTORY_ABI,
     params: {
       _name: formData.name,
@@ -109,7 +104,6 @@ const Create = () => {
         <h2 className="text-[42px] font-bold">Create Single LootBox </h2>
       </div>
 
-
       <div className="pl-16 pt-8 justify-items-start rounded-xl  w-full ">
         <div className="flex items-center  w-fit bg-gray-50 border-2 border-gray-200  rounded-xl shadow-xl text-lg font-bold  bg-gray-50 p-4">
           <div>{chain?.chainId ? createChain(chain?.chainId) : <></>}</div>
@@ -126,7 +120,6 @@ const Create = () => {
               </span>
             </div>
           )}
-
         </div>
       </div>
 
