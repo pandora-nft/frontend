@@ -30,6 +30,15 @@ export interface NFT {
   imageURI: string
 }
 
+export interface formDataType {
+  name: string
+  ticketPrice: number
+  minimumTicketRequired: number
+  drawDays: number
+  drawHours: number
+  drawMinutes: number
+  drawSeconds: number
+}
 export type Chain =
   | "eth"
   | "0x1"
