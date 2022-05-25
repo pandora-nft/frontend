@@ -45,6 +45,16 @@ export const TICKET_ADDRESS: { [chainId: string]: string } = {
 
 export const SUPPORT_CHAINID = ["0x38", "0x61", "0x89", "0x13881", "0xa86a", "0xa869"]
 
+export const isChainSupport = (chain: any) => {
+  if (!chain || !chain.chainId) {
+    return false
+  }
+  if (!SUPPORT_CHAINID.includes(chain.chainId)) {
+    return false
+  }
+  return true
+}
+
 export enum CHAIN_SUPPORT {
   "BSC" = "Binace Smart Chain",
   "BSC_TESTNET" = "Binance Smart Chain Testnet",
