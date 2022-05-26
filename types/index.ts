@@ -3,6 +3,7 @@ export interface Lootbox {
   address: string
   name: string
   nfts: NFT[]
+  tickets: Ticket[]
   isDrawn: boolean
   isRefundable: boolean
   drawTimestamp: number

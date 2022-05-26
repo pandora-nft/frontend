@@ -4,28 +4,23 @@ import { useMoralis, useChain } from "react-moralis"
 
 import { useLoading } from "./useLoading"
 
-import { ethers } from "ethers"
 import { Ticket } from "types"
 import axios from "axios"
 import { CHAINID_TO_DETAIL } from "contract"
 
 export const useTicket = () => {
-  const { isWeb3Enabled, enableWeb3, account, web3: moralisProvider } = useMoralis()
+  const { isWeb3Enabled, enableWeb3, account } = useMoralis()
   const { chain } = useChain()
   const [tickets, setTickets] = useState<Ticket[]>([])
   const { isLoading, onLoad, onDone } = useLoading()
-  // still not working => THE  GRAPH of ticket need to return address , tokenid and some more crucial data
   const fetchTicket = async (account: string) => {
     onLoad()
     const ret_tickets: Ticket[] = []
-    const result = await axios({
-      url: CHAINID_TO_DETAIL[chain.chainId].api,
-      method: "post",
-      data: {
-        query: `
-          query {
+    const result = await axios.post(CHAINID_TO_DETAIL[chain?.chainId].api, {
+      query: `
+          query tickets($account: String!){
             tickets(where: {
-              owner: "0xafF2671aD7129DC23D05F83fF651601e9d1aea0a"
+              owner: $account
             }
             ){
             id
@@ -54,46 +49,35 @@ export const useTicket = () => {
           }
         }
           `,
-      },
+      variables: {
+        account: account
+      }
     })
+    console.log(result)
     if (account && result?.data?.data?.tickets) {
       const tickets: any = result.data.data.tickets
       for (let singleTicket of tickets) {
         if (singleTicket.owner.toString().toLowerCase() !== account.toString().toLowerCase())
           continue
-        let nftMetadata = {
-          name: singleTicket.name,
-          image: singleTicket.image,
-          description: singleTicket.description,
-        }
-        if (singleTicket.isWinner) {
-          const ticketContract = new ethers.Contract(
-            TICKET_ADDRESS[chain.chainId],
-            TICKET_ABI,
-            moralisProvider
-          )
-          const tokenURI = await ticketContract.tokenURI(singleTicket.ticketId)
-          const base64 = tokenURI.substr(tokenURI.indexOf(",") + 1)
-          nftMetadata = JSON.parse(window.atob(base64))
-          nftMetadata.image = nftMetadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")
-        }
         const ticket = {
           tokenId: singleTicket.ticketId,
           collectionName: singleTicket.collectionName,
-          address: TICKET_ADDRESS[chain.chainId],
-          imageURI: nftMetadata?.image || null,
-          name: nftMetadata?.name || null,
-          description: nftMetadata?.description || null,
+          address: TICKET_ADDRESS[chain?.chainId],
+          name: singleTicket.name || null,
+          imageURI: singleTicket.image?.replace("ipfs://", "https://ipfs.io/ipfs/") || null,
+          description: singleTicket.description || null,
           owner: singleTicket.owner,
           isClaimed: singleTicket.isClaimed,
           isWinner: singleTicket.isWinner,
           isRefunded: singleTicket.isRefunded,
           lootboxId: singleTicket.lootbox.boxId,
         }
+
         ret_tickets.push(ticket)
       }
       setTickets(ret_tickets)
       onDone()
+
       return ret_tickets
     }
 
@@ -102,10 +86,8 @@ export const useTicket = () => {
   }
 
   useEffect(() => {
-    fetchTicket(account)
     onDone()
-
-    if (isWeb3Enabled && chain) {
+    if (isWeb3Enabled && chain?.chainId) {
       onLoad()
       fetchTicket(account)
       if (!SUPPORT_CHAINID.includes(chain.chainId)) {
