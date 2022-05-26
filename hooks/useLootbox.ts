@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { useChain } from "react-moralis"
 import { Lootbox, Ticket } from "types"
-import { getNFTMetadata } from "api"
 import { useLoading } from "./useLoading"
 import { CHAINID_TO_DETAIL } from "contract"
 import axios from "axios"
@@ -23,7 +22,6 @@ export const useLootbox = () => {
     ticketSold: 0,
     owner: "",
   })
-  console.log(chain)
   const [tickets, setTickets] = useState<Ticket[]>([])
   const fetchLootbox = async (_lootboxAddress: string, lootboxId?: number) => {
     onLoad()
@@ -51,6 +49,9 @@ export const useLootbox = () => {
             collectionName
             collectionSymbol
             address
+            name
+            image
+            description
             tokenId
           }
           tickets{
@@ -65,6 +66,7 @@ export const useLootbox = () => {
         `,
         },
       })
+      console.log(result)
       if (result?.data?.data?.singleLootbox) {
         const singleLootbox: any = result.data.data.singleLootbox
         const loot: Lootbox = {
@@ -81,19 +83,14 @@ export const useLootbox = () => {
           ticketSold: singleLootbox.ticketSold,
           owner: singleLootbox.owner,
         }
-
         for (let nft of singleLootbox.nft) {
-          const nftAddress = nft.address.toString()
-          const tokenId = Number(nft.tokenId)
-          const nftMetadata = await getNFTMetadata(chain.chainId, nftAddress, tokenId)
-
           loot.nfts.push({
-            tokenId,
-            collectionName: nft.name,
-            address: nftAddress,
-            imageURI: nftMetadata?.image || null,
-            name: nftMetadata?.name || null,
-            description: nftMetadata?.description || null,
+            tokenId: Number(nft.tokenId),
+            collectionName: nft.collectionName,
+            address: nft.address,
+            imageURI: nft.image.replace("ipfs://", "https://ipfs.io/ipfs/") || null,
+            name: nft.name || null,
+            description: nft.description || null,
           })
         }
         setLootbox(loot)
