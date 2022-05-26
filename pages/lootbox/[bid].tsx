@@ -242,7 +242,7 @@ const Bid: React.FC<Props> = () => {
 
                 <div className="grid grid-cols-4 gap-5">
                   {createLabel("items", nfts.length)}
-                  {createLabel("ticket owned", "TODO")}
+                  {createLabel("ticket owned", getTicketOwnedCount())}
                   {createLabel("ticket sold", ticketSold)}
                   {createLabel("ticket required", minimumTicketRequired)}
                 </div>
