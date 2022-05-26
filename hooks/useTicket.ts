@@ -7,6 +7,7 @@ import { useLoading } from "./useLoading"
 import { ethers } from "ethers"
 import { Ticket } from "types"
 import axios from "axios"
+import { CHAINID_TO_DETAIL } from "contract"
 
 export const useTicket = () => {
   const { isWeb3Enabled, enableWeb3, account, web3: moralisProvider } = useMoralis()
@@ -18,7 +19,7 @@ export const useTicket = () => {
     onLoad()
     const ret_tickets: Ticket[] = []
     const result = await axios({
-      url: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-mumbai",
+      url: CHAINID_TO_DETAIL[chain.chainId].api,
       method: "post",
       data: {
         query: `

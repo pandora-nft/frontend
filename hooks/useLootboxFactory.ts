@@ -6,6 +6,8 @@ import { useLootbox } from "./useLootbox"
 
 import { useLoading } from "./useLoading"
 import { useError } from "context/errors"
+import { CHAINID_TO_DETAIL } from "contract"
+
 import axios from "axios"
 export const useLootboxFactory = () => {
   const { enableWeb3, isWeb3Enabled } = useMoralis()
@@ -37,7 +39,7 @@ export const useLootboxFactory = () => {
   }
   const getAllLootboxes = async () => {
     const singleLootboxes = await axios({
-      url: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-lootbox",
+      url: CHAINID_TO_DETAIL[chain.chainId].api,
       method: "post",
       data: {
         query: `{
@@ -88,7 +90,6 @@ export const useLootboxFactory = () => {
       setAllLootboxes(lootboxes)
       onDone()
     }
-
     if (isWeb3Enabled && chain) {
       onLoad()
       if (!SUPPORT_CHAINID.includes(chain.chainId)) {

@@ -3,11 +3,11 @@ import { useChain } from "react-moralis"
 import { Lootbox, Ticket } from "types"
 import { getNFTMetadata } from "api"
 import { useLoading } from "./useLoading"
+import { CHAINID_TO_DETAIL } from "contract"
 import axios from "axios"
 
 export const useLootbox = () => {
   const { chain } = useChain()
-
   const { isLoading, onLoad, onDone } = useLoading()
   const [lootbox, setLootbox] = useState<Lootbox>({
     id: 0,
@@ -23,12 +23,13 @@ export const useLootbox = () => {
     ticketSold: 0,
     owner: "",
   })
+  console.log(chain)
   const [tickets, setTickets] = useState<Ticket[]>([])
   const fetchLootbox = async (_lootboxAddress: string, lootboxId?: number) => {
     onLoad()
     if (!isNaN(lootboxId)) {
       const result = await axios({
-        url: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-lootbox",
+        url: CHAINID_TO_DETAIL[chain.chainId].api,
         method: "post",
         data: {
           query: `
