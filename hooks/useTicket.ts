@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { TICKET_ADDRESS, TICKET_ABI, SUPPORT_CHAINID } from "contract"
+import { TICKET_ADDRESS, SUPPORT_CHAINID } from "contract"
 import { useMoralis, useChain } from "react-moralis"
 
 import { useLoading } from "./useLoading"
@@ -50,8 +50,8 @@ export const useTicket = () => {
         }
           `,
       variables: {
-        account: account
-      }
+        account: account,
+      },
     })
     console.log(result)
     if (account && result?.data?.data?.tickets) {

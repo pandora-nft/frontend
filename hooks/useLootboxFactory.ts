@@ -46,7 +46,7 @@ export const useLootboxFactory = () => {
             }
           }
         
-          `
+          `,
     })
 
     let lootboxOwnedBids: number[] = []
@@ -70,8 +70,8 @@ export const useLootboxFactory = () => {
             }
             `,
       variables: {
-        account: account
-      }
+        account: account,
+      },
     })
     console.log(singleLootboxes)
     let lootboxOwnedBids: number[] = []
