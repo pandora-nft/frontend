@@ -23,7 +23,9 @@ export const Modal = ({
         <>
           <div
             style={{ zIndex: zIndex }}
-            className={`justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none`}
+            className={
+              "justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none"
+            }
           >
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               <div className="pt-4 border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -51,7 +53,7 @@ export const Modal = ({
             </div>
           </div>
 
-          <div style={{ zIndex: bgZIndex }} className={`opacity-25 fixed inset-0 bg-black`}></div>
+          <div style={{ zIndex: bgZIndex }} className={"opacity-25 fixed inset-0 bg-black"}></div>
         </>
       ) : null}
     </>
