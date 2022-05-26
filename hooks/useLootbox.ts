@@ -13,6 +13,7 @@ export const useLootbox = () => {
     address: "",
     name: "",
     nfts: [],
+    tickets: [],
     isDrawn: false,
     isRefundable: false,
     drawTimestamp: 0,
@@ -26,13 +27,13 @@ export const useLootbox = () => {
   const fetchLootbox = async (_lootboxAddress: string, lootboxId?: number) => {
     onLoad()
     if (!isNaN(lootboxId)) {
-      const result = await axios({
-        url: CHAINID_TO_DETAIL[chain.chainId].api,
-        method: "post",
-        data: {
-          query: `
-        query {singleLootbox(id:${lootboxId}){
+      const result = await axios.post(CHAINID_TO_DETAIL[chain.chainId].api, {
+        query: `
+        query singleLootbox($lootboxId: Int!) {
+          singleLootbox (id: $lootboxId)
+          {
           id
+          address
           drawTimestamp
           ticketPrice
           minimumTicketRequired
@@ -61,12 +62,12 @@ export const useLootbox = () => {
             isRefunded
             ticketId
           }
-
-        }}
+          }}
         `,
+        variables: {
+          lootboxId: lootboxId,
         },
       })
-      console.log(result)
       if (result?.data?.data?.singleLootbox) {
         const singleLootbox: any = result.data.data.singleLootbox
         const loot: Lootbox = {
@@ -82,17 +83,19 @@ export const useLootbox = () => {
           maxTicketPerWallet: singleLootbox.maxTicketPerWallet,
           ticketSold: singleLootbox.ticketSold,
           owner: singleLootbox.owner,
+          tickets: singleLootbox.tickets,
         }
         for (let nft of singleLootbox.nft) {
           loot.nfts.push({
             tokenId: Number(nft.tokenId),
             collectionName: nft.collectionName,
             address: nft.address,
-            imageURI: nft.image.replace("ipfs://", "https://ipfs.io/ipfs/") || null,
+            imageURI: nft?.image?.replace("ipfs://", "https://ipfs.io/ipfs/") || null,
             name: nft.name || null,
             description: nft.description || null,
           })
         }
+        // console.log(loot)
         setLootbox(loot)
         setTickets(singleLootbox.tickets)
         onDone()

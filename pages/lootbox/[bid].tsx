@@ -102,7 +102,14 @@ const Bid: React.FC<Props> = () => {
       </div>
     )
   }
-
+  const getTicketOwnedCount = () => {
+    let count = 0
+    for (let ticket of lootbox.tickets) {
+      if (ticket.owner.toString().toLowerCase() === account.toString()) count += 1
+    }
+    return count
+  }
+  console.log(getTicketOwnedCount())
   const createSubButton = (title: string, onClick: () => void) => {
     return (
       <button

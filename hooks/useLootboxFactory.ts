@@ -38,48 +38,48 @@ export const useLootboxFactory = () => {
     return lootboxes
   }
   const getAllLootboxes = async () => {
-    const singleLootboxes = await axios({
-      url: CHAINID_TO_DETAIL[chain.chainId].api,
-      method: "post",
-      data: {
-        query: `{
-              singleLootboxes(owner: "0xafF2671aD7129DC23D05F83fF651601e9d1aea0a" ){
+    const singleLootboxes = await axios.post(CHAINID_TO_DETAIL[chain.chainId].api, {
+      query: ` query {
+                singleLootboxes(orderDirection:asc){
+                  boxId
+                  owner
+            }
+          }
+        
+          `,
+    })
+
+    let lootboxOwnedBids: number[] = []
+    singleLootboxes.data.data.singleLootboxes.map((lootbox) => {
+      lootboxOwnedBids.push(Number(lootbox.boxId))
+    })
+    let lootboxes: Lootbox[] = await fetchManyLootboxByBid(lootboxOwnedBids) //all lootbox
+    return lootboxes
+  }
+
+  const fetchLootboxOwned = async (account: string) => {
+    const singleLootboxes = await axios.post(CHAINID_TO_DETAIL[chain.chainId].api, {
+      query: `query singleLootboxes($account: String!){
+        singleLootboxes(where: {
+                owner: $account
+              }
+              ){
                 boxId
                 owner
               }
             }
             `,
+      variables: {
+        account: account,
       },
     })
+    console.log(singleLootboxes)
     let lootboxOwnedBids: number[] = []
     singleLootboxes.data.data.singleLootboxes.map((lootbox) => {
       lootboxOwnedBids.push(Number(lootbox.boxId))
     })
-    let lootboxes: Lootbox[] = await fetchManyLootboxByBid(lootboxOwnedBids) //lootboxOwnedAddresses
-    return lootboxes
-  }
-
-  const fetchLootboxOwned = async (account: string) => {
-    const singleLootboxes = await axios({
-      url: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-lootbox",
-      method: "post",
-      data: {
-        query: `{
-                singleLootboxes(owner: $account ){
-                  boxId
-                  owner
-                }
-              }
-              `,
-      },
-    })
-    let lootboxOwnedBids: number[] = []
-    singleLootboxes.data.data.singleLootboxes.map((lootbox) => {
-      if (account.toString().toLowerCase() === lootbox.owner.toString().toLowerCase())
-        lootboxOwnedBids.push(Number(lootbox.boxId))
-    })
-    let lootboxes: Lootbox[] = await fetchManyLootboxByBid(lootboxOwnedBids)
-
+    let lootboxes: Lootbox[] = await fetchManyLootboxByBid(lootboxOwnedBids) // lootbox owned
+    console.log(lootboxes)
     setLootboxOwned(lootboxes)
     return lootboxes
   }
