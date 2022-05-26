@@ -10,13 +10,13 @@ export { ticketAbi as TICKET_ABI }
 
 export const FACTORY_ADDRESS: { [chainId: string]: string } = {
   //Rinkeby
-  "0x4": "0x53D5A5Ee0DC444DcB681fF11ae8a630e79F2A577",
+  "0x4": "0xA78AffBFF38e4ae9FD030C52D8eD8a6AFBda9a5D",
   //BNB Testnet
-  "0x61": "0x86490bA09C96F36f288A618E0f11b09A97E427Da",
+  "0x61": "0x48652d6b881b0BA591241c30Fd80e80Cc6624379",
   //Mumbai
-  "0x13881": "0xeE9185C9Bfe2942c2421e82E028192f7a174d96C",
+  "0x13881": "0xEd94c13E344859C9A6b18bF217682a7Aba2eEC2F",
   //Fuji
-  "0xa869": "0xc674C8275Fa1C07b15E5B8B8056984d4940eC2c3",
+  "0xa869": "0x1dF0D95f834864F2fD91be2996cc465960b00AFc",
   //Avalanche
   // "0xa86a": "",
   //BNB Chain
@@ -27,14 +27,13 @@ export const FACTORY_ADDRESS: { [chainId: string]: string } = {
 
 export const TICKET_ADDRESS: { [chainId: string]: string } = {
   //Rinkeby
-  //Rinkeby
-  "0x4": "0xe1B562e5C935f6a9cBB732F97aF3d57ffE3875d0",
+  "0x4": "0xe82967CB8a13Ec6365cd7bFD26457aEdA7DC8Dfb",
   //BNB Testnet
-  "0x61": "0x624b980A80008307939aD769D5e0C2a8C2d25DE1",
+  "0x61": "0xaB62CEd74eC2C52B0A02E118BD51c58f3D1A61cE",
   //Mumbai
-  "0x13881": "0xA584A32D8b72C5FAb6fb8b10d7Ae74241225F8fC",
+  "0x13881": "0x34438266f76F9c82dA25f00946d325E811E9dA25",
   //Fuji
-  "0xa869": "0xf5BF0F9e8741e8d174C2D0DAE2302823Af22d660",
+  "0xa869": "0x35C9b674F856A6Ed52E609A08F257255124D40bA",
   //Avalanche
   // "0xa86a": "",
   //BNB Chain
