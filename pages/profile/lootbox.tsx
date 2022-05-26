@@ -17,7 +17,7 @@ const Lootbox = () => {
       if (!SUPPORT_CHAINID.includes(chain.chainId)) {
         return
       } else {
-        fetchLootboxOwned(account)
+        if (account) fetchLootboxOwned(account)
       }
     } else {
       enableWeb3()
