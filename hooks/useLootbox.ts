@@ -64,10 +64,8 @@ export const useLootbox = () => {
         `,
         },
       })
-      console.log(result)
       if (result?.data?.data?.singleLootbox) {
         const singleLootbox: any = result.data.data.singleLootbox
-        console.log("single lootbox", singleLootbox)
         const loot: Lootbox = {
           id: singleLootbox.id,
           name: singleLootbox.name,
@@ -87,7 +85,7 @@ export const useLootbox = () => {
           const nftAddress = nft.address.toString()
           const tokenId = Number(nft.tokenId)
           const nftMetadata = await getNFTMetadata(chain.chainId, nftAddress, tokenId)
-          // console.log(tokenId)
+
           loot.nfts.push({
             tokenId,
             collectionName: nft.name,
