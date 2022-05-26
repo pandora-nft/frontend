@@ -10,13 +10,13 @@ export { ticketAbi as TICKET_ABI }
 
 export const FACTORY_ADDRESS: { [chainId: string]: string } = {
   //Rinkeby
-  "0x4": "0xedF72393De2860E0cEc3C1D48865c3D58957556F",
+  "0x4": "0xA78AffBFF38e4ae9FD030C52D8eD8a6AFBda9a5D",
   //BNB Testnet
-  "0x61": "0x861543c3B97e193Af95179a052472bb063F9e394",
+  "0x61": "0x48652d6b881b0BA591241c30Fd80e80Cc6624379",
   //Mumbai
-  "0x13881": "0x8dFCdd30170FeAF90DC6C182123A465f7E7Ab080",
+  "0x13881": "0xEd94c13E344859C9A6b18bF217682a7Aba2eEC2F",
   //Fuji
-  "0xa869": "0x145C6028c725A1eACA457F1a3f79daC246aE7746",
+  "0xa869": "0x1dF0D95f834864F2fD91be2996cc465960b00AFc",
   //Avalanche
   // "0xa86a": "",
   //BNB Chain
@@ -27,14 +27,13 @@ export const FACTORY_ADDRESS: { [chainId: string]: string } = {
 
 export const TICKET_ADDRESS: { [chainId: string]: string } = {
   //Rinkeby
-  //Rinkeby
-  "0x4": "0xe5674c9166CAaA4aFb43102aaDAE115910d62eE1",
+  "0x4": "0xe82967CB8a13Ec6365cd7bFD26457aEdA7DC8Dfb",
   //BNB Testnet
-  "0x61": "0x54aB2f68c0088C82b36C31614133e478b49b5248",
+  "0x61": "0xaB62CEd74eC2C52B0A02E118BD51c58f3D1A61cE",
   //Mumbai
-  "0x13881": "0x9E2238f4dB3c6b9307CaaEbdC8289e89aBa38123",
+  "0x13881": "0x34438266f76F9c82dA25f00946d325E811E9dA25",
   //Fuji
-  "0xa869": "0x2FD95A2C686fB4bd28F42878E0b3BE98850fD7F5",
+  "0xa869": "0x35C9b674F856A6Ed52E609A08F257255124D40bA",
   //Avalanche
   // "0xa86a": "",
   //BNB Chain
@@ -70,6 +69,7 @@ interface CHAIN_DETAIL {
   src: string
   icon: string
   color: string
+  api: string
 }
 
 export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
@@ -79,6 +79,7 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     src: "binance",
     icon: "bnb",
     color: "#e7b527",
+    api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-chapel",
   },
   "0x61": {
     name: CHAIN_SUPPORT.BSC_TESTNET,
@@ -86,6 +87,7 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     src: "testnet",
     icon: "bnb",
     color: "#e7b527",
+    api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-chapel",
   },
   "0x89": {
     name: CHAIN_SUPPORT.POLYGON,
@@ -93,6 +95,7 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     src: "polygon",
     icon: "matic",
     color: "#6f38d6",
+    api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-mumbai",
   },
   "0x13881": {
     name: CHAIN_SUPPORT.POLYGON_MUMBAI,
@@ -100,6 +103,7 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     src: "testnet",
     icon: "matic",
     color: "#6f38d6",
+    api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-mumbai",
   },
   "0xa86a": {
     name: CHAIN_SUPPORT.AVALANCHE,
@@ -107,6 +111,7 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     src: "avalanche",
     icon: "avax",
     color: "#d0443b",
+    api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-fuji",
   },
   "0xa869": {
     name: CHAIN_SUPPORT.AVALANCHE_FUJI,
@@ -114,5 +119,6 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     src: "testnet",
     icon: "avax",
     color: "#d0443b",
+    api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-fuji",
   },
 }

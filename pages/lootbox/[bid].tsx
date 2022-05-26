@@ -71,7 +71,7 @@ const Bid: React.FC<Props> = () => {
     } else {
       enableWeb3()
     }
-  }, [bid, isWeb3Enabled, isSuccess])
+  }, [bid, isWeb3Enabled, isSuccess, chain?.networkId])
 
   const onNFTClick = (nft: NFT) => {
     setCurrentNFT(nft)
