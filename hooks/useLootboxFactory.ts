@@ -27,7 +27,6 @@ export const useLootboxFactory = () => {
     let lootboxes: Lootbox[] = []
 
     const promises = []
-
     for (let addr of lootboxAddresses) {
       promises.push(fetchLootbox(addr))
     }
@@ -52,8 +51,9 @@ export const useLootboxFactory = () => {
       moralisProvider
     )
     const lootboxOwnedAddresses = await lootboxFactoryContract.getLootboxesOwnedByUser(account)
-
+    console.log("here1")
     let lootboxes: Lootbox[] = await fetchManyLootboxByAddresses(lootboxOwnedAddresses)
+    console.log("here2")
 
     setLootboxOwned(lootboxes)
     return lootboxes

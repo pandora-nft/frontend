@@ -144,18 +144,19 @@ export const useLootbox = () => {
       })
 
       const result = nftMetadata?.result
-
-      for (const nft of result) {
-        const metadata = JSON.parse(nft.metadata)
-        const imageURI = metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")
-        nfts.push({
-          tokenId: Number(nft.token_id),
-          collectionName: nft.name,
-          address: nft.token_address,
-          imageURI: imageURI,
-          name: metadata.name,
-          description: metadata.description,
-        })
+      if (result) {
+        for (const nft of result) {
+          const metadata = JSON.parse(nft.metadata)
+          const imageURI = metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")
+          nfts.push({
+            tokenId: Number(nft.token_id),
+            collectionName: nft.name,
+            address: nft.token_address,
+            imageURI: imageURI,
+            name: metadata.name,
+            description: metadata.description,
+          })
+        }
       }
     }
 

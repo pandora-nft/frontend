@@ -41,5 +41,5 @@ export const useNFTsBalance = () => {
     }
   }, [isWeb3Enabled, chain])
 
-  return { NFTBalances, isLoading }
+  return { getNFTBalances, NFTBalances, isLoading }
 }

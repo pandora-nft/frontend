@@ -85,8 +85,8 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets }: Props) => {
           </div>
           <div className="border-2 shadow-lg shadow-indigo-500/40 cursor-pointer max-w-sm mt-2">
             <img
-              src={lootbox?.nfts[ticket?.wonTicket].imageURI || "error"}
-              alt=""
+              src={lootbox?.nfts[ticket?.wonTicket].imageURI}
+              alt="won-ticket"
               className="w-20 h-auto"
             />
           </div>

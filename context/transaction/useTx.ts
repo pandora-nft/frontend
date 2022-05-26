@@ -30,6 +30,7 @@ export const useTx = () => {
       // console.log("tx", tx)
       await handleTx(tx)
     } catch (err) {
+      clearTx()
       console.log("err", err)
       setError(err.message)
     }

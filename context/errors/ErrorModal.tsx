@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { Button, useNotification } from "web3uikit"
+import { useNotification } from "web3uikit"
 import { TIconType } from "web3uikit/dist/components/Icon/collection"
 import { IPosition, notifyType } from "web3uikit/dist/components/Notification/types"
 import { useError } from "./useError"
@@ -28,15 +28,7 @@ export const ErrorModal = () => {
   return (
     <>
       {errorState.show && (
-        <div className="absolute z-10 top-5 left-1/2 transform -translate-x-1/2">
-          {/* <Notification className="flex items-center" severity="error">
-            {errorState.message}
-
-            
-          </Notification> */}
-
-          <Button text="Info" onClick={() => handleNewNotification("info")} isFullWidth={true} />
-        </div>
+        <div className="absolute z-10 top-5 left-1/2 transform -translate-x-1/2"></div>
       )}
     </>
   )

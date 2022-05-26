@@ -1,7 +1,7 @@
 // pages/lootbox/[bid]
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import { useMoralis, useChain } from "react-moralis"
+import { useMoralis, useChain, useNativeBalance } from "react-moralis"
 import { useLootbox } from "hooks"
 import { LootboxCanvas } from "canvas"
 import {
@@ -12,8 +12,9 @@ import {
   ClaimNFTDialog,
   NFTDialog,
   RefundDialog,
+  NotFound,
 } from "components"
-import { NFT } from "types"
+import { NFT, Chain } from "types"
 import { ethers } from "ethers"
 import { CHAINID_TO_DETAIL, isChainSupport, LOOTBOX_ABI } from "contract"
 import { Icon } from "web3uikit"
@@ -50,11 +51,22 @@ const Bid: React.FC<Props> = () => {
   const [showBuyTicketsDialog, setShowBuyTicketsDialog] = useState(false)
   const [currentNFT, setCurrentNFT] = useState<NFT>(null)
   const [isSuccess, setIsSuccess] = useState(false)
+  const { getBalances, data: balance, isFetching: isBalanceLoading } = useNativeBalance()
+
+  const main = async () => {
+    await fetchLootbox("", Number(bid))
+    await getBalances({
+      params: {
+        address,
+        chain: chain ? (chain.chainId as Chain) : "eth",
+      },
+    })
+  }
 
   useEffect(() => {
     if (isWeb3Enabled) {
       if (bid) {
-        fetchLootbox("", Number(bid))
+        main()
       }
     } else {
       enableWeb3()
@@ -108,10 +120,22 @@ const Bid: React.FC<Props> = () => {
       <button
         onClick={onClick}
         className="flex flex-row px-8 py-3 bg-white border border-mainPink text-mainPink
-         rounded-xl hover:shadow-2xl transition duration-300
-"
+         rounded-xl hover:shadow-2xl transition duration-300"
       >
         <Icon fill="#E54090" size={28} svg="speedyNode" />
+        <h3 className="ml-2 mt-2">{title}</h3>
+      </button>
+    )
+  }
+
+  const createDisableButton = (title: string) => {
+    return (
+      <button
+        disabled
+        className="mr-5 flex flex-row px-8 py-3 bg-gray-400 text-white
+          rounded-xl"
+      >
+        <Icon fill="#ffffff" size={28} svg="creditCard" />
         <h3 className="ml-2 mt-2">{title}</h3>
       </button>
     )
@@ -157,7 +181,11 @@ const Bid: React.FC<Props> = () => {
         //TODO: check if user is a winner
         claimNFTButton = createMainButton("Claim NFT", () => setShowClaimNFTDialog(true))
         if (isOwner) {
-          claimMoneyButton = createMainButton("Claim Money", () => claimMoney())
+          if (Number(balance.formatted) > 0) {
+            claimMoneyButton = createMainButton("Claim Money", () => claimMoney())
+          } else {
+            claimMoneyButton = createDisableButton("Money Claimed")
+          }
         }
       }
     }
@@ -228,12 +256,24 @@ const Bid: React.FC<Props> = () => {
                   <h3 className="ml-1 mt-3">
                     Draw time:{" "}
                     <span className="text-mainPink">
-                      {new Date(drawTimestamp * 1000).toUTCString()}
+                      {isRefundable || isDrawn
+                        ? "Ended"
+                        : new Date(drawTimestamp * 1000).toUTCString()}
+                    </span>
+                  </h3>
+                  isRefundable: {isRefundable.toString()}
+                  isDrawn: {isDrawn.toString()}
+                  <h3 className="ml-5 mt-3">
+                    {isRefundable || isDrawn ? "State: " : ""}
+                    <span className="text-mainPink">
+                      {isRefundable && "Drawing Canceled! Refundable"}{" "}
+                      {isDrawn && "Drawing Completed"}
                     </span>
                   </h3>
                 </div>
 
                 <div className="grid grid-cols-4 gap-5">
+                  {createLabel("balance", isBalanceLoading ? "-" : balance.formatted)}
                   {createLabel("items", nfts.length)}
                   {createLabel("ticket owned", "TODO")}
                   {createLabel("ticket sold", ticketSold)}
@@ -248,13 +288,17 @@ const Bid: React.FC<Props> = () => {
             className="grid grid-cols-2 lg:grid-cols-3
                      xl:grid-cols-4 3xl:grid-cols-5 5xl:grid-cols-6 gap-5"
           >
-            {lootbox.nfts.map((nft, index) => {
-              return (
-                <div onClick={() => onNFTClick(nft)} key={index}>
-                  <NFTCard NFT={nft} />
-                </div>
-              )
-            })}
+            {nfts.length > 0 ? (
+              nfts.map((nft, index) => {
+                return (
+                  <div onClick={() => onNFTClick(nft)} key={index}>
+                    <NFTCard NFT={nft} />
+                  </div>
+                )
+              })
+            ) : (
+              <NotFound info="Nothing in the box yet!" />
+            )}
           </div>
 
           <NFTDialog open={!!currentNFT} currentNFT={currentNFT} setCurrentNFT={setCurrentNFT} />
