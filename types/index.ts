@@ -15,13 +15,18 @@ export interface Lootbox {
 }
 
 export interface Ticket extends NFT {
+  ticketId: number
   owner: string
   isClaimed: boolean
   isWinner: boolean
   isRefunded: boolean
-  wonTicket?: number
+  wonNFT?: {
+    id: string
+    imageURI: string
+  }
   lootboxId: number
 }
+
 export interface NFT {
   id?: string
   name: string

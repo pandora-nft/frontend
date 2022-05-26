@@ -25,7 +25,7 @@ export const convertToCountdown = (drawTimestamp: number) => {
     metric = "hour"
   } else if (duration.minutes() > 0) {
     time = duration.minutes()
-    metric = "minutes"
+    metric = "minute"
   } else if (duration.seconds() > 0) {
     time = duration.seconds()
     metric = "second"

@@ -13,6 +13,7 @@ const Nft = () => {
     setCurrentNFT(nft)
   }
 
+  console.log("ss", NFTBalances)
   const showNFTs = () => {
     if (isLoading) {
       return showSkeleton(<NFTCardSkeleton />)
@@ -23,14 +24,6 @@ const Nft = () => {
         <>
           {NFTBalances ? (
             NFTBalances.map((nft, index) => {
-              // const NFT = {
-              //   name: nft.name,
-              //   collectionName: nft.collectionName,
-              //   description: nft.description,
-              //   tokenId: nft.tokenId,
-              //   address: nft.address,
-              //   imageURI: nft.imageURI,
-              // }
               return (
                 <div onClick={() => onNFTClick(nft)} key={index}>
                   <NFTCard NFT={nft} />

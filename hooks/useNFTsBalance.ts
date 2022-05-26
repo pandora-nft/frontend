@@ -14,15 +14,17 @@ export const useNFTsBalance = () => {
     if (data) {
       let nfts: NFT[] = []
       data?.result?.map((nft) => {
-        nfts.push({
-          id: nft?.token_id + "_" + nft?.token_address,
-          name: nft?.metadata?.name,
-          collectionName: nft?.name,
-          description: nft?.metadata?.description,
-          tokenId: nft?.token_id,
-          address: nft?.token_address,
-          imageURI: nft?.image,
-        })
+        if (nft?.metadata) {
+          nfts.push({
+            id: nft?.token_id + "_" + nft?.token_address,
+            name: nft?.metadata?.name,
+            collectionName: nft?.name,
+            description: nft?.metadata?.description,
+            tokenId: nft?.token_id,
+            address: nft?.token_address,
+            imageURI: nft?.image,
+          })
+        }
       })
       setNFTBalances(nfts)
     }

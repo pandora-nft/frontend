@@ -42,7 +42,11 @@ export const TICKET_ADDRESS: { [chainId: string]: string } = {
   // "0x89": "",
 }
 
-export const SUPPORT_CHAINID = ["0x38", "0x61", "0x89", "0x13881", "0xa86a", "0xa869"]
+// with mainnet but no contract deployed yet!
+// export const SUPPORT_CHAINID = ["0x38", "0x61", "0x89", "0x13881", "0xa86a", "0xa869"]
+
+// only testnet
+export const SUPPORT_CHAINID = ["0x61", "0x13881", "0xa869"]
 
 export const isChainSupport = (chain: any) => {
   if (!chain || !chain.chainId) {
@@ -84,7 +88,7 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
   "0x61": {
     name: CHAIN_SUPPORT.BSC_TESTNET,
     shortName: "BSC Testnet",
-    src: "testnet",
+    src: "binance",
     icon: "bnb",
     color: "#e7b527",
     api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-chapel",
@@ -100,7 +104,7 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
   "0x13881": {
     name: CHAIN_SUPPORT.POLYGON_MUMBAI,
     shortName: "Mumbai",
-    src: "testnet",
+    src: "polygon",
     icon: "matic",
     color: "#6f38d6",
     api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-mumbai",
@@ -116,7 +120,7 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
   "0xa869": {
     name: CHAIN_SUPPORT.AVALANCHE_FUJI,
     shortName: "Fuji",
-    src: "testnet",
+    src: "avalanche",
     icon: "avax",
     color: "#d0443b",
     api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-fuji",

@@ -3,7 +3,6 @@ import { SUPPORT_CHAINID } from "contract"
 import { useEffect, useState } from "react"
 import { Lootbox } from "types"
 import { useLootbox } from "./useLootbox"
-
 import { useLoading } from "./useLoading"
 import { useError } from "context/errors"
 import { CHAINID_TO_DETAIL } from "contract"
@@ -73,13 +72,11 @@ export const useLootboxFactory = () => {
         account: account,
       },
     })
-    console.log(singleLootboxes)
     let lootboxOwnedBids: number[] = []
     singleLootboxes.data.data.singleLootboxes.map((lootbox) => {
       lootboxOwnedBids.push(Number(lootbox.boxId))
     })
     let lootboxes: Lootbox[] = await fetchManyLootboxByBid(lootboxOwnedBids) // lootbox owned
-    console.log(lootboxes)
     setLootboxOwned(lootboxes)
     return lootboxes
   }

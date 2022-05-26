@@ -1,7 +1,8 @@
 // pages/lootbox/[bid]
+import Router from "next/router"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import { useMoralis, useChain, useNativeBalance } from "react-moralis"
+import { useMoralis, useChain, useNFTBalances } from "react-moralis"
 import { useLootbox } from "hooks"
 import { LootboxCanvas } from "canvas"
 import {
@@ -51,27 +52,43 @@ const Bid: React.FC<Props> = () => {
   const [showBuyTicketsDialog, setShowBuyTicketsDialog] = useState(false)
   const [currentNFT, setCurrentNFT] = useState<NFT>(null)
   const [isSuccess, setIsSuccess] = useState(false)
-  const { getBalances, data: balance, isFetching: isBalanceLoading } = useNativeBalance()
+  // const { getBalances, data: balance, isFetching: isBalanceLoading } = useNativeBalance()
 
-  const main = async () => {
-    await fetchLootbox("", Number(bid))
-    await getBalances({
-      params: {
-        address,
-        chain: chain ? (chain.chainId as Chain) : "eth",
-      },
-    })
-  }
+  const [isNFTAlreadyWithdrawn, setIsNFTAlreadyWithdrawn] = useState(false)
+
+  const { getNFTBalances } = useNFTBalances()
 
   useEffect(() => {
-    if (isWeb3Enabled) {
-      if (bid) {
-        main()
+    if (isWeb3Enabled && chain && bid) {
+      const main = async () => {
+        const loot = await fetchLootbox("", Number(bid))
+        if (!loot.address || loot.address === "") {
+          return Router.push("/marketplace")
+        }
+        const nftMetadata = await getNFTBalances({
+          params: {
+            chain: chain.chainId as Chain,
+            address: loot.address,
+          },
+        })
+        const result = nftMetadata?.result
+        if (result?.length === 0) {
+          setIsNFTAlreadyWithdrawn(true)
+        }
+
+        // await getBalances({
+        //   params: {
+        //     address,
+        //     chain: chain ? (chain.chainId as Chain) : "eth",
+        //   },
+        // })
       }
+
+      main()
     } else {
       enableWeb3()
     }
-  }, [bid, isWeb3Enabled, isSuccess, chain?.networkId])
+  }, [bid, isWeb3Enabled, isSuccess, chain])
 
   const onNFTClick = (nft: NFT) => {
     setCurrentNFT(nft)
@@ -85,18 +102,20 @@ const Bid: React.FC<Props> = () => {
       functionName: "withdraw",
       abi: LOOTBOX_ABI,
     }
-    doTx(sendOptions)
+    await doTx(sendOptions)
+    setIsSuccess(true)
   }
 
   // withdraw NFT by owner of the lootbox
   // in case there is no draw occurs
-  const withdrawNFT = () => {
+  const withdrawNFT = async () => {
     const sendOptions = {
       contractAddress: lootbox?.address,
       functionName: "withdrawNFT",
       abi: LOOTBOX_ABI,
     }
-    doTx(sendOptions)
+    await doTx(sendOptions)
+    setIsSuccess(true)
   }
 
   const isOwner = () => {
@@ -108,7 +127,7 @@ const Bid: React.FC<Props> = () => {
 
   const createLabel = (topic: string, value: any) => {
     return (
-      <div className="rounded border bg-lightPink border-gray-200 p-4 items-center text-center">
+      <div className="p-4 items-center text-center">
         <h3 className="text-mainPink font-medium">{value}</h3>
         <h3 className="font-bold">{topic}</h3>
       </div>
@@ -121,7 +140,6 @@ const Bid: React.FC<Props> = () => {
     }
     return count
   }
-  console.log(getTicketOwnedCount())
   const createSubButton = (title: string, onClick: () => void) => {
     return (
       <button
@@ -179,8 +197,12 @@ const Bid: React.FC<Props> = () => {
       if (isRefundable) {
         //TODO: check if have ticket first
         refundTicketButton = createMainButton("Refund Tickets", () => setShowRefundDialog(true))
-        if (isOwner()) {
-          withdrawNFTButton = createSubButton("Withdraw NFTs", () => withdrawNFT())
+        if (isOwner() && nfts.length > 0) {
+          if (isNFTAlreadyWithdrawn) {
+            withdrawNFTButton = createDisableButton("NFT Withdrawn")
+          } else {
+            withdrawNFTButton = createSubButton("Withdraw NFTs", () => withdrawNFT())
+          }
         }
 
         // if draw success owner can claim money, winner can claim NFT
@@ -188,11 +210,11 @@ const Bid: React.FC<Props> = () => {
         //TODO: check if user is a winner
         claimNFTButton = createMainButton("Claim NFT", () => setShowClaimNFTDialog(true))
         if (isOwner) {
-          if (Number(balance.formatted) > 0) {
-            claimMoneyButton = createMainButton("Claim Money", () => claimMoney())
-          } else {
-            claimMoneyButton = createDisableButton("Money Claimed")
-          }
+          // if (Number(balance.formatted) > 0) {
+          claimMoneyButton = createMainButton("Claim Money", () => claimMoney())
+          // } else {
+          claimMoneyButton = createDisableButton("Money Claimed")
+          // }
         }
       }
     }
@@ -226,7 +248,7 @@ const Bid: React.FC<Props> = () => {
                 #{id} {name}
               </h1>
 
-              <h3 className="-mt-2 text-xl">{address}</h3>
+              <h3 className="-mt-2 text-xl">Address: {address}</h3>
 
               <h3 className="text-lg font-medium">
                 Owned by{" "}
@@ -263,24 +285,30 @@ const Bid: React.FC<Props> = () => {
                   <h3 className="ml-1 mt-3">
                     Draw time:{" "}
                     <span className="text-mainPink">
+                      {/* <CountdownTimer seconds={drawTimestamp * 1000} /> */}
                       {isRefundable || isDrawn
                         ? "Ended"
                         : new Date(drawTimestamp * 1000).toUTCString()}
                     </span>
                   </h3>
-                  isRefundable: {isRefundable.toString()}
-                  isDrawn: {isDrawn.toString()}
+                </div>
+
+                <div
+                  className="flex flex-row font-medium 
+                 border-b border-t border-gray-200 p-4 items-center"
+                >
                   <h3 className="ml-5 mt-3">
+                    {isRefundable.toString() + " " + isDrawn.toString()}
                     {isRefundable || isDrawn ? "State: " : ""}
                     <span className="text-mainPink">
-                      {isRefundable && "Drawing Canceled! Refundable"}{" "}
-                      {isDrawn && "Drawing Completed"}
+                      {isRefundable && "Drawing Canceled"}
+                      {isDrawn && !isRefundable && "Drawing Completed"}
                     </span>
                   </h3>
                 </div>
 
-                <div className="grid grid-cols-4 gap-5">
-                  {createLabel("balance", isBalanceLoading ? "-" : balance.formatted)}
+                <div className="grid grid-cols-4 gap-5 bg-lightPink">
+                  {/* {createLabel("balance", isBalanceLoading ? "-" : balance.formatted)} */}
                   {createLabel("items", nfts.length)}
                   {createLabel("ticket owned", getTicketOwnedCount())}
                   {createLabel("ticket sold", ticketSold)}
@@ -304,7 +332,7 @@ const Bid: React.FC<Props> = () => {
                 )
               })
             ) : (
-              <NotFound info="Nothing in the box yet!" />
+              <NotFound info="Nothing in the box" />
             )}
           </div>
 
@@ -322,12 +350,14 @@ const Bid: React.FC<Props> = () => {
             setOpen={setShowClaimNFTDialog}
             lootbox={lootbox}
             tickets={tickets}
+            setIsSuccess={setIsSuccess}
           />
           <RefundDialog
             open={showRefundDialog}
             setOpen={setShowRefundDialog}
             lootbox={lootbox}
             tickets={tickets}
+            setIsSuccess={setIsSuccess}
           />
 
           <DepositNFTDialog

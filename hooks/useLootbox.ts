@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useChain } from "react-moralis"
-import { Lootbox, Ticket } from "types"
+import { Lootbox, NFT, Ticket } from "types"
 import { useLoading } from "./useLoading"
 import { CHAINID_TO_DETAIL } from "contract"
 import axios from "axios"
@@ -23,6 +23,7 @@ export const useLootbox = () => {
     ticketSold: 0,
     owner: "",
   })
+
   const [tickets, setTickets] = useState<Ticket[]>([])
   const fetchLootbox = async (_lootboxAddress: string, lootboxId?: number) => {
     onLoad()
@@ -70,11 +71,24 @@ export const useLootbox = () => {
       })
       if (result?.data?.data?.singleLootbox) {
         const singleLootbox: any = result.data.data.singleLootbox
+
+        let nfts: NFT[] = []
+        for (let nft of singleLootbox.nft) {
+          nfts.push({
+            tokenId: Number(nft.tokenId),
+            collectionName: nft.collectionName,
+            address: nft.address,
+            imageURI: nft.image ? nft.image.replace("ipfs://", "https://ipfs.io/ipfs/") : null,
+            name: nft.name || null,
+            description: nft.description || null,
+          })
+        }
+
         const loot: Lootbox = {
           id: singleLootbox.id,
           name: singleLootbox.name,
           address: singleLootbox.address,
-          nfts: [],
+          nfts,
           isDrawn: singleLootbox.isDrawn,
           isRefundable: singleLootbox.isRefundable,
           drawTimestamp: singleLootbox.drawTimestamp,
@@ -97,7 +111,7 @@ export const useLootbox = () => {
         }
         // console.log(loot)
         setLootbox(loot)
-        setTickets(singleLootbox.tickets)
+        setTickets(tickets)
         onDone()
         return loot
       }
