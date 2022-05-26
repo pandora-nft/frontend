@@ -30,7 +30,7 @@ const Create = () => {
   const [isListened, setIsListened] = useState(true)
 
   const { runContractFunction: deployLootbox } = useWeb3Contract({
-    contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
+    contractAddress: chain ? FACTORY_ADDRESS[chain.chainId] : "",
     functionName: "deployLootbox(string,uint256,uint256,uint256)",
     abi: FACTORY_ABI,
     params: {
@@ -74,6 +74,7 @@ const Create = () => {
       })
     }
   }
+
   const createChain = (chainId: string) => {
     const { name, src } = CHAINID_TO_DETAIL[chainId]
 

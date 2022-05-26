@@ -22,12 +22,15 @@ export interface Ticket extends NFT {
   lootboxId: number
 }
 export interface NFT {
+  id?: string
   name: string
   description?: string
   collectionName: string
   tokenId: number
   address: string
   imageURI: string
+  isApproved?: boolean
+  isApproving?: boolean
 }
 
 export interface formDataType {

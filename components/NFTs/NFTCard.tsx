@@ -13,7 +13,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({ NFT }) => {
       <div>
         <img
           className="block object-cover object-center w-[300px] h-[300px] rounded-lg"
-          src={imageURI || "error"}
+          src={imageURI}
           alt="nft"
         />
       </div>

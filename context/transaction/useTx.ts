@@ -27,6 +27,7 @@ export const useTx = () => {
     try {
       initiateTx()
       const tx = await Moralis.executeFunction(sendOptions)
+      // console.log("tx", tx)
       await handleTx(tx)
     } catch (err) {
       console.log("err", err)

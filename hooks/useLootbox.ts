@@ -143,7 +143,8 @@ export const useLootbox = () => {
         },
       })
 
-      const result = nftMetadata.result
+      const result = nftMetadata?.result
+
       for (const nft of result) {
         const metadata = JSON.parse(nft.metadata)
         const imageURI = metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")
