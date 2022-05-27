@@ -67,14 +67,8 @@
 
 html,
 body {
-  height: 3000px;
+  min-height: 1000px;
   background: #ffffff;
-  /* background: linear-gradient(
-    160deg,
-    rgb(0, 0, 0) 0%,
-    rgb(232, 110, 222) 70%,
-    rgba(17, 15, 148, 0.5) 100%
-  ); */
   color: #1e1e1e;
   padding: 0;
   margin: 0;

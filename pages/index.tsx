@@ -78,6 +78,54 @@ const Home: NextPage = () => {
         </div>
       </section>
 
+      <section className="bg-white py-32">
+        <AnimationOnScroll animateOnce animateIn="animate__fadeInLeft">
+          <div className="centered">
+            <h1 className="">Core Value</h1>
+
+            <h2 className="italic mt-4">
+              Decentralized drawing mechanisms using Chainlink VRF and Keepers
+            </h2>
+            <div className="grid grid-cols-3 gap-10 my-10">
+              <Card text="Solving NFT Illiquidity" pictureURL="/NFTs/1.png" />
+              <Card text="Gamifying Experience" pictureURL="/NFTs/2.png" />
+              <Card text="Fair game of luck" pictureURL="/NFTs/9.png" />
+            </div>
+          </div>
+        </AnimationOnScroll>
+      </section>
+
+      <section className="bg-black py-36">
+        <div className="centered">
+          <AnimationOnScroll animateOnce animateIn="animate__fadeInUp">
+            <h1 className="text-white">The Pandora Tickets</h1>
+            <h2 className="italic text-white mt-4">
+              Ticket Buyers will receive the pandora ticket NFT
+            </h2>
+            <div className="text-white grid grid-cols-3 gap-10 my-10">
+              <Tilt>
+                <Card text="Normal Ticket" pictureURL="/Normal_Tickets.png" />
+              </Tilt>
+              <Tilt>
+                <Card text="Winning Ticket" pictureURL="/Winning_Ticket.png" />
+              </Tilt>
+              <Tilt>
+                <Card text="Refundable Ticket" pictureURL="/Refundable_Ticket.png" />
+              </Tilt>
+              <Tilt>
+                <Card text="Refunded Ticket" pictureURL="/Refunded_Ticket.png" />
+              </Tilt>
+              <Tilt>
+                <Card text="Claimed Ticket" pictureURL="/Claimed_Ticket.png" />
+              </Tilt>
+              <Tilt>
+                <Card text="Expired Ticket" pictureURL="/Expired_Ticket.png" />
+              </Tilt>
+            </div>
+          </AnimationOnScroll>
+        </div>
+      </section>
+
       <section className="py-36 text-center justify-center items-center">
         <AnimationOnScroll animateOnce animateIn="animate__fadeInRight">
           <h1>Now its your chance to win valuable NFTs</h1>
@@ -85,30 +133,6 @@ const Home: NextPage = () => {
             <NFTShowcase />
           </div>
         </AnimationOnScroll>
-      </section>
-
-      <section className="bg-black py-36">
-        <div className="centered">
-          <AnimationOnScroll animateOnce animateIn="animate__fadeInLeft">
-            <h1 className="text-white">Get your tickets</h1>
-            <div className="text-white grid grid-cols-3 gap-10 mt-10">
-              <Card text="Normal Ticket" pictureURL="/Normal_Tickets.png" />
-              <Card text="Winning Ticket" pictureURL="/Winning_Ticket.png" />
-              <Card text="Refundable Ticket" pictureURL="/Refundable_Ticket.png" />
-              <Card text="Refunded Ticket" pictureURL="/Refunded_Ticket.png" />
-              <Card text="Claimed Ticket" pictureURL="/Claimed_Ticket.png" />
-              <Card text="Expired Ticket" pictureURL="/Expired_Ticket.png" />
-            </div>
-          </AnimationOnScroll>
-        </div>
-      </section>
-
-      <section className="bg-white pb-96 pt-32">
-        <div className="centered">
-          <h1 className="text-gray-800">Core Value</h1>
-          <h2 className="mt-10 text-2xl font-medium ">NFT Illiquidity</h2>
-          <h2 className="mt-10 text-2xl font-medium ">Fair game of luck</h2>
-        </div>
       </section>
 
       <section className="py-28 bg-black">
