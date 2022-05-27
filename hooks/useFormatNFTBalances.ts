@@ -7,46 +7,42 @@ import axios from "axios"
 // fetch nft of user
 export const useFormatNFTBalances = () => {
   const { enableWeb3, isWeb3Enabled } = useMoralis()
-  const { getNFTBalances, data, error } = useNFTBalances()
+  const { getNFTBalances } = useNFTBalances()
   const [NFTBalances, setNFTBalances] = useState<NFT[]>([])
   const { isLoading, onLoad, onDone } = useLoading()
   const { chain } = useChain()
 
-  const formatNFTs = async () => {
-    console.log({ data, error })
-    if (data) {
-      console.log("data", data)
-      let nfts: NFT[] = []
+  const formatNFTs = async (data: any) => {
+    let nfts: NFT[] = []
 
-      data?.result?.map(async (nft) => {
-        if (!nft) {
-          return
-        }
-        let id, name, imageURI, description, collectionName, tokenId, address
-        collectionName = nft.name
-        tokenId = nft.token_id
-        address = nft.token_address
-        id = tokenId + "_" + address
-        if (nft.metadata) {
-          imageURI = nft.metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")
-          name = nft.metadata.name
-          description = nft.metadata.description
-          nfts.push({
-            id,
-            name,
-            collectionName,
-            description: description ? description : null,
-            tokenId,
-            address,
-            imageURI,
-          })
-        } else {
-          if (nft.token_uri) {
+    data?.result?.map(async (nft: any) => {
+      if (!nft) {
+        return
+      }
+
+      let id, name, imageURI, description, collectionName, tokenId, address
+      collectionName = nft.name
+      tokenId = nft.token_id
+      address = nft.token_address
+      id = tokenId + "_" + address
+      if (nft.metadata) {
+        const metadata = JSON.parse(nft.metadata)
+        imageURI = metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")
+        name = metadata.name
+        description = metadata.description
+        nfts.push({
+          id,
+          name,
+          collectionName,
+          description: description ? description : null,
+          tokenId,
+          address,
+          imageURI,
+        })
+      } else {
+        if (nft.token_uri) {
+          try {
             const res = await axios.get(nft.token_uri)
-            if (!res || !res.data) {
-              return
-            }
-
             imageURI = res.data.image
             name = res.data.name
             nfts.push({
@@ -58,21 +54,19 @@ export const useFormatNFTBalances = () => {
               address,
               imageURI,
             })
+          } catch (err) {
+            console.error("err", err.message)
           }
         }
-      })
-      setNFTBalances(nfts)
-    }
-    // return nfts
+      }
+    })
+    setNFTBalances(nfts)
   }
 
   const main = async () => {
     onLoad()
-    console.log("here1")
-
-    await getNFTBalances()
-    console.log("here2")
-    await formatNFTs()
+    const data = await getNFTBalances()
+    await formatNFTs(data)
     onDone()
   }
 
