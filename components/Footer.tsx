@@ -1,5 +1,6 @@
 import { useRouter } from "next/router"
 import Link from "next/link"
+import { openInNewTab } from "utils"
 
 export const Footer = () => {
   const router = useRouter()
@@ -42,9 +43,11 @@ export const Footer = () => {
     )
   }
 
-  const createIcon = (logoName: string) => {
+  const createIcon = (logoName: string, link?: string) => {
+    const onClick = link ? () => openInNewTab(link) : () => {}
     return (
       <img
+        onClick={onClick}
         className="w-10 h-10 p-2 hover:opacity-50 cursor-pointer"
         src={`/logo/${logoName}.svg`}
         alt="logo"
@@ -65,9 +68,9 @@ export const Footer = () => {
         {/* {createNavLink("Whitepaper", "")} */}
       </div>
       <div className="mt-5 flex flex-row">
-        {createIcon("twitter")}
+        {createIcon("twitter", "https://twitter.com/PandoraLootbox")}
         {createIcon("discord")}
-        {createIcon("github")}
+        {createIcon("github", "https://github.com/pandora-nft")}
         {createIcon("youtube")}
         {createIcon("medium")}
         {createIcon("telegram")}

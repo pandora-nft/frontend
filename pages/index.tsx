@@ -5,6 +5,7 @@ import { AnimationOnScroll } from "react-animation-on-scroll"
 import "animate.css/animate.min.css"
 import { Card } from "components"
 import { useRouter } from "next/router"
+
 const Home: NextPage = () => {
   const Router = useRouter()
   return (
