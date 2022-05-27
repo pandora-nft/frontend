@@ -8,8 +8,8 @@ export const useError = () => {
 
   const setError = (errMessage: string, type?: ErrorType) => {
     if (type === "tx") {
-      if (errMessage === "MetaMask Tx Signature: User denied transaction signature.") {
-        errMessage = "User denied transaction signature."
+      if (errMessage.includes("User denied transaction signature")) {
+        errMessage = "User denied transaction."
       } else {
         console.error("TX ERROR: ", errMessage)
         errMessage = "Transaction failed, please try again."
