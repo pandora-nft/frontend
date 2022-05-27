@@ -32,8 +32,7 @@ export const useTx = () => {
       return true
     } catch (err) {
       clearTx()
-      console.log("err2", err)
-      setError(err.message)
+      setError(err.message, "tx")
     }
   }
 
@@ -61,7 +60,7 @@ export const useTx = () => {
         setError("Transaction failed, please try again.")
       }
     } catch (err) {
-      setError(err.message)
+      setError(err.message, "tx")
     }
   }
 

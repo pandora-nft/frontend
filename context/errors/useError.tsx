@@ -1,10 +1,24 @@
 import { useEffect, useContext } from "react"
 import { ErrorAction, ErrorContext } from "context/errors/ErrorContext"
 
+type ErrorType = "tx" | "server"
+
 export const useError = () => {
   const { errorState, dispatch } = useContext(ErrorContext)
 
-  const setError = (errMessage: string) => {
+  const setError = (errMessage: string, type?: ErrorType) => {
+    if (type === "tx") {
+      if (errMessage === "MetaMask Tx Signature: User denied transaction signature.") {
+        errMessage = "User denied transaction signature."
+      } else {
+        console.error("TX ERROR: ", errMessage)
+        errMessage = "Transaction failed, please try again."
+      }
+    } else if (type === "server") {
+      console.error("SERVER ERROR: ", errMessage)
+      errMessage = "Something went wrong, please refresh the page or contact developer!"
+    }
+
     dispatch({ type: ErrorAction.SHOW_ERROR, message: errMessage })
   }
 

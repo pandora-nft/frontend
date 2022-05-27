@@ -31,7 +31,7 @@ export const useLootboxFactory = () => {
         }
       })
       .catch((err) => {
-        setError(err.message)
+        setError(err.message, "server")
       })
 
     return lootboxes
