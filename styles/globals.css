@@ -54,7 +54,7 @@
 
 @layer base {
   section {
-    @apply h-[100vh];
+    /* @apply h-[100vh]; */
   }
 
   h1 {
