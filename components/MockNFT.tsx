@@ -15,7 +15,6 @@ export const MockNFTButton = () => {
             _amount: 10,
           },
         }
-        console.log(sendOptions)
         try {
           await doTx(sendOptions)
         } catch {

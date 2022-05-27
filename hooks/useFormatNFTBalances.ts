@@ -3,23 +3,23 @@ import { useEffect, useState } from "react"
 import { useLoading } from "./useLoading"
 import { NFT } from "types"
 import axios from "axios"
+import { ERC721_ABI } from "contract"
 
 // fetch nft of user
 export const useFormatNFTBalances = () => {
-  const { enableWeb3, isWeb3Enabled } = useMoralis()
+  const { enableWeb3, isWeb3Enabled, Moralis } = useMoralis()
   const { getNFTBalances } = useNFTBalances()
   const [NFTBalances, setNFTBalances] = useState<NFT[]>([])
   const { isLoading, onLoad, onDone } = useLoading()
   const { chain } = useChain()
 
   const formatNFTs = async (data: any) => {
+    onLoad()
     let nfts: NFT[] = []
-
-    data?.result?.map(async (nft: any) => {
+    await data?.result?.map(async (nft: any) => {
       if (!nft) {
         return
       }
-
       let id, name, imageURI, description, collectionName, tokenId, address
       collectionName = nft.name
       tokenId = nft.token_id
@@ -43,7 +43,35 @@ export const useFormatNFTBalances = () => {
         if (nft.token_uri) {
           try {
             const res = await axios.get(nft.token_uri)
-            imageURI = res.data.image
+            imageURI = res.data.image.replace("ipfs://", "https://ipfs.io/ipfs/")
+            name = res.data.name
+            nfts.push({
+              id,
+              name,
+              collectionName,
+              description: description ? description : null,
+              tokenId,
+              address,
+              imageURI,
+            })
+          } catch (err) {
+            console.error("err", err.message)
+          }
+        } else {
+          try {
+            const readOptions = {
+              contractAddress: nft.token_address,
+              functionName: "tokenURI",
+              abi: ERC721_ABI,
+              params: {
+                tokenId: nft.token_id,
+              },
+            }
+            const tokenURI = await Moralis.executeFunction(readOptions)
+            const res = await axios.get(
+              tokenURI.toString().replace("ipfs://", "https://ipfs.io/ipfs/")
+            )
+            imageURI = res.data.image.replace("ipfs://", "https://ipfs.io/ipfs/")
             name = res.data.name
             nfts.push({
               id,
@@ -61,6 +89,15 @@ export const useFormatNFTBalances = () => {
       }
     })
     setNFTBalances(nfts)
+    onDone()
+    return nfts
+  }
+
+  const fetchNFTs = async () => {
+    const data = await getNFTBalances()
+    const nfts = await formatNFTs(data)
+    console.log(nfts)
+    return nfts
   }
 
   const main = async () => {
@@ -78,5 +115,5 @@ export const useFormatNFTBalances = () => {
     }
   }, [isWeb3Enabled, chain])
 
-  return { getNFTBalances, formatNFTs, main, NFTBalances, isLoading }
+  return { getNFTBalances, formatNFTs, main, NFTBalances, isLoading, fetchNFTs }
 }
