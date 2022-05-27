@@ -5,9 +5,6 @@ import { NotFound, NFTCard, NFTCardSkeleton, NFTDialog } from "components"
 import { NFT } from "types"
 
 const Nft = () => {
-  // const { enableWeb3, isWeb3Enabled, account } = useMoralis()
-  // const { chain } = useChain()
-
   const { NFTBalances, isLoading } = useFormatNFTBalances()
   const { showSkeleton } = useSkeleton()
   const [currentNFT, setCurrentNFT] = useState<NFT>(null)
