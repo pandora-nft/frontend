@@ -55,6 +55,7 @@ export const useLootbox = () => {
             image
             description
             tokenId
+            tokenURI
           }
           tickets{
             id
@@ -85,19 +86,36 @@ export const useLootbox = () => {
 
         let nfts: NFT[] = []
         for (let nft of singleLootbox.nft) {
-          nfts.push({
-            tokenId: Number(nft.tokenId),
-            collectionName: nft.collectionName,
-            address: nft.address,
-            imageURI: nft.image ? nft.image.replace("ipfs://", "https://ipfs.io/ipfs/") : null,
-            name: nft.name || null,
-            description: nft.description || null,
-          })
+          if (nft.image) {
+            nfts.push({
+              tokenId: Number(nft.tokenId),
+              collectionName: nft.collectionName,
+              address: nft.address,
+              imageURI: nft.image ? nft.image.replace("ipfs://", "https://ipfs.io/ipfs/") : null,
+              name: nft.name || null,
+              description: nft.description || null,
+            })
+          } else {
+            const res = await axios.get(nft.tokenURI)
+            if (!res || !res.data) {
+              return
+            }
+            nfts.push({
+              tokenId: Number(nft.tokenId),
+              collectionName: nft.collectionName,
+              address: nft.address,
+              imageURI: res.data.image
+                ? res.data.image.replace("ipfs://", "https://ipfs.io/ipfs/")
+                : null,
+              name: res.data.name,
+              description: nft.description || null,
+            })
+          }
         }
 
         let singleLootboxTickets: Ticket[] = []
         for (const tk of singleLootbox.tickets) {
-          console.log("tk won image", tk.wonNFT?.image)
+          // console.log("tk won image", tk.wonNFT?.image)
           const ticket: Ticket = {
             description: tk.description,
             id: tk.id,
