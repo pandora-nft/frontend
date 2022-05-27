@@ -3,6 +3,7 @@
 ![landingPage](/profile/Landing_Page.png)
 
 👀 Visit us here: https://pandora.on.fleek.co
+  or here: https://pandora-nft.vercel.app/
 
 📱 Available on
 
