@@ -80,14 +80,14 @@ const Home: NextPage = () => {
         </AnimationOnScroll>
       </section>
 
-      <section className="mt-40 centered">
-        <AnimationOnScroll animateIn="animate__fadeInUp">
-          <h1 className="my-20 centered">{"What's Next"}</h1>
-          <img
-            className="object-contain w-full h-4/5"
-            src="/Roadmap/roadmap.png"
-            alt="PolygonChain"
-          />
+      <section className="centered">
+        <AnimationOnScroll animateIn="animate__fadeInRight">
+          <div className="mt-96 mb-32">
+            <h1>Roadmap</h1>
+            <div className="flex items-center my-8">
+              <img src="/Roadmap/roadmap.png" alt="roadmap" className="w-4/5 m-auto" />
+            </div>
+          </div>
         </AnimationOnScroll>
       </section>
 
