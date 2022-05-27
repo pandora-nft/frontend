@@ -20,7 +20,7 @@ interface Props {
 export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props) => {
   const [selectingNFTs, setSelectingNFTs] = useState<NFT[]>([])
   const [selectingIds, setSelectingIds] = useState<string[]>([])
-  const { NFTBalances, isLoading, main: fetchNFTBalance } = useFormatNFTBalances()
+  const { NFTBalances, isLoading, fetchNFTs } = useFormatNFTBalances()
   const [isApprovingState, setIsApprovingState] = useState(false)
 
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -40,7 +40,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
 
   useEffect(() => {
     if (open && NFTBalances.length === 0) {
-      fetchNFTBalance()
+      fetchNFTs()
     }
   }, [open])
 
@@ -221,7 +221,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
             })
           ) : (
             <div className="col-span-4">
-              {showRefreshButton(fetchNFTBalance, isLoading)}
+              {showRefreshButton(fetchNFTs, isLoading)}
               <NotFound info="You have no NFT" />
             </div>
           )}

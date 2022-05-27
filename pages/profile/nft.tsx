@@ -1,31 +1,30 @@
 import ProfileLayout from "layouts/profileLayout"
-import { ReactElement, useState } from "react"
+import { ReactElement, useEffect, useState } from "react"
 import { useFormatNFTBalances, useSkeleton } from "hooks"
-import { NotFound, NFTCard, NFTCardSkeleton, NFTDialog } from "components"
+import { NotFound, NFTCard, NFTCardSkeleton, NFTDialog, MockNFTButton } from "components"
 import { NFT } from "types"
+import { SUPPORT_CHAINID } from "contract"
+import { useChain, useMoralis } from "react-moralis"
 
 const Nft = () => {
-  const { NFTBalances, isLoading } = useFormatNFTBalances()
+  const { NFTBalances, isLoading, fetchNFTs } = useFormatNFTBalances()
+  const { enableWeb3, isWeb3Enabled, account } = useMoralis()
+  const { chain } = useChain()
+
   const { showSkeleton } = useSkeleton()
   const [currentNFT, setCurrentNFT] = useState<NFT>(null)
-  // const [nfts, setNfts] = useState<NFT[]>([])
 
-  // const setNFT = async () => {
-  //   const res = await fetchNFTs()
-  //   setNfts(res)
-  // }
+  const [isSuccess, setIsSuccess] = useState(false)
 
-  // useEffect(() => {
-  //   if (isWeb3Enabled) {
-  //     if (!SUPPORT_CHAINID.includes(chain.chainId)) {
-  //       return
-  //     } else {
-  //       if (account) fetchNFTs()
-  //     }
-  //   } else {
-  //     enableWeb3()
-  //   }
-  // }, [isWeb3Enabled, chain])
+  useEffect(() => {
+    if (isWeb3Enabled && chain && account) {
+      if (SUPPORT_CHAINID.includes(chain.chainId)) {
+        fetchNFTs()
+      }
+    } else {
+      enableWeb3()
+    }
+  }, [isWeb3Enabled, chain, isSuccess, account])
 
   const onNFTClick = (nft: NFT) => {
     setCurrentNFT(nft)
@@ -59,6 +58,9 @@ const Nft = () => {
       <NFTDialog open={!!currentNFT} currentNFT={currentNFT} setCurrentNFT={setCurrentNFT} />
 
       <div className="centered mt-10">
+        <div className="mb-10 font-normal text-xs">
+          <MockNFTButton setIsSuccess={setIsSuccess} />
+        </div>
         <div
           className="grid grid-cols-2 lg:grid-cols-3
                      xl:grid-cols-4 3xl:grid-cols-5 5xl:grid-cols-6 gap-5"
