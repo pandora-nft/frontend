@@ -75,7 +75,7 @@ export const Header = () => {
 
             {isAuthenticated ? (
               <div
-                className="rounded-[15px] pl-2 pr-4 flex items-center 
+                className="mr-2 rounded-[15px] pl-2 pr-4 flex items-center 
               bg-blue-50 hover:bg-gray-300 cursor-pointer"
               >
                 <ConnectChain modalOpen={modalOpen} setModalOpen={setModalOpen} />

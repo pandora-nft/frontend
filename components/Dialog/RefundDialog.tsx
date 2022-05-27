@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
 import { LOOTBOX_ABI } from "contract"
-import { Lootbox, Ticket } from "types"
+import { Lootbox } from "types"
 import { useMoralis } from "react-moralis"
 import { Modal } from "components"
 import { useTx } from "context/transaction"
@@ -9,13 +9,13 @@ interface Props {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   lootbox: Lootbox
-  tickets: Ticket[]
   setIsSuccess: Dispatch<SetStateAction<boolean>>
 }
 
-export const RefundDialog = ({ open, setOpen, lootbox, tickets, setIsSuccess }: Props) => {
+export const RefundDialog = ({ open, setOpen, lootbox, setIsSuccess }: Props) => {
   const { account } = useMoralis()
   const { doTx } = useTx()
+  const { tickets } = lootbox
   const ownTicket = tickets.filter((ticket) => {
     return ticket.owner.toUpperCase() === account?.toUpperCase() && !ticket.isRefunded
   })

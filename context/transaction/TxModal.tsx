@@ -1,5 +1,5 @@
 import { Loading, Illustration } from "web3uikit"
-import { Modal as CustomModal } from "components"
+import { Modal } from "components"
 import { useTx } from "./useTx"
 import { TX_ACTION } from "./TxContext"
 import { useChain } from "react-moralis"
@@ -23,7 +23,7 @@ export const TxModal = () => {
     const url =
       chain && isChainSupport
         ? CHAINID_TO_DETAIL[chain.chainId].scan + hash
-        : "https://mumbai.polygonscan.com/tx/" + hash
+        : "http://wrong-chain/" + hash
     setUrl(url)
   }, [hash, chain])
 
@@ -31,7 +31,7 @@ export const TxModal = () => {
     if (stage === TX_ACTION.INITIATED) {
       return (
         <div className="font-light mt-5 text-center">
-          <h3>Your transaction is preparing.</h3>
+          <h3>Your transaction is pending.</h3>
           <h3>Please confirm the transaction!</h3>
         </div>
       )
@@ -74,28 +74,7 @@ export const TxModal = () => {
   return (
     <>
       <div>
-        {/* <Modal
-          isVisible={show}
-          // title={<h2 className="text-black font-medium">Transaction</h2>}
-
-          onCloseButtonPressed={clearTx}
-          onOk={clearTx}
-          hasCancel={false}
-          hasFooter={false}
-          headerHasBottomBorder={false}
-        >
-          {content}
-        </Modal> */}
-
-        <CustomModal
-          zIndex={100}
-          bgZIndex={60}
-          open={show}
-          onClose={() => clearTx()}
-          content={content}
-        />
-
-        {/* <div className="opacity-50 fixed inset-0 z-30 bg-black"></div> */}
+        <Modal zIndex={100} bgZIndex={60} open={show} onClose={() => clearTx()} content={content} />
       </div>
     </>
   )
