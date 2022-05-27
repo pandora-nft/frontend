@@ -5,9 +5,30 @@ import { NotFound, NFTCard, NFTCardSkeleton, NFTDialog } from "components"
 import { NFT } from "types"
 
 const Nft = () => {
+  // const { enableWeb3, isWeb3Enabled, account } = useMoralis()
+  // const { chain } = useChain()
+
   const { NFTBalances, isLoading } = useFormatNFTBalances()
   const { showSkeleton } = useSkeleton()
   const [currentNFT, setCurrentNFT] = useState<NFT>(null)
+  // const [nfts, setNfts] = useState<NFT[]>([])
+
+  // const setNFT = async () => {
+  //   const res = await fetchNFTs()
+  //   setNfts(res)
+  // }
+
+  // useEffect(() => {
+  //   if (isWeb3Enabled) {
+  //     if (!SUPPORT_CHAINID.includes(chain.chainId)) {
+  //       return
+  //     } else {
+  //       if (account) fetchNFTs()
+  //     }
+  //   } else {
+  //     enableWeb3()
+  //   }
+  // }, [isWeb3Enabled, chain])
 
   const onNFTClick = (nft: NFT) => {
     setCurrentNFT(nft)

@@ -45,11 +45,11 @@ export const TICKET_ADDRESS: { [chainId: string]: string } = {
 }
 export const MOCK_NFT: { [chainId: string]: string } = {
   //BNB Testnet
-  "0x61": "0xe1EF0CF6fDb12104778D596E943898b64596C7D7",
+  "0x61": "0xB00b7EA00FD2e89f86da40461577c9Ea1C4aa86b",
   //Mumbai
-  "0x13881": "0xdcE112b4557014b43e63F37A5C7924f19B7001Fa",
+  "0x13881": "0x6deaa19695ad386E3cA6A303f86ffbD6A24CD602",
   //Fuji
-  "0xa869": "0x2446784D598c04Cc617E6d17A343c6CCdA133724",
+  "0xa869": "0x2C994e32ae087c7Ff0543998f4CC91b6435904Aa",
   //Avalanche
   // 43114: "",
   //BNB Chain
