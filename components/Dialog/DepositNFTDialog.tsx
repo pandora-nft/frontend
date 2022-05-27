@@ -20,7 +20,7 @@ interface Props {
 export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props) => {
   const [selectingNFTs, setSelectingNFTs] = useState<NFT[]>([])
   const [selectingIds, setSelectingIds] = useState<string[]>([])
-  const { NFTBalances, isLoading, main } = useNFTsBalance()
+  const { NFTBalances, isLoading, main: fetchNFTBalance } = useNFTsBalance()
   const [isApprovingState, setIsApprovingState] = useState(false)
 
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -39,8 +39,8 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
   }
 
   useEffect(() => {
-    if (open) {
-      main()
+    if (open && NFTBalances.length === 0) {
+      fetchNFTBalance()
     }
   }, [open])
 
@@ -101,7 +101,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
     } else if (selectingNFT.isApproving) {
       return (
         <div className="relative">
-          <div className="border-2 opacity-50 shadow-lg margin-auto max-w-md mt-2 w-32 h-auto">
+          <div className="border-4 opacity-50 shadow-lg margin-auto max-w-md mt-2 w-32 h-auto">
             <img src={selectingNFT.imageURI} alt="nft" />
           </div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -112,7 +112,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
     } else {
       return (
         <div
-          className="border-2 shadow-lg margin-auto cursor-pointer max-w-md mt-2 w-32 h-auto hover:border-yellow-400 hover:scale-105"
+          className="border-4 shadow-lg margin-auto cursor-pointer max-w-md mt-2 w-32 h-auto hover:border-yellow-400 hover:scale-105"
           onClick={() => approve(selectingNFT)}
         >
           <img src={selectingNFT.imageURI} alt="nft" />
@@ -167,17 +167,19 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
     }
   }
 
-  const refreshButton = (
-    <button className="text-gray-500 hover:text-gray-800" onClick={() => checkApproval()}>
-      {isRefreshing ? <LoadingIndicator /> : "refresh"}
-    </button>
-  )
+  const showRefreshButton = (onClick: () => Promise<void>, isLoading: boolean) => {
+    return (
+      <button className="text-gray-500 hover:text-gray-800" onClick={onClick}>
+        {isLoading ? <LoadingIndicator /> : "refresh"}
+      </button>
+    )
+  }
 
   const content = (
     <div className="flex flex-col justify-start min-w-[600px]">
       {isApprovingState ? (
         <>
-          {refreshButton}
+          {showRefreshButton(checkApproval, isRefreshing)}
           <div className="min-h-[300px] max-h-[450px] overflow-auto gap-1 grid grid-cols-4 place-items-center">
             {showSelectingNFTs()}
           </div>
@@ -193,7 +195,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
               return selectingIds.includes(_nft.id) ? (
                 <div
                   key={index}
-                  className="border-2 shadow-lg shadow-mainPink/40 
+                  className="border-4 shadow-lg shadow-mainPink/40 
                   border-mainPink cursor-pointer
                    max-w-md mt-2 w-32"
                   onClick={() => {
@@ -208,7 +210,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
               ) : (
                 <div
                   key={index}
-                  className="hover:scale-105 border-2 hover:shadow-xl cursor-pointer w-32 max-w-md mt-2"
+                  className="hover:scale-105 border-4 hover:shadow-xl cursor-pointer w-32 max-w-md mt-2"
                   onClick={() => {
                     setSelectingNFTs([...selectingNFTs, _nft])
                     setSelectingIds([...selectingIds, _nft.id])
@@ -220,6 +222,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
             })
           ) : (
             <div className="col-span-4">
+              {showRefreshButton(fetchNFTBalance, isLoading)}
               <NotFound info="You have no NFT" />
             </div>
           )}
