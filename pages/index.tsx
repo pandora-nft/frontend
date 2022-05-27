@@ -63,7 +63,14 @@ const Home: NextPage = () => {
       </section>
 
       <section className="centered">
-        <h1>Roadmap</h1>
+        <AnimationOnScroll animateIn="animate__fadeInRight">
+          <div className="mt-96 mb-32">
+            <h1>Roadmap</h1>
+            <div className="flex items-center my-8">
+              <img src="/roadmap.jpg" alt="roadmap" className="w-4/5 m-auto" />
+            </div>
+          </div>
+        </AnimationOnScroll>
       </section>
 
       <section className="centered">
@@ -72,8 +79,8 @@ const Home: NextPage = () => {
           <div className="pt-20 grid grid-cols-3 gap-10">
             <div className="flex flex-col items-center justify-center">
               {/* // Please do not use Image from next/image since cannot static deploy */}
-              <img width={60} height={100} src="/chain/Ethereum.png" alt="EthChain" />
-              <h3 className="pt-4">Ethereum</h3>
+              <img width={100} height={100} src="/chain/Avalanche.png" alt="EthChain" />
+              <h3 className="pt-4">Avalanche</h3>
             </div>
             <div className="flex flex-col items-center justify-center">
               <img width={100} height={100} src="/chain/BNB.png" alt="BNBChain" />

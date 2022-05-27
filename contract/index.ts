@@ -12,7 +12,7 @@ export const FACTORY_ADDRESS: { [chainId: string]: string } = {
   //Rinkeby
   "0x4": "0xA78AffBFF38e4ae9FD030C52D8eD8a6AFBda9a5D",
   //BNB Testnet
-  "0x61": "0x48652d6b881b0BA591241c30Fd80e80Cc6624379",
+  "0x61": "0xc632F5b06C85d8C6ff80Ad858Bb43dd3a86aee06",
   //Mumbai
   "0x13881": "0xEd94c13E344859C9A6b18bF217682a7Aba2eEC2F",
   //Fuji
@@ -29,7 +29,7 @@ export const TICKET_ADDRESS: { [chainId: string]: string } = {
   //Rinkeby
   "0x4": "0xe82967CB8a13Ec6365cd7bFD26457aEdA7DC8Dfb",
   //BNB Testnet
-  "0x61": "0xaB62CEd74eC2C52B0A02E118BD51c58f3D1A61cE",
+  "0x61": "0xeE57309b221060F03c96e585d88f7C7B282fc2cf",
   //Mumbai
   "0x13881": "0x34438266f76F9c82dA25f00946d325E811E9dA25",
   //Fuji
