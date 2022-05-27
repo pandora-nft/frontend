@@ -41,7 +41,7 @@ const Home: NextPage = () => {
               <button
                 onClick={() =>
                   openInNewTab(
-                    "https://drive.google.com/file/d/1mqk53FOcxMcnHYroZ66U4F7UR022xLob/view?usp=sharing"
+                    "https://bafybeih5q474f3ilxsavdigcwsqpoaibgacf3vwpofmi3dnds7soe2sjmy.ipfs.dweb.link/"
                   )
                 }
                 className="ml-4 mt-2 underline"
