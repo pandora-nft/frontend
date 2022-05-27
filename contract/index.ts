@@ -2,11 +2,13 @@ import { abi as factoryAbi } from "./factory/LootboxFactory.json"
 import { abi as lootboxAbi } from "./lootbox/Lootbox.json"
 import { abi as ticketAbi } from "./ticket/PandoraTicket.json"
 import { abi as erc721Abi } from "./ERC721/ERC721.json"
+import mockNFTAbi from "./mockNFT/MockNFT.json"
 
 export { erc721Abi as ERC721_ABI }
 export { factoryAbi as FACTORY_ABI }
 export { lootboxAbi as LOOTBOX_ABI }
 export { ticketAbi as TICKET_ABI }
+export { mockNFTAbi as MOCKNFT_ABI }
 
 export const FACTORY_ADDRESS: { [chainId: string]: string } = {
   //Rinkeby
@@ -41,7 +43,20 @@ export const TICKET_ADDRESS: { [chainId: string]: string } = {
   //Polygon Mainnet
   // "0x89": "",
 }
-
+export const MOCK_NFT: { [chainId: string]: string } = {
+  //BNB Testnet
+  "0x61": "0xe1EF0CF6fDb12104778D596E943898b64596C7D7",
+  //Mumbai
+  "0x13881": "0xdcE112b4557014b43e63F37A5C7924f19B7001Fa",
+  //Fuji
+  "0xa869": "0x2446784D598c04Cc617E6d17A343c6CCdA133724",
+  //Avalanche
+  // 43114: "",
+  //BNB Chain
+  // 56: "",
+  //Polygon Mainnet
+  // 137: "",
+}
 // with mainnet but no contract deployed yet!
 // export const SUPPORT_CHAINID = ["0x38", "0x61", "0x89", "0x13881", "0xa86a", "0xa869"]
 
