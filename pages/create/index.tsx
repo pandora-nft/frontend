@@ -8,6 +8,7 @@ import { CreateForm } from "components/inputs/CreateForm"
 import { chainType } from "web3uikit/dist/components/CryptoLogos/types"
 import { shortenAddress } from "utils"
 import { useTx } from "context/transaction"
+import MockNFTButton from "components/MockNFT"
 
 const initialFormData = {
   name: "",
@@ -98,6 +99,9 @@ const Create = () => {
         <div>
           <h3 className="ml-6 font-bold">{name}</h3>
           <h4 className="ml-6 font-normal">{shortenAddress(account)}</h4>
+          <div className="ml-6 font-normal text-xs">
+            <MockNFTButton />
+          </div>
         </div>
       </div>
     )

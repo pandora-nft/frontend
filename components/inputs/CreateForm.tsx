@@ -49,7 +49,6 @@ export const CreateForm = ({
             placeholder=" "
             required
           />
-          <div className=" pr-5 pt-2 font-light font-sm text-gray-800">Service Fee 2%</div>
         </div>
       </div>
       <div className="grid pt-6 xl:grid-cols-2 xl:gap-6">
