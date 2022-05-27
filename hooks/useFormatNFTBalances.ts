@@ -12,12 +12,12 @@ export const useFormatNFTBalances = () => {
   const [NFTBalances, setNFTBalances] = useState<NFT[]>([])
   const { isLoading, onLoad, onDone } = useLoading()
 
-  const formatNFTs = (data: any) => {
+  const formatNFTs = async (data: any) => {
     onLoad()
     let nfts: NFT[] = []
 
-    for (let i = 0; i < data?.result.length; i++) {
-      const nft = data.result[i]
+    // for (let i = 0; i < data?.result.length; i++) {
+    await data?.result.forEach((nft) => {
       let id, name, imageURI, description, collectionName, tokenId, address
 
       tokenId = nft.token_id
@@ -30,11 +30,29 @@ export const useFormatNFTBalances = () => {
         imageURI = metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")
         name = metadata.name
         description = metadata.description
+        nfts.push({
+          id,
+          name,
+          collectionName,
+          description,
+          imageURI,
+          tokenId,
+          address,
+        })
       } else {
         if (nft.token_uri) {
           axios.get(nft.token_uri).then((res) => {
             imageURI = res.data.image.replace("ipfs://", "https://ipfs.io/ipfs/")
             name = res.data.name
+            nfts.push({
+              id,
+              name,
+              collectionName,
+              description,
+              imageURI,
+              tokenId,
+              address,
+            })
           })
         } else {
           const readOptions = {
@@ -51,42 +69,43 @@ export const useFormatNFTBalances = () => {
             axios.get(endpoint).then((res) => {
               imageURI = res.data.image.replace("ipfs://", "https://ipfs.io/ipfs/")
               name = res.data.name
+              nfts.push({
+                id,
+                name,
+                collectionName,
+                description,
+                imageURI,
+                tokenId,
+                address,
+              })
             })
           })
         }
       }
 
-      nfts.push({
-        id,
-        name,
-        collectionName,
-        description,
-        imageURI,
-        tokenId,
-        address,
-      })
-    }
+      // nfts.push({
+      //   id,
+      //   name,
+      //   collectionName,
+      //   description,
+      //   imageURI,
+      //   tokenId,
+      //   address,
+      // })
+    })
+    await setTimeout(() => {
+      setNFTBalances(nfts)
+    }, 1000)
 
-    setNFTBalances(nfts)
+    console.log(nfts)
     onDone()
     return nfts
   }
 
   const fetchNFTs = async () => {
-    onLoad()
     const data = await getNFTBalances()
     await formatNFTs(data)
-
-    onDone()
   }
-
-  // useEffect(() => {
-  //   if (isWeb3Enabled) {
-  //     main()
-  //   } else {
-  //     enableWeb3()
-  //   }
-  // }, [isWeb3Enabled, chain])
 
   return { getNFTBalances, formatNFTs, NFTBalances, isLoading, fetchNFTs }
 }
