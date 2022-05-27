@@ -21,7 +21,6 @@ export interface Ticket extends NFT {
   isWinner: boolean
   isRefunded: boolean
   wonNFT?: {
-    id: string
     imageURI: string
   }
   lootboxId: number

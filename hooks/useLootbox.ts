@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useChain } from "react-moralis"
 import { Lootbox, NFT, Ticket } from "types"
 import { useLoading } from "./useLoading"
-import { CHAINID_TO_DETAIL } from "contract"
+import { CHAINID_TO_DETAIL, isChainSupport, TICKET_ADDRESS } from "contract"
 import axios from "axios"
 
 export const useLootbox = () => {
@@ -57,11 +57,21 @@ export const useLootbox = () => {
             tokenId
           }
           tickets{
+            id
             owner
-            isClaimed
-            isWinner
-            isRefunded
             ticketId
+            lootbox
+            isWinner
+            isClaimed
+            isRefunded
+            image
+            name
+            description
+            wonNFT{
+              name
+              description
+              image
+            }
           }
           }}
         `,
@@ -71,6 +81,7 @@ export const useLootbox = () => {
       })
       if (result?.data?.data?.singleLootbox) {
         const singleLootbox: any = result.data.data.singleLootbox
+        console.log("lootbox before push to set", singleLootbox)
 
         let nfts: NFT[] = []
         for (let nft of singleLootbox.nft) {
@@ -82,6 +93,32 @@ export const useLootbox = () => {
             name: nft.name || null,
             description: nft.description || null,
           })
+        }
+
+        let singleLootboxTickets: Ticket[] = []
+        for (const tk of singleLootbox.tickets) {
+          console.log("tk won image", tk.wonNFT?.image)
+          const ticket: Ticket = {
+            description: tk.description,
+            id: tk.id,
+            imageURI: tk.image ? tk.image.replace("ipfs://", "https://ipfs.io/ipfs/") : null,
+            isClaimed: tk.isClaimed,
+            isRefunded: tk.isRefunded,
+            isWinner: tk.isWinner,
+            owner: tk.owner,
+            ticketId: tk.ticketId,
+            lootboxId: singleLootbox.id,
+            collectionName: tk.name,
+            name: tk.name,
+            address: chain && isChainSupport(chain) ? TICKET_ADDRESS[chain.chainId] : "",
+            tokenId: tk.ticketId,
+            wonNFT: {
+              imageURI: tk.wonNFT?.image
+                ? tk.wonNFT?.image.replace("ipfs://", "https://ipfs.io/ipfs/")
+                : null,
+            },
+          }
+          singleLootboxTickets.push(ticket)
         }
 
         const loot: Lootbox = {
@@ -97,21 +134,11 @@ export const useLootbox = () => {
           maxTicketPerWallet: singleLootbox.maxTicketPerWallet,
           ticketSold: singleLootbox.ticketSold,
           owner: singleLootbox.owner,
-          tickets: singleLootbox.tickets,
+          tickets: singleLootboxTickets,
         }
-        for (let nft of singleLootbox.nft) {
-          loot.nfts.push({
-            tokenId: Number(nft.tokenId),
-            collectionName: nft.collectionName,
-            address: nft.address,
-            imageURI: nft?.image?.replace("ipfs://", "https://ipfs.io/ipfs/") || null,
-            name: nft.name || null,
-            description: nft.description || null,
-          })
-        }
-        // console.log(loot)
+
         setLootbox(loot)
-        setTickets(tickets)
+        setTickets(singleLootboxTickets)
         onDone()
         return loot
       }

@@ -97,7 +97,9 @@ export const DepositAfterCreateModal = ({
               <div className="mx-8">ID: {bid}</div>
               <div className="text-sm mx-8">
                 <div>Name: {lootbox?.name}</div>
-                <div>{`Draw time: ${new Date(lootbox?.drawTimestamp * 1000).toUTCString()}`}</div>
+                <div className="justify-center border-2">{`Draw time: ${new Date(
+                  lootbox?.drawTimestamp * 1000
+                ).toUTCString()}`}</div>
                 <div className="flex flex-row-reverse"></div>
               </div>
             </div>

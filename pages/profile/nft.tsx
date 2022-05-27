@@ -13,7 +13,6 @@ const Nft = () => {
     setCurrentNFT(nft)
   }
 
-  console.log("ss", NFTBalances)
   const showNFTs = () => {
     if (isLoading) {
       return showSkeleton(<NFTCardSkeleton />)

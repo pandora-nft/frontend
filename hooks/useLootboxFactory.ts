@@ -37,6 +37,7 @@ export const useLootboxFactory = () => {
     return lootboxes
   }
   const getAllLootboxes = async () => {
+    console.log("call get all")
     const singleLootboxes = await axios.post(CHAINID_TO_DETAIL[chain.chainId].api, {
       query: ` query {
                 singleLootboxes(orderDirection:asc){
