@@ -1,7 +1,7 @@
 import { Modal } from "components"
 import { useTx } from "context/transaction"
 import { ERC721_ABI, LOOTBOX_ABI } from "contract"
-import { useNFTsBalance } from "hooks"
+import { useFormatNFTBalances } from "hooks"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useMoralis } from "react-moralis"
 import { Lootbox, NFT } from "types"
@@ -20,7 +20,7 @@ interface Props {
 export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props) => {
   const [selectingNFTs, setSelectingNFTs] = useState<NFT[]>([])
   const [selectingIds, setSelectingIds] = useState<string[]>([])
-  const { NFTBalances, isLoading, main: fetchNFTBalance } = useNFTsBalance()
+  const { NFTBalances, isLoading, main: fetchNFTBalance } = useFormatNFTBalances()
   const [isApprovingState, setIsApprovingState] = useState(false)
 
   const [isRefreshing, setIsRefreshing] = useState(false)

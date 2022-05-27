@@ -4,15 +4,18 @@ import { useLoading } from "./useLoading"
 import { NFT } from "types"
 import axios from "axios"
 
-export const useNFTsBalance = () => {
+// fetch nft of user
+export const useFormatNFTBalances = () => {
   const { enableWeb3, isWeb3Enabled } = useMoralis()
-  const { getNFTBalances, data } = useNFTBalances()
+  const { getNFTBalances, data, error } = useNFTBalances()
   const [NFTBalances, setNFTBalances] = useState<NFT[]>([])
   const { isLoading, onLoad, onDone } = useLoading()
   const { chain } = useChain()
 
   const formatNFTs = async () => {
+    console.log({ data, error })
     if (data) {
+      console.log("data", data)
       let nfts: NFT[] = []
 
       data?.result?.map(async (nft) => {
@@ -40,7 +43,7 @@ export const useNFTsBalance = () => {
         } else {
           if (nft.token_uri) {
             const res = await axios.get(nft.token_uri)
-            if (!res) {
+            if (!res || !res.data) {
               return
             }
 
@@ -65,7 +68,10 @@ export const useNFTsBalance = () => {
 
   const main = async () => {
     onLoad()
+    console.log("here1")
+
     await getNFTBalances()
+    console.log("here2")
     await formatNFTs()
     onDone()
   }

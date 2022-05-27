@@ -45,10 +45,6 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets, setIsSuccess }
       !ticket.isClaimed
     )
   })
-  console.log("lootbox", lootbox)
-  console.log("Tickets", tickets)
-  console.log("ownwonticket", ownWonTicket)
-  console.log("selectedTicket", selectedTicket)
 
   const content = (
     <>
