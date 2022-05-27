@@ -1,4 +1,4 @@
-# Pandora - The NFT Lootbox 
+# Pandora - The NFT Lootbox
 
 ![landingPage](/profile/Landing_Page.png)
 
