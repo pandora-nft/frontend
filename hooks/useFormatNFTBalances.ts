@@ -1,82 +1,92 @@
-import { useChain, useMoralis, useNFTBalances } from "react-moralis"
-import { useEffect, useState } from "react"
+import { useMoralis, useNFTBalances } from "react-moralis"
+import { useState } from "react"
 import { useLoading } from "./useLoading"
 import { NFT } from "types"
 import axios from "axios"
+import { ERC721_ABI } from "contract"
 
 // fetch nft of user
 export const useFormatNFTBalances = () => {
-  const { enableWeb3, isWeb3Enabled } = useMoralis()
+  const { Moralis } = useMoralis()
   const { getNFTBalances } = useNFTBalances()
   const [NFTBalances, setNFTBalances] = useState<NFT[]>([])
   const { isLoading, onLoad, onDone } = useLoading()
-  const { chain } = useChain()
 
-  const formatNFTs = async (data: any) => {
+  const formatNFTs = (data: any) => {
+    onLoad()
     let nfts: NFT[] = []
 
-    data?.result?.map(async (nft: any) => {
-      if (!nft) {
-        return
-      }
-
+    for (let i = 0; i < data?.result.length; i++) {
+      const nft = data.result[i]
       let id, name, imageURI, description, collectionName, tokenId, address
-      collectionName = nft.name
+
       tokenId = nft.token_id
       address = nft.token_address
       id = tokenId + "_" + address
+      collectionName = nft.name
+
       if (nft.metadata) {
         const metadata = JSON.parse(nft.metadata)
         imageURI = metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/")
         name = metadata.name
         description = metadata.description
-        nfts.push({
-          id,
-          name,
-          collectionName,
-          description: description ? description : null,
-          tokenId,
-          address,
-          imageURI,
-        })
       } else {
         if (nft.token_uri) {
-          try {
-            const res = await axios.get(nft.token_uri)
-            imageURI = res.data.image
+          axios.get(nft.token_uri).then((res) => {
+            imageURI = res.data.image.replace("ipfs://", "https://ipfs.io/ipfs/")
             name = res.data.name
-            nfts.push({
-              id,
-              name,
-              collectionName,
-              description: description ? description : null,
-              tokenId,
-              address,
-              imageURI,
-            })
-          } catch (err) {
-            console.error("err", err.message)
+          })
+        } else {
+          const readOptions = {
+            contractAddress: nft.token_address,
+            functionName: "tokenURI",
+            abi: ERC721_ABI,
+            params: {
+              tokenId: nft.token_id,
+            },
           }
+
+          Moralis.executeFunction(readOptions).then((tokenURI) => {
+            const endpoint = tokenURI.toString().replace("ipfs://", "https://ipfs.io/ipfs/")
+            axios.get(endpoint).then((res) => {
+              imageURI = res.data.image.replace("ipfs://", "https://ipfs.io/ipfs/")
+              name = res.data.name
+            })
+          })
         }
       }
-    })
+
+      nfts.push({
+        id,
+        name,
+        collectionName,
+        description,
+        imageURI,
+        tokenId,
+        address,
+      })
+    }
+
     setNFTBalances(nfts)
+    onDone()
+    return nfts
   }
 
-  const main = async () => {
+  const fetchNFTs = async () => {
     onLoad()
     const data = await getNFTBalances()
     await formatNFTs(data)
+
     onDone()
   }
 
-  useEffect(() => {
-    if (isWeb3Enabled) {
-      main()
-    } else {
-      enableWeb3()
-    }
-  }, [isWeb3Enabled, chain])
+  // useEffect(() => {
+  //   if (isWeb3Enabled) {
+  //     main()
+  //   } else {
+  //     enableWeb3()
+  //   }
+  // }, [isWeb3Enabled, chain])
 
-  return { getNFTBalances, formatNFTs, main, NFTBalances, isLoading }
+  return { getNFTBalances, formatNFTs, NFTBalances, isLoading, fetchNFTs }
 }

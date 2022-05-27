@@ -52,7 +52,7 @@ export const Header = () => {
         <Link href={{ pathname: "/" }} replace>
           <a>
             <div className="mb-2 flex flex-row items-center border-mainPink justify-center">
-              <img className="w-6 h-6" src={"/box.png"} alt="icon" />
+              <img className="w-8 h-8" src={"/logo2.png"} alt="icon" />
               <h1 className="font-medium ml-2 mt-[13px] text-xl">Pandora</h1>
             </div>
           </a>
