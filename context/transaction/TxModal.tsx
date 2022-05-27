@@ -60,7 +60,7 @@ export const TxModal = () => {
   )
   return (
     <>
-      <div className="z-40">
+      <div>
         {/* <Modal
           isVisible={show}
           // title={<h2 className="text-black font-medium">Transaction</h2>}
@@ -74,7 +74,13 @@ export const TxModal = () => {
           {content}
         </Modal> */}
 
-        <CustomModal zIndex={40} open={show} onClose={() => clearTx()} content={content} />
+        <CustomModal
+          zIndex={100}
+          bgZIndex={60}
+          open={show}
+          onClose={() => clearTx()}
+          content={content}
+        />
 
         {/* <div className="opacity-50 fixed inset-0 z-30 bg-black"></div> */}
       </div>

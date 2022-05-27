@@ -1,14 +1,13 @@
-import { useState } from "react"
+import Router from "next/router"
+import { useEffect, useState } from "react"
 import { CryptoLogos, Illustration } from "web3uikit"
-import { useChain, useWeb3Contract, useMoralis } from "react-moralis"
-import { useLootbox } from "hooks"
+import { useChain, useMoralis } from "react-moralis"
 import { FACTORY_ABI, FACTORY_ADDRESS, CHAINID_TO_DETAIL } from "contract"
 import { ethers } from "ethers"
 import { CreateForm } from "components/inputs/CreateForm"
-import { DepositAfterCreateModal } from "../../components/DepositAfterCreateModal"
-import { LoadingIndicator } from "components"
 import { chainType } from "web3uikit/dist/components/CryptoLogos/types"
 import { shortenAddress } from "utils"
+import { useTx } from "context/transaction"
 
 const initialFormData = {
   name: "",
@@ -21,59 +20,64 @@ const initialFormData = {
 }
 
 const Create = () => {
-  const { account, web3: moralisProvider } = useMoralis()
+  const { account, enableWeb3, isWeb3Enabled, web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
-  const { fetchLootbox, lootbox, isLoading } = useLootbox()
   const [formData, setFormData] = useState(initialFormData)
-  const [showDepositNFTDialog, setShowDepositNFTDialog] = useState<boolean>(false)
-  const [bid, setBid] = useState<number>(0)
-  const [isListened, setIsListened] = useState(true)
 
-  const { runContractFunction: deployLootbox } = useWeb3Contract({
-    contractAddress: chain ? FACTORY_ADDRESS[chain.networkId] : "",
-    functionName: "deployLootbox(string,uint256,uint256,uint256)",
-    abi: FACTORY_ABI,
-    params: {
-      _name: formData.name,
-      _drawTimestamp:
-        Math.floor(Date.now() / 1000) +
-        formData.drawDays * (24 * 60 * 60) +
-        formData.drawHours * (60 * 60) +
-        formData.drawMinutes * 60 +
-        formData.drawSeconds,
-      _ticketPrice: ethers.utils.parseEther(formData.ticketPrice.toString()).toString(),
-      _minimumTicketRequired: formData.minimumTicketRequired,
-    },
-  })
+  const { doTx, clearTx } = useTx()
+
   async function handleFormSumbit(e) {
     e.preventDefault()
     await deployLootbox()
-    setIsListened(false)
-    setFormData(initialFormData)
+  }
+  const deployLootbox = async () => {
+    const sendOptions = {
+      contractAddress: FACTORY_ADDRESS[chain.chainId],
+      functionName: "deployLootbox(string,uint256,uint256,uint256)",
+      abi: FACTORY_ABI,
+      params: {
+        _name: formData.name,
+        _drawTimestamp:
+          Math.floor(Date.now() / 1000) +
+          formData.drawDays * (24 * 60 * 60) +
+          formData.drawHours * (60 * 60) +
+          formData.drawMinutes * 60 +
+          formData.drawSeconds,
+        _ticketPrice: ethers.utils.parseEther(formData.ticketPrice.toString()).toString(),
+        _minimumTicketRequired: formData.minimumTicketRequired,
+      },
+    }
+    const isSuccess = await doTx(sendOptions)
+    if (isSuccess) {
+      setFormData(initialFormData)
+    }
   }
 
-  const handleEventListener = async (bid: number) => {
-    await fetchLootbox("", bid)
-    setShowDepositNFTDialog(true)
-  }
-
-  if (chain?.networkId) {
+  const onLootboxCreateListener = () => {
     const factory = new ethers.Contract(
       FACTORY_ADDRESS[chain.chainId],
       FACTORY_ABI,
       moralisProvider
     )
-    if (!isListened) {
-      factory.on("LootboxDeployed", (lootboxId, lootboxAddress, owner) => {
-        setIsListened(true)
-        const listened_bid = Number(ethers.utils.formatUnits(lootboxId, 0))
-        if (account?.toString().toLowerCase() == owner?.toString().toLowerCase()) {
-          setBid(listened_bid)
-          handleEventListener(listened_bid)
-        }
-      })
-    }
+
+    factory.on("LootboxDeployed", (lootboxId, lootboxAddress, owner) => {
+      const listened_bid = Number(lootboxId.toString())
+      console.log({ account, owner })
+      if (account?.toUpperCase() === owner?.toUpperCase()) {
+        clearTx()
+        Router.push("/lootbox/" + listened_bid)
+      }
+    })
   }
+
+  useEffect(() => {
+    if (isWeb3Enabled && chain) {
+      onLootboxCreateListener()
+    } else {
+      enableWeb3()
+    }
+  }, [chain, isWeb3Enabled])
+
   const createChain = (chainId: string) => {
     const { name, src } = CHAINID_TO_DETAIL[chainId]
 
@@ -130,35 +134,17 @@ const Create = () => {
         <div className="w-3/4">
           <form onSubmit={(e) => handleFormSumbit(e)} className="w-full max-w-lg">
             <CreateForm formData={formData} setFormData={setFormData} />
-
-            {isLoading || !isListened ? (
-              <button
-                type="button"
-                className="text-white pt-4 mt-4 bg-mainPink hover:bg-mainPink/[.9] focus:ring-4 focus:outline-none focus:bg-mainPink/[.9] font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-mainPink dark:hover:mainPink/[.9] dark:focus:mainPink/[.9]"
-              >
-                <LoadingIndicator />
-              </button>
-            ) : (
-              <button
-                type="submit"
-                className="text-white pt-4 mt-4 bg-mainPink hover:bg-mainPink/[.9] focus:ring-4 focus:outline-none focus:bg-mainPink/[.9] font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-mainPink dark:hover:mainPink/[.9] dark:focus:mainPink/[.9]"
-              >
-                Submit
-              </button>
-            )}
+            <button
+              type="submit"
+              className="text-white pt-4 mt-4 bg-mainPink 
+              hover:bg-mainPink/[.9] focus:ring-4 focus:outline-none 
+              focus:bg-mainPink/[.9] font-medium rounded-lg text-m w-full 
+              sm:w-auto px-5 py-2.5 text-center dark:bg-mainPink 
+              dark:hover:mainPink/[.9] dark:focus:mainPink/[.9]"
+            >
+              Submit
+            </button>
           </form>
-          {lootbox ? (
-            <div>
-              <DepositAfterCreateModal
-                lootbox={lootbox}
-                showDepositNFTDialog={showDepositNFTDialog}
-                setShowDepositNFTDialog={setShowDepositNFTDialog}
-                bid={bid}
-              />
-            </div>
-          ) : (
-            <></>
-          )}
         </div>
       </div>
     </div>

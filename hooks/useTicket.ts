@@ -13,6 +13,7 @@ export const useTicket = () => {
   const { chain } = useChain()
   const [tickets, setTickets] = useState<Ticket[]>([])
   const { isLoading, onLoad, onDone } = useLoading()
+
   const fetchTicket = async (account: string) => {
     onLoad()
     const ret_tickets: Ticket[] = []
@@ -53,13 +54,13 @@ export const useTicket = () => {
         account: account,
       },
     })
-    console.log(result)
     if (account && result?.data?.data?.tickets) {
       const tickets: any = result.data.data.tickets
       for (let singleTicket of tickets) {
-        if (singleTicket.owner.toString().toLowerCase() !== account.toString().toLowerCase())
+        if (singleTicket.owner.toString().toUpperCase() !== account.toString().toUpperCase())
           continue
         const ticket = {
+          ticketId: singleTicket.ticketId,
           tokenId: singleTicket.ticketId,
           collectionName: singleTicket.collectionName,
           address: TICKET_ADDRESS[chain?.chainId],
@@ -79,14 +80,13 @@ export const useTicket = () => {
       onDone()
 
       return ret_tickets
+    } else {
+      onDone()
+      return ret_tickets
     }
-
-    onDone()
-    return ret_tickets
   }
 
   useEffect(() => {
-    onDone()
     if (isWeb3Enabled && chain?.chainId) {
       onLoad()
       fetchTicket(account)

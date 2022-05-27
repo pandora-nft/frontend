@@ -3,19 +3,21 @@ import { LOOTBOX_ABI } from "contract"
 import { Lootbox, Ticket } from "types"
 import { useMoralis } from "react-moralis"
 import { Modal } from "components"
+import { useTx } from "context/transaction"
 
 interface Props {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   lootbox: Lootbox
   tickets: Ticket[]
+  setIsSuccess: Dispatch<SetStateAction<boolean>>
 }
 
-export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets }: Props) => {
+export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets, setIsSuccess }: Props) => {
   const [ticket, setTicket] = useState<Ticket>(null)
-  const [isSuccess, setIsSuccess] = useState(false)
 
-  const { account, Moralis } = useMoralis()
+  const { account } = useMoralis()
+  const { doTx } = useTx()
 
   async function claimTickets(ticketId: number) {
     const sendOptions = {
@@ -26,11 +28,17 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets }: Props) => {
         _ticketId: ticketId,
       },
     }
-    await Moralis.executeFunction(sendOptions)
-    setIsSuccess(true)
+
+    // await Moralis.executeFunction(sendOptions)
+    const success = await doTx(sendOptions)
+    if (success) {
+      setOpen(false)
+      setIsSuccess(true)
+    }
   }
 
   const ownWonTicket = tickets?.filter((ticket) => {
+    console.log("ticket22", tickets)
     return (
       ticket &&
       ticket.owner?.toLowerCase() === account.toLowerCase() &&
@@ -39,7 +47,7 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets }: Props) => {
     )
   })
 
-  const content = !isSuccess ? (
+  const content = (
     <>
       <div className="grid grid-rows-2 grid-flow-col">
         {ownWonTicket?.length > 0 ? (
@@ -56,7 +64,7 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets }: Props) => {
                   }
                 }}
               >
-                <img src={_ticket?.imageURI || "error"} alt="" className="w-20 h-auto" />
+                <img src={_ticket?.imageURI} alt="ticket" className="w-20 h-auto" />
               </div>
             ) : (
               <div
@@ -70,7 +78,7 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets }: Props) => {
                   }
                 }}
               >
-                <img src={_ticket?.imageURI || "error"} alt="" className="w-20 h-auto" />
+                <img src={_ticket?.imageURI} alt="ticket" className="w-20 h-auto" />
               </div>
             )
           })
@@ -81,20 +89,19 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets }: Props) => {
       {ticket && (
         <div className="flex flex-row my-4 space-x-4 justify-center">
           <div className="border-2 shadow-lg shadow-indigo-500/40 cursor-pointer max-w-sm mt-2">
-            <img src={ticket?.imageURI || "error"} alt="" className="w-20 h-auto" />
+            <img src={ticket?.imageURI} alt="ticket" className="w-20 h-auto" />
           </div>
           <div className="border-2 shadow-lg shadow-indigo-500/40 cursor-pointer max-w-sm mt-2">
             <img
-              src={lootbox?.nfts[ticket?.wonTicket].imageURI || "error"}
-              alt=""
+              // src={lootbox?.nfts[ticket?.wonNFT.id].imageURI}
+              src={ticket.wonNFT.imageURI}
+              alt="won-ticket"
               className="w-20 h-auto"
             />
           </div>
         </div>
       )}
     </>
-  ) : (
-    <div className="flex items-center justify-center">Transaction Submitted 🎉</div>
   )
 
   const claimButton = (

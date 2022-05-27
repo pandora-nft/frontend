@@ -13,27 +13,20 @@ const Nft = () => {
     setCurrentNFT(nft)
   }
 
+  console.log("ss", NFTBalances)
   const showNFTs = () => {
     if (isLoading) {
       return showSkeleton(<NFTCardSkeleton />)
-    } else if (!NFTBalances || NFTBalances.result.length === 0) {
+    } else if (NFTBalances.length === 0) {
       return <NotFound info="You have no NFT yet" />
     } else {
       return (
         <>
           {NFTBalances ? (
-            NFTBalances.result.map((nft, index) => {
-              const NFT = {
-                name: nft?.metadata?.name,
-                collectionName: nft?.name,
-                description: nft?.metadata?.description,
-                tokenId: nft?.token_id,
-                address: nft?.token_address,
-                imageURI: nft?.image,
-              }
+            NFTBalances.map((nft, index) => {
               return (
-                <div onClick={() => onNFTClick(NFT)} key={index}>
-                  <NFTCard NFT={NFT} />
+                <div onClick={() => onNFTClick(nft)} key={index}>
+                  <NFTCard NFT={nft} />
                 </div>
               )
             })

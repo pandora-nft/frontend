@@ -14,9 +14,9 @@ const Marketplace = () => {
     } else {
       return (
         <>
-          {allLootboxes.map((lootbox) => {
+          {allLootboxes.map((lootbox, index) => {
             return (
-              <Link key={lootbox.id} href={`/lootbox/${lootbox.id}`}>
+              <Link key={index} href={`/lootbox/${lootbox.id}`}>
                 <a>
                   <LootboxCard lootbox={lootbox} />
                 </a>
