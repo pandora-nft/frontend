@@ -63,8 +63,8 @@ const Create = () => {
     factory.on("LootboxDeployed", (lootboxId, lootboxAddress, owner) => {
       const listened_bid = Number(lootboxId.toString())
       if (account?.toUpperCase() === owner?.toUpperCase()) {
-        Router.push("/lootbox/" + listened_bid)
         clearTx()
+        Router.push("/lootbox/" + listened_bid)
       }
     })
   }

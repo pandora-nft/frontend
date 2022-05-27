@@ -39,7 +39,7 @@ export const useLootboxFactory = () => {
   const getAllLootboxes = async () => {
     const singleLootboxes = await axios.post(CHAINID_TO_DETAIL[chain.chainId].api, {
       query: ` query {
-                singleLootboxes(orderDirection:asc){
+                singleLootboxes(orderBy:drawTimestamp,orderDirection:desc){
                   boxId
                   owner
             }
