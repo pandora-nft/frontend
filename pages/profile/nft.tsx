@@ -41,9 +41,12 @@ const Nft = () => {
           {NFTBalances ? (
             NFTBalances.map((nft, index) => {
               return (
-                <div onClick={() => onNFTClick(nft)} key={index}>
-                  <NFTCard NFT={nft} />
-                </div>
+                nft.name &&
+                nft.imageURI && (
+                  <div onClick={() => onNFTClick(nft)} key={index}>
+                    <NFTCard NFT={nft} />
+                  </div>
+                )
               )
             })
           ) : (
