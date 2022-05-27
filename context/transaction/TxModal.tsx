@@ -40,7 +40,7 @@ export const TxModal = () => {
     if (stage === TX_ACTION.PENDING) {
       return (
         <div className="font-light mt-5 text-center">
-          <h3>Your transaction is submitted on the blockchain.</h3>
+          <h3>Your transaction is already submitted on the blockchain.</h3>
           <h3> It should be mined shortly!</h3>
         </div>
       )
