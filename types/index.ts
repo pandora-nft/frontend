@@ -3,6 +3,7 @@ export interface Lootbox {
   address: string
   name: string
   nfts: NFT[]
+  tickets: Ticket[]
   isDrawn: boolean
   isRefundable: boolean
   drawTimestamp: number
@@ -14,22 +15,38 @@ export interface Lootbox {
 }
 
 export interface Ticket extends NFT {
+  ticketId: number
   owner: string
   isClaimed: boolean
   isWinner: boolean
   isRefunded: boolean
-  wonTicket?: number
+  wonNFT?: {
+    imageURI: string
+  }
   lootboxId: number
 }
+
 export interface NFT {
+  id?: string
   name: string
   description?: string
   collectionName: string
   tokenId: number
   address: string
   imageURI: string
+  isApproved?: boolean
+  isApproving?: boolean
 }
 
+export interface formDataType {
+  name: string
+  ticketPrice: number
+  minimumTicketRequired: number
+  drawDays: number
+  drawHours: number
+  drawMinutes: number
+  drawSeconds: number
+}
 export type Chain =
   | "eth"
   | "0x1"

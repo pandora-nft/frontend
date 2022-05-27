@@ -15,6 +15,7 @@ const angleToRadians = (angleInDegree: number) => {
 }
 
 // ref: https://sketchfab.com/3d-models/loot-box-24d1d9be93954d3eb7807f8b528d6d98
+// ref2:https://sketchfab.com/3d-models/sci-fi-box-2-55ba1c5bdf254a2c9cceeb4e6dd5af79
 const Lootbox = () => {
   const { scene } = useGLTF("/lootbox2/scene.gltf")
 
@@ -39,7 +40,7 @@ export const LootboxCanvas = () => {
           position={[0, 6, 0]}
           distance={10}
           angle={1}
-          color="#ffb0fb"
+          color="#ffa2fd"
           attenuation={5}
           anglePower={1} // Diffuse-cone anglePower (default: 5)
         />

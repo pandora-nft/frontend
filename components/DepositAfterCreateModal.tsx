@@ -39,7 +39,7 @@ export const DepositAfterCreateModal = ({
     return (
       <Modal
         open={!!currentNFT}
-        setOpen={setCurrentNFT}
+        onClose={() => setCurrentNFT(null)}
         title={currentNFT?.name}
         content={content}
       />
@@ -97,7 +97,9 @@ export const DepositAfterCreateModal = ({
               <div className="mx-8">ID: {bid}</div>
               <div className="text-sm mx-8">
                 <div>Name: {lootbox?.name}</div>
-                <div>{`Draw time: ${new Date(lootbox?.drawTimestamp * 1000).toUTCString()}`}</div>
+                <div className="justify-center border-2">{`Draw time: ${new Date(
+                  lootbox?.drawTimestamp * 1000
+                ).toUTCString()}`}</div>
                 <div className="flex flex-row-reverse"></div>
               </div>
             </div>
@@ -169,40 +171,37 @@ export const DepositAfterCreateModal = ({
             <h3>Select your NFTs to deposit</h3>
           </div>
           <div className="grid grid-rows-2 grid-flow-col p-2 gap-2">
-            {NFTBalances?.result?.length > 0 ? (
-              NFTBalances.result?.map((_nft, index) => {
-                return (
-                  _nft.metadata &&
-                  (nfts?.includes(_nft) ? (
-                    <div
-                      key={index}
-                      className="border-2 shadow-lg shadow-red-500/40 border-red-500 cursor-pointer max-w-sm mt-2 scale-110"
-                      onClick={() => {
-                        const i = nfts.indexOf(_nft)
-                        setNFTS([...nfts.slice(0, i), ...nfts.slice(i + 1, nfts.length)])
-                      }}
-                    >
-                      <img
-                        src={_nft?.image || "error"}
-                        alt=""
-                        className="block object-cover object-center w-full h-20  rounded-lg"
-                      />
-                    </div>
-                  ) : (
-                    <div
-                      key={index}
-                      className="border-2 hover:shadow-xl cursor-pointer max-w-sm mt-2"
-                      onClick={() => {
-                        setNFTS([...nfts, _nft])
-                      }}
-                    >
-                      <img
-                        src={_nft?.image || "error"}
-                        alt=""
-                        className="block object-cover object-center w-full h-20  rounded-lg"
-                      />
-                    </div>
-                  ))
+            {NFTBalances.length > 0 ? (
+              NFTBalances.map((_nft, index) => {
+                return nfts?.includes(_nft) ? (
+                  <div
+                    key={index}
+                    className="border-2 shadow-lg shadow-mainPink/40 border-mainPink cursor-pointer max-w-sm mt-2 scale-110"
+                    onClick={() => {
+                      const i = nfts.indexOf(_nft)
+                      setNFTS([...nfts.slice(0, i), ...nfts.slice(i + 1, nfts.length)])
+                    }}
+                  >
+                    <img
+                      src={_nft.imageURI}
+                      alt="nft"
+                      className="block object-cover object-center w-full h-20  rounded-lg"
+                    />
+                  </div>
+                ) : (
+                  <div
+                    key={index}
+                    className="border-2 hover:shadow-xl cursor-pointer max-w-sm mt-2"
+                    onClick={() => {
+                      setNFTS([...nfts, _nft])
+                    }}
+                  >
+                    <img
+                      src={_nft?.imageURI}
+                      alt="nft"
+                      className="block object-cover object-center w-full h-20  rounded-lg"
+                    />
+                  </div>
                 )
               })
             ) : (
@@ -254,7 +253,7 @@ export const DepositAfterCreateModal = ({
   return (
     <Modal
       open={showDepositNFTDialog}
-      setOpen={setShowDepositNFTDialog}
+      onClose={() => setShowDepositNFTDialog(false)}
       title="Deposit NFTs"
       content={content}
       confirmButton={depositButton}

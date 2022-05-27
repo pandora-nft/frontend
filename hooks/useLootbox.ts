@@ -1,24 +1,19 @@
-import { FACTORY_ABI, FACTORY_ADDRESS, LOOTBOX_ABI, TICKET_ABI, TICKET_ADDRESS } from "contract"
-import { useMoralis, useChain } from "react-moralis"
 import { useState } from "react"
-import { ethers } from "ethers"
+import { useChain } from "react-moralis"
 import { Lootbox, NFT, Ticket } from "types"
-import { getNFTMetadata } from "api"
 import { useLoading } from "./useLoading"
-import { useTicket } from "./useTicket"
+import { CHAINID_TO_DETAIL, isChainSupport, TICKET_ADDRESS } from "contract"
+import axios from "axios"
 
 export const useLootbox = () => {
-  const { web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
-
-  // const Web3Api = useMoralisWeb3Api()
-  const { fetchTicket } = useTicket()
   const { isLoading, onLoad, onDone } = useLoading()
   const [lootbox, setLootbox] = useState<Lootbox>({
     id: 0,
     address: "",
     name: "",
     nfts: [],
+    tickets: [],
     isDrawn: false,
     isRefundable: false,
     drawTimestamp: 0,
@@ -28,113 +23,129 @@ export const useLootbox = () => {
     ticketSold: 0,
     owner: "",
   })
-  const [tickets, setTickets] = useState<Ticket[]>()
 
+  const [tickets, setTickets] = useState<Ticket[]>([])
   const fetchLootbox = async (_lootboxAddress: string, lootboxId?: number) => {
     onLoad()
-    let lootboxAddress: string
     if (!isNaN(lootboxId)) {
-      const factory = new ethers.Contract(
-        FACTORY_ADDRESS[chain.chainId],
-        FACTORY_ABI,
-        moralisProvider
-      )
-      lootboxAddress = (await factory.functions.lootboxAddress(lootboxId))[0] as string
-    } else {
-      lootboxAddress = _lootboxAddress
-    }
-
-    const ticketContract = new ethers.Contract(
-      TICKET_ADDRESS[chain.chainId],
-      TICKET_ABI,
-      moralisProvider
-    )
-    const lootboxContract = new ethers.Contract(lootboxAddress, LOOTBOX_ABI, moralisProvider)
-
-    const fetchNfts = await lootboxContract.getAllNFTs()
-
-    let ticketIds = []
-    if (!isNaN(lootboxId)) {
-      ticketIds = await ticketContract.getTicketsForLootbox(lootboxId)
-    }
-
-    let id,
-      name,
-      ticketPrice,
-      ticketSold,
-      minimumTicketRequired,
-      maxTicketPerWallet,
-      drawTimestamp,
-      isDrawn,
-      isRefundable,
-      owner
-    await Promise.all([
-      lootboxContract.id(),
-      lootboxContract.name(),
-      lootboxContract.ticketPrice(),
-      lootboxContract.ticketSold(),
-      lootboxContract.minimumTicketRequired(),
-      lootboxContract.maxTicketPerWallet(),
-      lootboxContract.drawTimestamp(),
-      lootboxContract.isDrawn(),
-      lootboxContract.isRefundable(),
-      lootboxContract.owner(),
-    ]).then((values) => {
-      id = Number(values[0].toString())
-      name = values[1].toString()
-      ticketPrice = Number(values[2].toString())
-      ticketSold = Number(values[3].toString())
-      minimumTicketRequired = Number(values[4].toString())
-      maxTicketPerWallet = Number(values[5].toString())
-      drawTimestamp = Number(values[6].toString())
-      isDrawn = values[7]
-      isRefundable = values[8]
-      owner = values[9].toString()
-    })
-
-    let nfts: NFT[] = []
-    for (const nft of fetchNfts) {
-      const nftAddress = nft._address.toString()
-      const tokenId = +nft._tokenId.toString()
-      const nftMetadata = await getNFTMetadata(chain.chainId, nftAddress, tokenId)
-
-      nfts.push({
-        tokenId,
-        collectionName: nft.name,
-        address: nftAddress,
-        imageURI: nftMetadata?.image || null,
-        name: nftMetadata?.name || null,
-        description: nftMetadata?.description || null,
+      const result = await axios.post(CHAINID_TO_DETAIL[chain.chainId].api, {
+        query: `
+        query singleLootbox($lootboxId: Int!) {
+          singleLootbox (id: $lootboxId)
+          {
+          id
+          address
+          drawTimestamp
+          ticketPrice
+          minimumTicketRequired
+          maxTicketPerWallet
+          owner
+          ticketSold
+          numNFT
+          isDrawn
+          isRefundable
+          name
+          boxId
+          nft{
+            id
+            collectionName
+            collectionSymbol
+            address
+            name
+            image
+            description
+            tokenId
+          }
+          tickets{
+            id
+            owner
+            ticketId
+            lootbox
+            isWinner
+            isClaimed
+            isRefunded
+            image
+            name
+            description
+            wonNFT{
+              name
+              description
+              image
+            }
+          }
+          }}
+        `,
+        variables: {
+          lootboxId: lootboxId,
+        },
       })
+      if (result?.data?.data?.singleLootbox) {
+        const singleLootbox: any = result.data.data.singleLootbox
+        console.log("lootbox before push to set", singleLootbox)
+
+        let nfts: NFT[] = []
+        for (let nft of singleLootbox.nft) {
+          nfts.push({
+            tokenId: Number(nft.tokenId),
+            collectionName: nft.collectionName,
+            address: nft.address,
+            imageURI: nft.image ? nft.image.replace("ipfs://", "https://ipfs.io/ipfs/") : null,
+            name: nft.name || null,
+            description: nft.description || null,
+          })
+        }
+
+        let singleLootboxTickets: Ticket[] = []
+        for (const tk of singleLootbox.tickets) {
+          console.log("tk won image", tk.wonNFT?.image)
+          const ticket: Ticket = {
+            description: tk.description,
+            id: tk.id,
+            imageURI: tk.image ? tk.image.replace("ipfs://", "https://ipfs.io/ipfs/") : null,
+            isClaimed: tk.isClaimed,
+            isRefunded: tk.isRefunded,
+            isWinner: tk.isWinner,
+            owner: tk.owner,
+            ticketId: tk.ticketId,
+            lootboxId: singleLootbox.id,
+            collectionName: tk.name,
+            name: tk.name,
+            address: chain && isChainSupport(chain) ? TICKET_ADDRESS[chain.chainId] : "",
+            tokenId: tk.ticketId,
+            wonNFT: {
+              imageURI: tk.wonNFT?.image
+                ? tk.wonNFT?.image.replace("ipfs://", "https://ipfs.io/ipfs/")
+                : null,
+            },
+          }
+          singleLootboxTickets.push(ticket)
+        }
+
+        const loot: Lootbox = {
+          id: singleLootbox.id,
+          name: singleLootbox.name,
+          address: singleLootbox.address,
+          nfts,
+          isDrawn: singleLootbox.isDrawn,
+          isRefundable: singleLootbox.isRefundable,
+          drawTimestamp: singleLootbox.drawTimestamp,
+          ticketPrice: singleLootbox.ticketPrice,
+          minimumTicketRequired: singleLootbox.minimumTicketRequired,
+          maxTicketPerWallet: singleLootbox.maxTicketPerWallet,
+          ticketSold: singleLootbox.ticketSold,
+          owner: singleLootbox.owner,
+          tickets: singleLootboxTickets,
+        }
+
+        setLootbox(loot)
+        setTickets(singleLootboxTickets)
+        onDone()
+        return loot
+      }
     }
 
-    let _tickets: Ticket[] = []
-    for (const ticketId of ticketIds) {
-      let ticket: Ticket
-      Promise.all([fetchTicket(ticketId), lootboxContract.wonTicket(ticketId)]).then((values) => {
-        ticket = values[0]
-        ticket.wonTicket = Number(values[1])
-        _tickets.push(ticket)
-      })
-    }
-    const loot: Lootbox = {
-      id,
-      name,
-      address: lootboxAddress,
-      nfts,
-      isDrawn,
-      isRefundable,
-      drawTimestamp,
-      ticketPrice,
-      minimumTicketRequired,
-      maxTicketPerWallet,
-      ticketSold,
-      owner,
-    }
-    setLootbox(loot)
-    setTickets(_tickets)
     onDone()
-    return loot
+    return lootbox
   }
 
   return { fetchLootbox, lootbox, isLoading, tickets }

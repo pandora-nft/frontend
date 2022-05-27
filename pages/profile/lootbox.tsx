@@ -4,6 +4,7 @@ import { ReactElement, useEffect } from "react"
 import { NotFound, LootboxCard, LootboxCardSkeleton } from "components"
 import { useChain, useMoralis } from "react-moralis"
 import Link from "next/link"
+import { SUPPORT_CHAINID } from "contract"
 
 const Lootbox = () => {
   const { enableWeb3, isWeb3Enabled, account } = useMoralis()
@@ -13,7 +14,11 @@ const Lootbox = () => {
 
   useEffect(() => {
     if (isWeb3Enabled) {
-      fetchLootboxOwned(account)
+      if (!SUPPORT_CHAINID.includes(chain.chainId)) {
+        return
+      } else {
+        if (account) fetchLootboxOwned(account)
+      }
     } else {
       enableWeb3()
     }

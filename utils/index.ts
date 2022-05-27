@@ -13,7 +13,7 @@ export const convertToCountdown = (drawTimestamp: number) => {
   var duration = moment.duration(diffTime * 1000, "milliseconds")
 
   let metric = ""
-  let time = 0
+  let time: any = 0
   if (duration.months() > 0) {
     time = duration.months()
     metric = "month"
@@ -25,17 +25,18 @@ export const convertToCountdown = (drawTimestamp: number) => {
     metric = "hour"
   } else if (duration.minutes() > 0) {
     time = duration.minutes()
-    metric = "minutes"
+    metric = "minute"
   } else if (duration.seconds() > 0) {
     time = duration.seconds()
     metric = "second"
   } else {
-    return "Ended"
+    time = "Ended"
+    metric = ""
   }
 
   if (time > 1) {
     metric += "s"
   }
 
-  return time + " " + metric
+  return { time, metric }
 }
