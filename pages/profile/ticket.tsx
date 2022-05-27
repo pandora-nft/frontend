@@ -10,7 +10,7 @@ const Ticket = () => {
   const { showSkeleton } = useSkeleton()
 
   const showTickets = () => {
-    if (!isLoading) {
+    if (isLoading) {
       return showSkeleton(<NFTCardSkeleton />)
     } else if (tickets.length === 0) {
       return <NotFound info="You have not bought any ticket yet" />
