@@ -71,6 +71,7 @@ export const useLootbox = () => {
       })
       if (result?.data?.data?.singleLootbox) {
         const singleLootbox: any = result.data.data.singleLootbox
+        console.log("lootbox before push to set", singleLootbox)
 
         let nfts: NFT[] = []
         for (let nft of singleLootbox.nft) {
@@ -99,16 +100,7 @@ export const useLootbox = () => {
           owner: singleLootbox.owner,
           tickets: singleLootbox.tickets,
         }
-        for (let nft of singleLootbox.nft) {
-          loot.nfts.push({
-            tokenId: Number(nft.tokenId),
-            collectionName: nft.collectionName,
-            address: nft.address,
-            imageURI: nft?.image?.replace("ipfs://", "https://ipfs.io/ipfs/") || null,
-            name: nft.name || null,
-            description: nft.description || null,
-          })
-        }
+
         // console.log(loot)
         setLootbox(loot)
         setTickets(tickets)
