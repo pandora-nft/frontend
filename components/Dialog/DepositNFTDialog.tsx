@@ -1,7 +1,7 @@
 import { Modal } from "components"
 import { useTx } from "context/transaction"
 import { ERC721_ABI, LOOTBOX_ABI } from "contract"
-import { useNFTsBalance } from "hooks"
+import { useFormatNFTBalances } from "hooks"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useMoralis } from "react-moralis"
 import { Lootbox, NFT } from "types"
@@ -20,7 +20,7 @@ interface Props {
 export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props) => {
   const [selectingNFTs, setSelectingNFTs] = useState<NFT[]>([])
   const [selectingIds, setSelectingIds] = useState<string[]>([])
-  const { NFTBalances, isLoading, main: fetchNFTBalance } = useNFTsBalance()
+  const { NFTBalances, isLoading, main: fetchNFTBalance } = useFormatNFTBalances()
   const [isApprovingState, setIsApprovingState] = useState(false)
 
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -154,7 +154,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
       // @ts-ignore
       await tx.wait()
     } catch (err) {
-      setError(err.message)
+      setError(err.message, "tx")
     } finally {
       setSelectingNFTs([
         ...selectingNFTs.slice(0, i),
@@ -180,7 +180,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
       {isApprovingState ? (
         <>
           {showRefreshButton(checkApproval, isRefreshing)}
-          <div className="min-h-[300px] max-h-[450px] overflow-auto gap-1 grid grid-cols-4 place-items-center">
+          <div className="min-h-[200px] max-h-[450px] overflow-auto gap-1 grid grid-cols-4 place-items-center">
             {showSelectingNFTs()}
           </div>
           <div className="font-light text-sm m-4 italic">
@@ -188,8 +188,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
           </div>
         </>
       ) : (
-        // px-5 grid grid-cols-4 min-h-[300px] max-h-[400px] overflow-auto"
-        <div className="w-full grid gap-1 grid-cols-4 min-h-[300px] max-h-[500px] overflow-auto">
+        <div className="w-full grid gap-1 grid-cols-4 min-h-[200px] max-h-[500px] overflow-auto">
           {NFTBalances.length > 0 ? (
             NFTBalances.map((_nft, index) => {
               return selectingIds.includes(_nft.id) ? (

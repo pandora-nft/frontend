@@ -4,7 +4,7 @@ import { Skeleton } from "web3uikit"
 export const NFTCardSkeleton = () => {
   return (
     <div
-      className="grid grid-flow-row min-h-64 
+      className="grid grid-flow-row min-h-64 w-[300px]
     rounded-[5px] border border-gray-300"
     >
       <Skeleton height="280px" width="full" theme="image" />
