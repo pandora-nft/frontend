@@ -31,7 +31,7 @@ export const TxModal = () => {
     if (stage === TX_ACTION.INITIATED) {
       return (
         <div className="font-light mt-5 text-center">
-          <h3>Your transaction is preparing.</h3>
+          <h3>Your transaction is pending.</h3>
           <h3>Please confirm the transaction!</h3>
         </div>
       )

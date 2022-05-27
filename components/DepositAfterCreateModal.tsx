@@ -1,6 +1,6 @@
 import { LoadingIndicator, Modal } from "components"
 import { ERC721_ABI, LOOTBOX_ABI } from "contract"
-import { useNFTsBalance } from "hooks"
+import { useFormatNFTBalances } from "hooks"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useMoralis } from "react-moralis"
 import { Lootbox, NFT } from "types"
@@ -18,7 +18,7 @@ export const DepositAfterCreateModal = ({
 }) => {
   const [nfts, setNFTS] = useState<any[]>([])
   const [isSuccess, setIsSuccess] = useState(false)
-  const { NFTBalances } = useNFTsBalance()
+  const { NFTBalances } = useFormatNFTBalances()
   const [isNFTSelected, setIsNFTSelected] = useState(false)
   const { Moralis, account } = useMoralis()
   const isLoading = false

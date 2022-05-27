@@ -1,11 +1,11 @@
 import ProfileLayout from "layouts/profileLayout"
 import { ReactElement, useState } from "react"
-import { useNFTsBalance, useSkeleton } from "hooks"
+import { useFormatNFTBalances, useSkeleton } from "hooks"
 import { NotFound, NFTCard, NFTCardSkeleton, NFTDialog } from "components"
 import { NFT } from "types"
 
 const Nft = () => {
-  const { NFTBalances, isLoading } = useNFTsBalance()
+  const { NFTBalances, isLoading } = useFormatNFTBalances()
   const { showSkeleton } = useSkeleton()
   const [currentNFT, setCurrentNFT] = useState<NFT>(null)
 
@@ -40,7 +40,7 @@ const Nft = () => {
     <>
       <NFTDialog open={!!currentNFT} currentNFT={currentNFT} setCurrentNFT={setCurrentNFT} />
 
-      <div className="container mt-10 mx-auto max-w-4/5 min-w-sm">
+      <div className="centered mt-10">
         <div
           className="grid grid-cols-2 lg:grid-cols-3
                      xl:grid-cols-4 3xl:grid-cols-5 5xl:grid-cols-6 gap-5"

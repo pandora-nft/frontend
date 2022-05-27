@@ -10,7 +10,7 @@ const Ticket = () => {
   const { showSkeleton } = useSkeleton()
 
   const showTickets = () => {
-    if (isLoading) {
+    if (!isLoading) {
       return showSkeleton(<NFTCardSkeleton />)
     } else if (tickets.length === 0) {
       return <NotFound info="You have not bought any ticket yet" />
@@ -32,7 +32,7 @@ const Ticket = () => {
   }
 
   return (
-    <div className="container mt-10 mx-auto max-w-4/5 min-w-sm">
+    <div className="centered mt-10 w-full">
       <div
         className="grid grid-cols-2 lg:grid-cols-3
                    xl:grid-cols-4 3xl:grid-cols-5 5xl:grid-cols-6 gap-5"
