@@ -25,27 +25,11 @@ const Lootbox = () => {
 useGLTF.preload("/lootbox2/scene.gltf")
 
 export const LootboxCanvas = () => {
-  // const [color, setColor] = useState("#fffff")
-
-  // useEffect(() => {
-  //   function start() {
-  //     setTimeout(function () {
-  //       const randomColor = Math.floor(Math.random() * 16777215).toString(16)
-  //       setColor(randomColor)
-
-  //       start()
-  //     }, 1000)
-  //   }
-
-  //   // Begins
-  //   start()
-  // }, [color])
-
   return (
     <Canvas>
       <Suspense fallback={<Html position={[-0.4, 0.7, 0]}>{<LoadingIndicator />}</Html>}>
         <PerspectiveCamera makeDefault position={[10, 5, 0]} />
-        <OrbitControls autoRotate autoRotateSpeed={0} enableZoom={false} />
+        <OrbitControls autoRotate autoRotateSpeed={2} enableZoom={false} />
         <ambientLight args={["#ffffff", 0.25]} />
         <spotLight
           args={["#ffffff", 10, 50, angleToRadians(80), 0.4]}

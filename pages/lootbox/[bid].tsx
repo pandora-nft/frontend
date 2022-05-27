@@ -19,7 +19,7 @@ import { convertToCountdown } from "utils"
 import { NFT, Chain } from "types"
 import { ethers } from "ethers"
 import { CHAINID_TO_DETAIL, isChainSupport, LOOTBOX_ABI } from "contract"
-import { Icon } from "web3uikit"
+import { Icon, Tooltip } from "web3uikit"
 import { useTx } from "context/transaction"
 
 interface Props {
@@ -30,6 +30,7 @@ const Bid: React.FC<Props> = () => {
   const router = useRouter()
   const { bid } = router.query
 
+  const [isCopy, setIsCopy] = useState(false)
   const { enableWeb3, isWeb3Enabled, account, web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
   const { doTx } = useTx()
@@ -56,7 +57,7 @@ const Bid: React.FC<Props> = () => {
   const [currentNFT, setCurrentNFT] = useState<NFT>(null)
   const [isSuccess, setIsSuccess] = useState(false)
   const [balance, setBalance] = useState(0)
-  const [showBalance, setShowBalance] = useState("0")
+  // const [showBalance, setShowBalance] = useState("0")
 
   const [isNFTAlreadyWithdrawn, setIsNFTAlreadyWithdrawn] = useState(false)
 
@@ -84,9 +85,9 @@ const Bid: React.FC<Props> = () => {
         const balance = await moralisProvider.getBalance(loot.address)
         setBalance(Number(balance.toString()))
 
-        const currency = isChainSupport(chain) ? CHAINID_TO_DETAIL[chain.chainId].currency : ""
-        const showBalance = ethers.utils.formatEther(balance.toString()) + " " + currency
-        setShowBalance(showBalance)
+        // const currency = isChainSupport(chain) ? CHAINID_TO_DETAIL[chain.chainId].currency : ""
+        // const showBalance = ethers.utils.formatEther(balance.toString()) + " " + currency
+        // setShowBalance(showBalance)
       }
 
       main()
@@ -236,6 +237,17 @@ const Bid: React.FC<Props> = () => {
     )
   }
 
+  const showStatus = () => {
+    if (time === "Ended" && !isRefundable && !isDrawn) {
+      return "Drawing"
+    } else if (isRefundable) {
+      return "Canceled"
+    } else if (isDrawn && !isRefundable) {
+      return "Completed"
+    } else {
+      return "Countdown"
+    }
+  }
   return (
     <div className="centered border-red-500">
       {isLoading ? (
@@ -253,9 +265,24 @@ const Bid: React.FC<Props> = () => {
                 #{id} {name}
               </h1>
 
-              <h3 className="-mt-2 text-xl">Address: {address}</h3>
+              {/* <h3 className="-mt-2 text-md">Address: {address}</h3> */}
+              <div className="w-fit -mt-4">
+                <Tooltip position="right" content={<h4>{isCopy ? "Copied" : "Copy"}</h4>}>
+                  <h4
+                    onMouseLeave={() => setIsCopy(false)}
+                    onClick={() => {
+                      navigator.clipboard.writeText(address)
+                      setIsCopy(true)
+                    }}
+                    className="p-2 w-fit border-gray-200 text-sm flex flex-col 
+                      font-medium text-gray-500 rounded-md cursor-pointer hover:bg-gray-100"
+                  >
+                    Address: {address}
+                  </h4>
+                </Tooltip>
+              </div>
 
-              <h3 className="text-lg font-medium">
+              <h3 className="ml-2 text-lg font-medium">
                 Owned by{" "}
                 <span className="text-mainPink">
                   {account?.toUpperCase() === owner?.toUpperCase() ? "you" : "" + owner}
@@ -282,46 +309,41 @@ const Bid: React.FC<Props> = () => {
                   {showActionButtons()}
                 </div>
                 <div
-                  className="flex flex-row justify-start font-medium 
+                  className="flex flex-row font-medium 
                         border-b border-t border-gray-200 p-4 items-center"
                 >
-                  <div>
-                    <div className="flex flex-row items-center justify-center">
-                      <Icon fill="rgb(30,30,30)" size={28} svg="calendar" />
+                  <div className="ml-5 flex flex-row -pr-10">
+                    <Icon fill="rgb(30,30,30)" size={36} svg="calendar" />
 
-                      <h3 className="ml-1 mt-3">Draw time </h3>
-                    </div>
-                    <h3 className="text-mainPink">
-                      {/* <CountdownTimer seconds={drawTimestamp * 1000} /> */}
-                      {new Date(drawTimestamp * 1000).toUTCString()}
-                    </h3>
-                  </div>
-                  <div className="ml-20 text-center items-center justify-center">
-                    <div className="flex flex-row items-center justify-center">
-                      <Icon fill="rgb(30,30,30)" size={28} svg="atomicApi" />{" "}
-                      <h3 className="ml-1 mt-3">Time left </h3>
-                    </div>
-                    <h3 className="ml-2 text-mainPink">
-                      {time} {metric}
-                    </h3>
-                  </div>
-
-                  <div className="ml-20 text-center">
-                    <div className="mt-3">
-                      <h3>{time == "Ended" || isRefundable || isDrawn ? "State " : ""}</h3>
-                      <h3 className="ml-5">
-                        <span className="text-mainPink">
-                          {time === "Ended" && !isRefundable && !isDrawn && "Drawing"}
-                          {isRefundable && "Drawing Canceled"}
-                          {isDrawn && !isRefundable && "Drawing Completed"}
-                        </span>
+                    <div className="ml-1 mt-3">
+                      <h3>Draw time </h3>
+                      <h3 className="text-mainPink">
+                        {new Date(drawTimestamp * 1000).toUTCString()}
                       </h3>
+                    </div>
+                  </div>
+
+                  <div className="ml-20 flex flex-row items-center justify-center">
+                    <Icon fill="rgb(30,30,30)" size={36} svg="atomicApi" />{" "}
+                    <div className="ml-1 mt-3">
+                      <h3>Time left </h3>
+                      <h3 className="text-mainPink">
+                        {time} {metric}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="ml-24 flex flex-row items-center justify-center">
+                    <Icon fill="rgb(30,30,30)" size={36} svg="eye" />{" "}
+                    <div className="ml-1 mt-3">
+                      <h3>Status </h3>
+                      <h3 className="text-mainPink">{showStatus()}</h3>
                     </div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-4 gap-5 bg-lightPink rounded-b-xl">
-                  {createLabel("balance", showBalance)}
+                  {/* {createLabel("balance", showBalance)} */}
                   {createLabel("items", nfts.length)}
                   {createLabel("ticket owned", getTicketOwnedCount())}
                   {createLabel("ticket sold", ticketSold)}
