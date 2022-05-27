@@ -9,15 +9,15 @@ interface Props {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   lootbox: Lootbox
-  tickets: Ticket[]
   setIsSuccess: Dispatch<SetStateAction<boolean>>
 }
 
-export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets, setIsSuccess }: Props) => {
+export const ClaimNFTDialog = ({ open, setOpen, lootbox, setIsSuccess }: Props) => {
   const [selectedTicket, setSelectedTicket] = useState<Ticket>(null)
 
   const { account } = useMoralis()
   const { doTx } = useTx()
+  const { tickets } = lootbox
 
   async function claimTickets(ticketId: number) {
     const sendOptions = {
@@ -29,15 +29,15 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets, setIsSuccess }
       },
     }
 
-    // await Moralis.executeFunction(sendOptions)
+    setOpen(false)
     const success = await doTx(sendOptions)
     if (success) {
-      setOpen(false)
       setIsSuccess(true)
     }
   }
 
   const ownWonTicket = tickets?.filter((ticket) => {
+    // console.log("ticket: ", ticket)
     return (
       ticket &&
       ticket.owner?.toLowerCase() === account.toLowerCase() &&
@@ -48,14 +48,14 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets, setIsSuccess }
 
   const content = (
     <>
-      <div className="grid grid-rows-2 grid-flow-col">
+      <div className="grid grid-cols-2 grid-flow-row gap-10 max-h-[500px] overflow-auto">
         {!selectedTicket && ownWonTicket?.length > 0 ? (
           ownWonTicket.map((_ticket, index) => {
             return _ticket.tokenId === selectedTicket?.tokenId ? (
               <div className="border-2 rounded bg-lightPink flex flex-row my-4 space-x-4 justify-center">
                 <div
                   key={index}
-                  className="border-2 shadow-lg shadow-indigo-500/40 cursor-pointer max-w-sm"
+                  className="border-2 shadow-lg shadow-mainPink cursor-pointer max-w-sm"
                   onClick={() => {
                     if (selectedTicket == _ticket) {
                       setSelectedTicket(null)
@@ -64,22 +64,17 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets, setIsSuccess }
                     }
                   }}
                 >
-                  <img src={_ticket?.imageURI} alt="ticket" className="w-20 h-auto" />
+                  <img src={_ticket?.imageURI} alt="ticket" className="w-32 h-auto" />
                 </div>
-                <div className="border-2 shadow-lg shadow-indigo-500/40 cursor-pointer max-w-sm">
-                  <img
-                    // src={lootbox?.nfts[ticket?.wonNFT.id].imageURI}
-                    src={_ticket.wonNFT?.imageURI}
-                    alt="won-ticket"
-                    className="w-20 h-auto"
-                  />
+                <div className="border-2 shadow-lg cursor-pointer max-w-sm">
+                  <img src={_ticket.wonNFT.imageURI} alt="won-ticket" className="w-32 h-auto" />
                 </div>
               </div>
             ) : (
               <div className="border-2 rounded bg-lightPink flex flex-row my-4 space-x-4 justify-center">
                 <div
                   key={index}
-                  className="border-2 hover:shadow-xl cursor-pointer max-w-sm"
+                  className="border-2 hover:shadow-xl hover:shadow-green-500 cursor-pointer max-w-sm"
                   onClick={() => {
                     if (selectedTicket == _ticket) {
                       setSelectedTicket(null)
@@ -88,15 +83,10 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets, setIsSuccess }
                     }
                   }}
                 >
-                  <img src={_ticket?.imageURI} alt="ticket" className="w-20 h-auto" />
+                  <img src={_ticket?.imageURI} alt="ticket" className="w-32 h-auto" />
                 </div>
-                <div className="border-2 shadow-lg shadow-indigo-500/40 cursor-pointer max-w-sm">
-                  <img
-                    // src={lootbox?.nfts[ticket?.wonNFT.id].imageURI}
-                    src={_ticket.wonNFT?.imageURI}
-                    alt="won-ticket"
-                    className="w-20 h-auto"
-                  />
+                <div className="border-2 shadow-lg shadow-mainPink max-w-sm">
+                  <img src={_ticket.wonNFT.imageURI} alt="won-nft" className="w-32 h-auto" />
                 </div>
               </div>
             )
@@ -110,16 +100,11 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets, setIsSuccess }
 
       {selectedTicket && (
         <div className="flex flex-row my-4 space-x-4 justify-center">
-          <div className="border-2 shadow-lg shadow-indigo-500/40 cursor-pointer max-w-sm mt-2">
-            <img src={selectedTicket?.imageURI} alt="ticket" className="w-20 h-auto" />
+          <div className="border-2 shadow-lg shadow-mainPink cursor-pointer max-w-sm mt-2">
+            <img src={selectedTicket?.imageURI} alt="ticket" className="w-32 h-auto" />
           </div>
-          <div className="border-2 shadow-lg shadow-indigo-500/40 cursor-pointer max-w-sm mt-2">
-            <img
-              // src={lootbox?.nfts[ticket?.wonNFT.id].imageURI}
-              src={selectedTicket?.wonNFT?.imageURI}
-              alt="won-ticket"
-              className="w-20 h-auto"
-            />
+          <div className="border-2 shadow-lg shadow-mainPink cursor-pointer max-w-sm mt-2">
+            <img src={selectedTicket?.wonNFT?.imageURI} alt="won-ticket" className="w-32 h-auto" />
           </div>
         </div>
       )}

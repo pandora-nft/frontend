@@ -180,7 +180,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
       {isApprovingState ? (
         <>
           {showRefreshButton(checkApproval, isRefreshing)}
-          <div className="min-h-[300px] max-h-[450px] overflow-auto gap-1 grid grid-cols-4 place-items-center">
+          <div className="max-h-[450px] overflow-auto gap-1 grid grid-cols-4 place-items-center">
             {showSelectingNFTs()}
           </div>
           <div className="font-light text-sm m-4 italic">
@@ -188,8 +188,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
           </div>
         </>
       ) : (
-        // px-5 grid grid-cols-4 min-h-[300px] max-h-[400px] overflow-auto"
-        <div className="w-full grid gap-1 grid-cols-4 min-h-[300px] max-h-[500px] overflow-auto">
+        <div className="w-full grid gap-1 grid-cols-4 max-h-[500px] overflow-auto">
           {NFTBalances.length > 0 ? (
             NFTBalances.map((_nft, index) => {
               return selectingIds.includes(_nft.id) ? (

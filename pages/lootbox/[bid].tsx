@@ -34,7 +34,7 @@ const Bid: React.FC<Props> = () => {
   const { enableWeb3, isWeb3Enabled, account, web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
   const { doTx } = useTx()
-  const { fetchLootbox, lootbox, isLoading, tickets } = useLootbox()
+  const { fetchLootbox, lootbox, isLoading } = useLootbox()
   const {
     id,
     name,
@@ -78,6 +78,7 @@ const Bid: React.FC<Props> = () => {
             address: loot.address,
           },
         })
+        console.log("xx")
         const result = nftMetadata?.result
         if (result?.length === 0) {
           setIsNFTAlreadyWithdrawn(true)
@@ -386,14 +387,12 @@ const Bid: React.FC<Props> = () => {
             open={showClaimNFTDialog}
             setOpen={setShowClaimNFTDialog}
             lootbox={lootbox}
-            tickets={tickets}
             setIsSuccess={setIsSuccess}
           />
           <RefundDialog
             open={showRefundDialog}
             setOpen={setShowRefundDialog}
             lootbox={lootbox}
-            tickets={tickets}
             setIsSuccess={setIsSuccess}
           />
 
