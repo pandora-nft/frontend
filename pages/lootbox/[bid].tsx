@@ -34,7 +34,7 @@ const Bid: React.FC<Props> = () => {
   const { enableWeb3, isWeb3Enabled, account, web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
   const { doTx } = useTx()
-  const { fetchLootbox, lootbox, isLoading, tickets } = useLootbox()
+  const { fetchLootbox, lootbox, isLoading } = useLootbox()
   const {
     id,
     name,
@@ -70,12 +70,15 @@ const Bid: React.FC<Props> = () => {
         if (!loot.address || loot.address === "") {
           return Router.push("/marketplace")
         }
+
+        // get nfts of lootbox
         const nftMetadata = await getNFTBalances({
           params: {
             chain: chain.chainId as Chain,
             address: loot.address,
           },
         })
+        console.log("xx")
         const result = nftMetadata?.result
         if (result?.length === 0) {
           setIsNFTAlreadyWithdrawn(true)
@@ -249,7 +252,7 @@ const Bid: React.FC<Props> = () => {
     }
   }
   return (
-    <div className="centered border-red-500">
+    <div className="centered">
       {isLoading ? (
         <div className="h-[30vh] mt-[10vh] flex flex-col items-center justify-between">
           <LoadingIndicator />
@@ -275,7 +278,7 @@ const Bid: React.FC<Props> = () => {
                       setIsCopy(true)
                     }}
                     className="p-2 w-fit border-gray-200 text-sm flex flex-col 
-                      font-medium text-gray-500 rounded-md cursor-pointer hover:bg-gray-100"
+                      font-medium text-gray-500 bg-gray-50 rounded-md cursor-pointer hover:bg-gray-200"
                   >
                     Address: {address}
                   </h4>
@@ -367,7 +370,7 @@ const Bid: React.FC<Props> = () => {
                 )
               })
             ) : (
-              <NotFound info="Nothing in the box" />
+              <NotFound info="Nothing in the box yet" />
             )}
           </div>
 
@@ -384,14 +387,12 @@ const Bid: React.FC<Props> = () => {
             open={showClaimNFTDialog}
             setOpen={setShowClaimNFTDialog}
             lootbox={lootbox}
-            tickets={tickets}
             setIsSuccess={setIsSuccess}
           />
           <RefundDialog
             open={showRefundDialog}
             setOpen={setShowRefundDialog}
             lootbox={lootbox}
-            tickets={tickets}
             setIsSuccess={setIsSuccess}
           />
 

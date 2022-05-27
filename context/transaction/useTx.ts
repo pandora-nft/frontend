@@ -27,13 +27,11 @@ export const useTx = () => {
     try {
       initiateTx()
       const tx = await Moralis.executeFunction(sendOptions)
-      // console.log("tx", tx)
       await handleTx(tx)
       return true
     } catch (err) {
       clearTx()
-      console.log("err2", err)
-      setError(err.message)
+      setError(err.message, "tx")
     }
   }
 
@@ -47,21 +45,19 @@ export const useTx = () => {
 
       //@ts-ignore
       const res = await transaction.wait()
-      console.log("success tx", res)
       if (res.blockHash) {
-        // if Tx is already closed by user, no need to show the success tx
-        successTx()
-
         //TODO:fix this un update state bug
+        // if Tx is already closed by user, no need to show the success tx
         // if (txState.stage !== TX_ACTION.CLEAR) {
+        //   console.log("xxx", txState.stage)
         //   successTx()
-
         // }
+        successTx()
       } else {
         setError("Transaction failed, please try again.")
       }
     } catch (err) {
-      setError(err.message)
+      setError(err.message, "tx")
     }
   }
 
