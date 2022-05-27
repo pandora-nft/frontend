@@ -38,7 +38,6 @@ export const ClaimNFTDialog = ({ open, setOpen, lootbox, tickets, setIsSuccess }
   }
 
   const ownWonTicket = tickets?.filter((ticket) => {
-    console.log("ticket22", tickets)
     return (
       ticket &&
       ticket.owner?.toLowerCase() === account.toLowerCase() &&
