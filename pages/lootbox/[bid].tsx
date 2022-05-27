@@ -78,7 +78,6 @@ const Bid: React.FC<Props> = () => {
             address: loot.address,
           },
         })
-        console.log("xx")
         const result = nftMetadata?.result
         if (result?.length === 0) {
           setIsNFTAlreadyWithdrawn(true)

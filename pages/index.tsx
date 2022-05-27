@@ -90,20 +90,26 @@ const Home: NextPage = () => {
       <section className="bg-black py-36">
         <div className="centered">
           <AnimationOnScroll animateOnce animateIn="animate__fadeInLeft">
-            <h1 className="text-white">Core value</h1>
+            <h1 className="text-white">Get your tickets</h1>
             <div className="text-white grid grid-cols-3 gap-10 mt-10">
-              <Card pictureURL="/Normal_Tickets.png" />
-              <Card pictureURL="/Winning_Ticket.png" />
-              <Card pictureURL="/Refundable_Ticket.png" />
-              <Card pictureURL="/Refunded_Ticket.png" />
-              <Card pictureURL="/Claimed_Ticket.png" />
-              <Card pictureURL="/Expired_Ticket.png" />
+              <Card text="Normal Ticket" pictureURL="/Normal_Tickets.png" />
+              <Card text="Winning Ticket" pictureURL="/Winning_Ticket.png" />
+              <Card text="Refundable Ticket" pictureURL="/Refundable_Ticket.png" />
+              <Card text="Refunded Ticket" pictureURL="/Refunded_Ticket.png" />
+              <Card text="Claimed Ticket" pictureURL="/Claimed_Ticket.png" />
+              <Card text="Expired Ticket" pictureURL="/Expired_Ticket.png" />
             </div>
           </AnimationOnScroll>
         </div>
       </section>
 
-      <section className="bg-white py-72"></section>
+      <section className="bg-white pb-96 pt-32">
+        <div className="centered">
+          <h1 className="text-gray-800">Core Value</h1>
+          <h2 className="mt-10 text-2xl font-medium ">NFT Illiquidity</h2>
+          <h2 className="mt-10 text-2xl font-medium ">Fair game of luck</h2>
+        </div>
+      </section>
 
       <section className="py-28 bg-black">
         <AnimationOnScroll animateOnce animateIn="animate__fadeInUp">
