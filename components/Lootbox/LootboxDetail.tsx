@@ -22,12 +22,14 @@ export const LootboxDetail: React.FC<LootboxDetailProps> = ({
       </div>
     )
   }
+  const { time, metric } = convertToCountdown(drawTimestamp)
+
   return (
     <div className="grid grid-cols-4 gap-5 mb-5">
       {createLabel("items", numItems)}
       {createLabel("ticket price", ethers.utils.formatEther(ticketPrice.toString()))}
       {createLabel("ticket sold", ticketSold)}
-      {createLabel("draw in", convertToCountdown(drawTimestamp))}
+      {createLabel("draw in", `${time} ${metric}`)}
     </div>
   )
 }

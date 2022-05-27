@@ -15,6 +15,7 @@ import {
   RefundDialog,
   NotFound,
 } from "components"
+import { convertToCountdown } from "utils"
 import { NFT, Chain } from "types"
 import { ethers } from "ethers"
 import { CHAINID_TO_DETAIL, isChainSupport, LOOTBOX_ABI } from "contract"
@@ -29,7 +30,7 @@ const Bid: React.FC<Props> = () => {
   const router = useRouter()
   const { bid } = router.query
 
-  const { enableWeb3, isWeb3Enabled, account } = useMoralis()
+  const { enableWeb3, isWeb3Enabled, account, web3: moralisProvider } = useMoralis()
   const { chain } = useChain()
   const { doTx } = useTx()
   const { fetchLootbox, lootbox, isLoading, tickets } = useLootbox()
@@ -46,13 +47,16 @@ const Bid: React.FC<Props> = () => {
     isRefundable,
     isDrawn,
   } = lootbox
+  const { time, metric } = convertToCountdown(drawTimestamp)
+
   const [showClaimNFTDialog, setShowClaimNFTDialog] = useState(false)
   const [showDepositNFTDialog, setShowDepositNFTDialog] = useState(false)
   const [showRefundDialog, setShowRefundDialog] = useState(false)
   const [showBuyTicketsDialog, setShowBuyTicketsDialog] = useState(false)
   const [currentNFT, setCurrentNFT] = useState<NFT>(null)
   const [isSuccess, setIsSuccess] = useState(false)
-  // const { getBalances, data: balance, isFetching: isBalanceLoading } = useNativeBalance()
+  const [balance, setBalance] = useState(0)
+  const [showBalance, setShowBalance] = useState("0")
 
   const [isNFTAlreadyWithdrawn, setIsNFTAlreadyWithdrawn] = useState(false)
 
@@ -76,12 +80,13 @@ const Bid: React.FC<Props> = () => {
           setIsNFTAlreadyWithdrawn(true)
         }
 
-        // await getBalances({
-        //   params: {
-        //     address,
-        //     chain: chain ? (chain.chainId as Chain) : "eth",
-        //   },
-        // })
+        // get native balance of lootbox
+        const balance = await moralisProvider.getBalance(loot.address)
+        setBalance(Number(balance.toString()))
+
+        const currency = isChainSupport(chain) ? CHAINID_TO_DETAIL[chain.chainId].currency : ""
+        const showBalance = ethers.utils.formatEther(balance.toString()) + " " + currency
+        setShowBalance(showBalance)
       }
 
       main()
@@ -210,11 +215,11 @@ const Bid: React.FC<Props> = () => {
         //TODO: check if user is a winner
         claimNFTButton = createMainButton("Claim NFT", () => setShowClaimNFTDialog(true))
         if (isOwner) {
-          // if (Number(balance.formatted) > 0) {
-          claimMoneyButton = createMainButton("Claim Money", () => claimMoney())
-          // } else {
-          claimMoneyButton = createDisableButton("Money Claimed")
-          // }
+          if (balance > 0) {
+            claimMoneyButton = createMainButton("Claim Money", () => claimMoney())
+          } else {
+            claimMoneyButton = createDisableButton("Money Claimed")
+          }
         }
       }
     }
@@ -276,39 +281,47 @@ const Bid: React.FC<Props> = () => {
 
                   {showActionButtons()}
                 </div>
-
                 <div
-                  className="flex flex-row font-medium 
+                  className="flex flex-row justify-start font-medium 
                         border-b border-t border-gray-200 p-4 items-center"
                 >
-                  <Icon fill="rgb(30,30,30)" size={28} svg="calendar" />{" "}
-                  <h3 className="ml-1 mt-3">
-                    Draw time:{" "}
-                    <span className="text-mainPink">
+                  <div>
+                    <div className="flex flex-row items-center justify-center">
+                      <Icon fill="rgb(30,30,30)" size={28} svg="calendar" />
+
+                      <h3 className="ml-1 mt-3">Draw time </h3>
+                    </div>
+                    <h3 className="text-mainPink">
                       {/* <CountdownTimer seconds={drawTimestamp * 1000} /> */}
-                      {isRefundable || isDrawn
-                        ? "Ended"
-                        : new Date(drawTimestamp * 1000).toUTCString()}
-                    </span>
-                  </h3>
+                      {new Date(drawTimestamp * 1000).toUTCString()}
+                    </h3>
+                  </div>
+                  <div className="ml-20 text-center items-center justify-center">
+                    <div className="flex flex-row items-center justify-center">
+                      <Icon fill="rgb(30,30,30)" size={28} svg="atomicApi" />{" "}
+                      <h3 className="ml-1 mt-3">Time left </h3>
+                    </div>
+                    <h3 className="ml-2 text-mainPink">
+                      {time} {metric}
+                    </h3>
+                  </div>
+
+                  <div className="ml-20 text-center">
+                    <div className="mt-3">
+                      <h3>{time == "Ended" || isRefundable || isDrawn ? "State " : ""}</h3>
+                      <h3 className="ml-5">
+                        <span className="text-mainPink">
+                          {time === "Ended" && !isRefundable && !isDrawn && "Drawing"}
+                          {isRefundable && "Drawing Canceled"}
+                          {isDrawn && !isRefundable && "Drawing Completed"}
+                        </span>
+                      </h3>
+                    </div>
+                  </div>
                 </div>
 
-                <div
-                  className="flex flex-row font-medium 
-                 border-b border-t border-gray-200 p-4 items-center"
-                >
-                  <h3 className="ml-5 mt-3">
-                    {isRefundable.toString() + " " + isDrawn.toString()}
-                    {isRefundable || isDrawn ? "State: " : ""}
-                    <span className="text-mainPink">
-                      {isRefundable && "Drawing Canceled"}
-                      {isDrawn && !isRefundable && "Drawing Completed"}
-                    </span>
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-4 gap-5 bg-lightPink">
-                  {/* {createLabel("balance", isBalanceLoading ? "-" : balance.formatted)} */}
+                <div className="grid grid-cols-4 gap-5 bg-lightPink rounded-b-xl">
+                  {createLabel("balance", showBalance)}
                   {createLabel("items", nfts.length)}
                   {createLabel("ticket owned", getTicketOwnedCount())}
                   {createLabel("ticket sold", ticketSold)}
