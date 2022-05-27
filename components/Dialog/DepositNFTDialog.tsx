@@ -2,7 +2,7 @@ import { Modal } from "components"
 import { useTx } from "context/transaction"
 import { ERC721_ABI, LOOTBOX_ABI } from "contract"
 import { useNFTsBalance } from "hooks"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useMoralis } from "react-moralis"
 import { Lootbox, NFT } from "types"
 import { ethers } from "ethers"
@@ -20,7 +20,7 @@ interface Props {
 export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props) => {
   const [selectingNFTs, setSelectingNFTs] = useState<NFT[]>([])
   const [selectingIds, setSelectingIds] = useState<string[]>([])
-  const { NFTBalances } = useNFTsBalance()
+  const { NFTBalances, isLoading, main } = useNFTsBalance()
   const [isApprovingState, setIsApprovingState] = useState(false)
 
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -37,6 +37,12 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
       }
     })
   }
+
+  useEffect(() => {
+    if (open) {
+      main()
+    }
+  }, [open])
 
   const checkApproval = async () => {
     let fetchNFTs: NFT[] = []
@@ -176,7 +182,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
             {showSelectingNFTs()}
           </div>
           <div className="font-light text-sm m-4 italic">
-            Note: Please approve NFTs for Pandora to deposit them by clicking.
+            Note: Please click each one to approve depositing NFTs in the pandora lootbox.
           </div>
         </>
       ) : (
@@ -222,6 +228,8 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
     </div>
   )
 
+  const showContent = isLoading ? <LoadingIndicator /> : <>{content}</>
+
   const depositButton = (
     <>
       <button
@@ -260,7 +268,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
       open={open}
       onClose={() => setOpen(false)}
       title="Deposit NFTs"
-      content={content}
+      content={showContent}
       confirmButton={depositButton}
     />
   )
