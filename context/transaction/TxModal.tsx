@@ -2,6 +2,10 @@ import { Loading, Illustration } from "web3uikit"
 import { Modal as CustomModal } from "components"
 import { useTx } from "./useTx"
 import { TX_ACTION } from "./TxContext"
+import { useChain } from "react-moralis"
+import { shortenAddress } from "utils"
+import { CHAINID_TO_DETAIL, isChainSupport } from "contract"
+import { useEffect, useState } from "react"
 
 const openInNewTab = (url: string) => {
   const newWindow = window.open(url, "_blank", "noopener,noreferrer")
@@ -11,7 +15,17 @@ const openInNewTab = (url: string) => {
 export const TxModal = () => {
   const { txState, clearTx } = useTx()
   const { hash, show, stage } = txState
-  const url = `https://mumbai.polygonscan.com/tx/${hash}`
+  const { chain } = useChain()
+
+  const [url, setUrl] = useState("")
+
+  useEffect(() => {
+    const url =
+      chain && isChainSupport
+        ? CHAINID_TO_DETAIL[chain.chainId].scan + hash
+        : "https://mumbai.polygonscan.com/tx/" + hash
+    setUrl(url)
+  }, [hash, chain])
 
   const showText = () => {
     if (stage === TX_ACTION.INITIATED) {
@@ -50,9 +64,8 @@ export const TxModal = () => {
           {stage === TX_ACTION.SUCCESS && (
             <Illustration width={100} height={100} logo="confirmed" />
           )}
-
           <button className="pt-5 underline text-mainPink" onClick={() => openInNewTab(url)}>
-            View on MumbaiScan
+            Transaction Hash: {shortenAddress(hash)}
           </button>
         </div>
       )}

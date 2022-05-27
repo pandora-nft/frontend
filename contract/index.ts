@@ -74,6 +74,8 @@ interface CHAIN_DETAIL {
   icon: string
   color: string
   api: string
+  scan: string
+  currency: string
 }
 
 export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
@@ -84,6 +86,8 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     icon: "bnb",
     color: "#e7b527",
     api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-chapel",
+    scan: "https://bscscan.com/tx/",
+    currency: "BNB",
   },
   "0x61": {
     name: CHAIN_SUPPORT.BSC_TESTNET,
@@ -92,6 +96,8 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     icon: "bnb",
     color: "#e7b527",
     api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-chapel",
+    scan: "https://testnet.bscscan.com/tx/",
+    currency: "BNB",
   },
   "0x89": {
     name: CHAIN_SUPPORT.POLYGON,
@@ -100,6 +106,8 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     icon: "matic",
     color: "#6f38d6",
     api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-mumbai",
+    scan: "https://polygonscan.com/tx/",
+    currency: "MATIC",
   },
   "0x13881": {
     name: CHAIN_SUPPORT.POLYGON_MUMBAI,
@@ -108,6 +116,8 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     icon: "matic",
     color: "#6f38d6",
     api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-mumbai",
+    scan: "https://mumbai.polygonscan.com/tx/",
+    currency: "MATIC",
   },
   "0xa86a": {
     name: CHAIN_SUPPORT.AVALANCHE,
@@ -116,6 +126,8 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     icon: "avax",
     color: "#d0443b",
     api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-fuji",
+    scan: "https://snowtrace.io/tx/",
+    currency: "AVAX",
   },
   "0xa869": {
     name: CHAIN_SUPPORT.AVALANCHE_FUJI,
@@ -124,5 +136,7 @@ export const CHAINID_TO_DETAIL: { [chainId: string]: CHAIN_DETAIL } = {
     icon: "avax",
     color: "#d0443b",
     api: "https://api.thegraph.com/subgraphs/name/pannavich/pandora-nft-fuji",
+    scan: "https://testnet.snowtrace.io/tx/",
+    currency: "AVAX",
   },
 }
