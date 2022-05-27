@@ -3,14 +3,9 @@ import { Modal } from "components"
 import { useTx } from "./useTx"
 import { TX_ACTION } from "./TxContext"
 import { useChain } from "react-moralis"
-import { shortenAddress } from "utils"
+import { shortenAddress, openInNewTab } from "utils"
 import { CHAINID_TO_DETAIL, isChainSupport } from "contract"
 import { useEffect, useState } from "react"
-
-const openInNewTab = (url: string) => {
-  const newWindow = window.open(url, "_blank", "noopener,noreferrer")
-  if (newWindow) newWindow.opener = null
-}
 
 export const TxModal = () => {
   const { txState, clearTx } = useTx()

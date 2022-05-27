@@ -4,11 +4,10 @@ import { CryptoLogos, Illustration } from "web3uikit"
 import { useChain, useMoralis } from "react-moralis"
 import { FACTORY_ABI, FACTORY_ADDRESS, CHAINID_TO_DETAIL } from "contract"
 import { ethers } from "ethers"
-import { CreateForm } from "components/inputs/CreateForm"
+import { CreateForm } from "components"
 import { chainType } from "web3uikit/dist/components/CryptoLogos/types"
 import { shortenAddress } from "utils"
 import { useTx } from "context/transaction"
-import MockNFTButton from "components/MockNFT"
 
 const initialFormData = {
   name: "",
@@ -99,9 +98,6 @@ const Create = () => {
         <div>
           <h3 className="ml-6 font-bold">{name}</h3>
           <h4 className="ml-6 font-normal">{shortenAddress(account)}</h4>
-          <div className="ml-6 font-normal text-xs">
-            <MockNFTButton />
-          </div>
         </div>
       </div>
     )
@@ -114,7 +110,7 @@ const Create = () => {
       </div>
 
       <div className="pl-16 pt-8 justify-items-start rounded-xl  w-full ">
-        <div className="flex items-center  w-fit bg-gray-50 border-2 border-gray-200  rounded-xl shadow-xl text-lg font-bold  bg-gray-50 p-4">
+        <div className="flex items-center  w-fit bg-gray-50 border-2 border-gray-200  rounded-xl shadow-xl text-lg font-bold p-4">
           <div>{chain?.chainId ? createChain(chain?.chainId) : <></>}</div>
           {chain ? (
             <div>

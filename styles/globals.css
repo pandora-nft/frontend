@@ -54,7 +54,7 @@
 
 @layer base {
   section {
-    @apply h-[100vh];
+    /* @apply h-[100vh]; */
   }
 
   h1 {
@@ -68,7 +68,7 @@
 html,
 body {
   height: 3000px;
-  background: white;
+  background: #ffffff;
   /* background: linear-gradient(
     160deg,
     rgb(0, 0, 0) 0%,
