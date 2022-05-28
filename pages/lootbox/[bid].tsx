@@ -86,10 +86,6 @@ const Bid: React.FC<Props> = () => {
         // get native balance of lootbox
         const balance = await moralisProvider.getBalance(loot.address)
         setBalance(Number(balance.toString()))
-
-        // const currency = isChainSupport(chain) ? CHAINID_TO_DETAIL[chain.chainId].currency : ""
-        // const showBalance = ethers.utils.formatEther(balance.toString()) + " " + currency
-        // setShowBalance(showBalance)
       }
 
       main()
@@ -203,7 +199,6 @@ const Bid: React.FC<Props> = () => {
     } else {
       // if refundable, users can refund, and owner can withdraw NFTs
       if (isRefundable) {
-        //TODO: check if have ticket first
         refundTicketButton = createMainButton("Refund Tickets", () => setShowRefundDialog(true))
         if (isOwner() && nfts.length > 0) {
           if (isNFTAlreadyWithdrawn) {
@@ -215,9 +210,8 @@ const Bid: React.FC<Props> = () => {
 
         // if draw success owner can claim money, winner can claim NFT
       } else {
-        //TODO: check if user is a winner
         claimNFTButton = createMainButton("Claim NFT", () => setShowClaimNFTDialog(true))
-        if (isOwner) {
+        if (isOwner()) {
           if (balance > 0) {
             claimMoneyButton = createMainButton("Claim Money", () => claimMoney())
           } else {

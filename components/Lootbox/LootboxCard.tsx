@@ -60,10 +60,10 @@ export const LootboxCard: React.FC<LootboxCardProps> = ({ lootbox }) => {
   }
   return (
     <div
-      className="rounded border border-gray-800 shadow-xl w-full h-[330px]
+      className="rounded border border-gray-800 shadow-xl w-full min-h-[330px]
                     pt-8 p-6 flex flex-col hover:scale-[101%] transition duration-500"
     >
-      <h2 className="text-left font-medium">
+      <h2 className="text-left text-2xl font-medium">
         #{id} {name}
       </h2>
       <h3 className="text-left font-medium mb-5">{shortenAddress(address)}</h3>
