@@ -69,11 +69,14 @@ export const Footer = () => {
       </div>
       <div className="mt-5 flex flex-row">
         {createIcon("twitter", "https://twitter.com/PandoraLootbox")}
-        {createIcon("discord")}
+        {/* {createIcon("discord")} */}
         {createIcon("github", "https://github.com/pandora-nft")}
-        {createIcon("youtube")}
-        {createIcon("medium")}
-        {createIcon("telegram")}
+        {createIcon("youtube", "https://youtu.be/NqhKUwoAMsg")}
+        {createIcon(
+          "medium",
+          "https://bafybeih5q474f3ilxsavdigcwsqpoaibgacf3vwpofmi3dnds7soe2sjmy.ipfs.dweb.link/"
+        )}
+        {/* {createIcon("telegram")} */}
       </div>
     </div>
   )
