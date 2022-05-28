@@ -13,7 +13,6 @@ export const useFormatNFTBalances = () => {
   const { isLoading, onLoad, onDone } = useLoading()
 
   const formatNFTs = async (data: any) => {
-    onLoad()
     let nfts: NFT[] = []
 
     // for (let i = 0; i < data?.result.length; i++) {
@@ -95,14 +94,14 @@ export const useFormatNFTBalances = () => {
     })
     await setTimeout(() => {
       setNFTBalances(nfts)
+      onDone()
     }, 1000)
 
-    console.log(nfts)
-    onDone()
     return nfts
   }
 
   const fetchNFTs = async () => {
+    onLoad()
     const data = await getNFTBalances()
     await formatNFTs(data)
   }
