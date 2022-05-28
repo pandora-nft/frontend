@@ -88,7 +88,7 @@ export const DepositNFTDialog = ({ lootbox, open, setOpen, setIsSuccess }: Props
 
     setOpen(false)
     await doTx(sendOptions)
-    setIsSuccess(true)
+    setIsSuccess((prevState) => !prevState)
   }
 
   const showSelectingNFTByState = (selectingNFT: NFT) => {
