@@ -72,7 +72,10 @@ export const Footer = () => {
         {/* {createIcon("discord")} */}
         {createIcon("github", "https://github.com/pandora-nft")}
         {createIcon("youtube", "https://youtu.be/NqhKUwoAMsg")}
-        {createIcon("medium","https://bafybeih5q474f3ilxsavdigcwsqpoaibgacf3vwpofmi3dnds7soe2sjmy.ipfs.dweb.link/")}
+        {createIcon(
+          "medium",
+          "https://bafybeih5q474f3ilxsavdigcwsqpoaibgacf3vwpofmi3dnds7soe2sjmy.ipfs.dweb.link/"
+        )}
         {/* {createIcon("telegram")} */}
       </div>
     </div>
