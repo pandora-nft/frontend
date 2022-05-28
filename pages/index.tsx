@@ -1,4 +1,5 @@
 import type { NextPage } from "next"
+import Head from "next/head"
 import { LootboxCanvas, NFTShowcase } from "canvas"
 import Tilt from "react-parallax-tilt"
 import { AnimationOnScroll } from "react-animation-on-scroll"
@@ -12,6 +13,10 @@ const Home: NextPage = () => {
   const Router = useRouter()
   return (
     <div>
+      <Head>
+        <title>Pandora</title>
+        <meta property="og:title" content="My page title" key="title" />
+      </Head>
       <div className="centered px-20 mt-24 mb-96">
         <div className="grid grid-cols-2 px-10 pt-10">
           <div className="mt-10 text-left">
