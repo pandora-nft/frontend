@@ -16,7 +16,7 @@ export const TxModal = () => {
 
   useEffect(() => {
     const url =
-      chain && isChainSupport
+      chain && isChainSupport(chain)
         ? CHAINID_TO_DETAIL[chain.chainId].scan + hash
         : "http://wrong-chain/" + hash
     setUrl(url)
